@@ -1,0 +1,45 @@
+{
+	"type": "Collection",
+	"properties": {
+		"characterId": {
+			"name": "characterId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "characterId",
+			"order": 0
+		},
+		"note": {
+			"name": "note",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "note",
+			"order": 1
+		},
+		"damage": {
+			"name": "damage",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "damage",
+			"order": 2
+		},
+		"location": {
+			"name": "location",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "location",
+			"order": 3
+		},
+		"critical": {
+			"name": "critical",
+			"type": "boolean",
+			"typeLabel": "boolean",
+			"required": false,
+			"id": "critical",
+			"order": 4
+		}
+	}
+}

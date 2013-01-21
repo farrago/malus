@@ -1,0 +1,77 @@
+{
+	"type": "Collection",
+	"properties": {
+		"characterId": {
+			"name": "characterId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "characterId",
+			"order": 0
+		},
+		"name": {
+			"name": "name",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "name",
+			"order": 1
+		},
+		"notes": {
+			"name": "notes",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "notes",
+			"order": 2
+		},
+		"strength": {
+			"name": "strength",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "strength",
+			"order": 3
+		},
+		"damage": {
+			"name": "damage",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "damage",
+			"order": 4
+		},
+		"area": {
+			"name": "area",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "area",
+			"order": 5
+		},
+		"hits": {
+			"name": "hits",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "hits",
+			"order": 6
+		},
+		"number": {
+			"name": "number",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "number",
+			"order": 7
+		},
+		"enc": {
+			"name": "enc",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "enc",
+			"order": 8
+		}
+	}
+}

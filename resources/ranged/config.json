@@ -1,0 +1,125 @@
+{
+	"type": "Collection",
+	"properties": {
+		"characterId": {
+			"name": "characterId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "characterId",
+			"order": 0
+		},
+		"name": {
+			"name": "name",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "name",
+			"order": 1
+		},
+		"notes": {
+			"name": "notes",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "notes",
+			"order": 2
+		},
+		"strength": {
+			"name": "strength",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "strength",
+			"order": 3
+		},
+		"damage": {
+			"name": "damage",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "damage",
+			"order": 4
+		},
+		"short": {
+			"name": "short",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "short",
+			"order": 5
+		},
+		"medium": {
+			"name": "medium",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "medium",
+			"order": 6
+		},
+		"long": {
+			"name": "long",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "long",
+			"order": 7
+		},
+		"con": {
+			"name": "con",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "con",
+			"order": 8
+		},
+		"ports": {
+			"name": "ports",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "ports",
+			"order": 9
+		},
+		"tohit": {
+			"name": "tohit",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "tohit",
+			"order": 10
+		},
+		"rof": {
+			"name": "rof",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "rof",
+			"order": 11
+		},
+		"dx": {
+			"name": "dx",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "dx",
+			"order": 12
+		},
+		"drain": {
+			"name": "drain",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "drain",
+			"order": 13
+		},
+		"enc": {
+			"name": "enc",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "enc",
+			"order": 14
+		}
+	}
+}

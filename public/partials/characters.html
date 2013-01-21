@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="span10">
+    <h1>Characters</h1>
+  </div>
+  <div class="pull-right">
+    <h1 class="pull-right">
+      <small>
+        <button class="btn" ng-click="editable = true" ng-hide="editable"><i class="icon-edit muted" tooltip="Enable Editing"></i></button>
+        <button class="btn btn-primary" ng-click="endEdit()" ng-show="editable"><span tooltip="Save Changes"><i class="icon-cloud-upload"></i>&nbsp;Save</span></button>
+        <button class="btn" ng-click="cancelEdit()" ng-show="editable">Cancel</button>
+      </small>
+    </h1>
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <ul class="unstyled">
+      <li ng-repeat="character in characters | filter:filterDeleted">
+        <h3>
+          <a href="#/characters/{{character.id}}" ng-class="stateClass(character)">
+            <i class="icon-user"></i>&nbsp;{{character.name}}</small>
+          </a>
+          <span ng-show="editable && !character.deleted && !character.ui.add" ng-click="deleteCharacter(character)"><i class="icon-remove-circle"></i></span>
+          <span ng-show="editable && character.deleted" ng-click="restoreCharacter(character)"><i class="icon-undo"></i></span>
+        </h3>
+      </li>
+    </ul>
+    <button type="submit" class="btn btn-success pull-right" ng-click="addCharacter()" ng-show="editable">
+      <i class="icon-plus"></i>&nbsp;Add Character
+    </button>
+  </div>
+</div>

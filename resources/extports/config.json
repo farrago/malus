@@ -1,0 +1,29 @@
+{
+	"type": "Collection",
+	"properties": {
+		"rangedId": {
+			"name": "rangedId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "rangedId",
+			"order": 0
+		},
+		"name": {
+			"name": "name",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "name",
+			"order": 1
+		},
+		"effect": {
+			"name": "effect",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "effect",
+			"order": 2
+		}
+	}
+}

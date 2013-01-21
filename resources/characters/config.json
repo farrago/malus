@@ -1,0 +1,109 @@
+{
+	"type": "Collection",
+	"properties": {
+		"creatorId": {
+			"name": "creatorId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "creatorId",
+			"order": 0
+		},
+		"createdDate": {
+			"name": "createdDate",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "createdDate",
+			"order": 1
+		},
+		"modifiedDate": {
+			"name": "modifiedDate",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "modifiedDate",
+			"order": 2
+		},
+		"name": {
+			"name": "name",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "name",
+			"order": 3
+		},
+		"race": {
+			"name": "race",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "race",
+			"order": 4
+		},
+		"gender": {
+			"name": "gender",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "gender",
+			"order": 5
+		},
+		"career": {
+			"name": "career",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "career",
+			"order": 6
+		},
+		"age": {
+			"name": "age",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "age",
+			"order": 7
+		},
+		"weight": {
+			"name": "weight",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "weight",
+			"order": 8
+		},
+		"height": {
+			"name": "height",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "height",
+			"order": 9
+		},
+		"experience": {
+			"name": "experience",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "experience",
+			"order": 10
+		},
+		"caste": {
+			"name": "caste",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "caste",
+			"order": 11
+		},
+		"deleted": {
+			"name": "deleted",
+			"type": "boolean",
+			"typeLabel": "boolean",
+			"required": false,
+			"id": "deleted",
+			"order": 12
+		}
+	}
+}

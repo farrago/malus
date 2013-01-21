@@ -1,0 +1,213 @@
+{
+	"type": "Collection",
+	"properties": {
+		"characterId": {
+			"name": "characterId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "characterId",
+			"order": 0
+		},
+		"modifiedDate": {
+			"name": "modifiedDate",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "modifiedDate",
+			"order": 1
+		},
+		"iqBase": {
+			"name": "iqBase",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "iqBase",
+			"order": 2
+		},
+		"iqUp": {
+			"name": "iqUp",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "iqUp",
+			"order": 3
+		},
+		"mtBase": {
+			"name": "mtBase",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "mtBase",
+			"order": 4
+		},
+		"mtUp": {
+			"name": "mtUp",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "mtUp",
+			"order": 5
+		},
+		"awBase": {
+			"name": "awBase",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "awBase",
+			"order": 6
+		},
+		"awUp": {
+			"name": "awUp",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "awUp",
+			"order": 7
+		},
+		"psBase": {
+			"name": "psBase",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "psBase",
+			"order": 8
+		},
+		"psUp": {
+			"name": "psUp",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "psUp",
+			"order": 9
+		},
+		"aBase": {
+			"name": "aBase",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "aBase",
+			"order": 10
+		},
+		"aUp": {
+			"name": "aUp",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "aUp",
+			"order": 11
+		},
+		"eBase": {
+			"name": "eBase",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "eBase",
+			"order": 12
+		},
+		"eUp": {
+			"name": "eUp",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "eUp",
+			"order": 13
+		},
+		"sBase": {
+			"name": "sBase",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "sBase",
+			"order": 14
+		},
+		"sUp": {
+			"name": "sUp",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "sUp",
+			"order": 15
+		},
+		"rBase": {
+			"name": "rBase",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "rBase",
+			"order": 16
+		},
+		"rUp": {
+			"name": "rUp",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "rUp",
+			"order": 17
+		},
+		"asBase": {
+			"name": "asBase",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "asBase",
+			"order": 18
+		},
+		"asUp": {
+			"name": "asUp",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "asUp",
+			"order": 19
+		},
+		"aiBase": {
+			"name": "aiBase",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "aiBase",
+			"order": 20
+		},
+		"aiUp": {
+			"name": "aiUp",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "aiUp",
+			"order": 21
+		},
+		"dxBase": {
+			"name": "dxBase",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "dxBase",
+			"order": 22
+		},
+		"dxUp": {
+			"name": "dxUp",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "dxUp",
+			"order": 23
+		},
+		"spBase": {
+			"name": "spBase",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "spBase",
+			"order": 24
+		},
+		"spUp": {
+			"name": "spUp",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "spUp",
+			"order": 25
+		}
+	}
+}

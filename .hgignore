@@ -1,0 +1,4 @@
+syntax: glob
+.dpd/*
+data/*
+.gitignore

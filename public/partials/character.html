@@ -1,0 +1,391 @@
+<div class="row">
+  <div class="span10">
+    <h1><span contenteditable="{{editable}}" ng-model="character.name" on-ok="character.ui.edit=true"></span>
+      <small contenteditable="{{editable}}" ng-model="character.career" on-ok="character.ui.edit=true"></small></h1>
+  </div>
+  <div class="pull-right">
+    <h1 class="pull-right">
+      <small>
+        <button class="btn" ng-click="allowEdit()" ng-hide="editable"><i class="icon-edit muted" tooltip="Enable Editing"></i></button>
+        <button class="btn btn-primary" ng-click="endEdit()" ng-show="editable"><span tooltip="Save Changes"><i class="icon-cloud-upload"></i>&nbsp;Save</span></button>
+        <button class="btn" ng-click="cancelEdit()" ng-show="editable">Cancel</button>
+      </small>
+    </h1>
+  </div>
+</div>
+<div class="row">
+  <div class="span6">
+    <p class="muted">
+      <span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.race"></span>
+      <span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.gender"></span>, 
+      <span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.age"></span>&nbsp;years old, 
+      <span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.height"></span>&nbsp;cm, 
+      <span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.weight"></span>&nbsp;kg
+    </p>
+  </div>
+  <div class="span6">
+    <div class="pull-right muted">
+      <span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.caste"></span>: 
+      <b><span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.experience"></span> EPs</b>
+    </div>
+  </div>
+</div>
+
+<!-- spacer -->
+<div class="row">
+  <div class="span12">&nbsp;</div>
+</div>
+
+<tabs>
+  <!-- ============================================================================== -->
+  <!-- Stats, wounds, and skills tab                                                  -->
+  <!-- ============================================================================== -->
+  <pane heading="Stats" icon="user">
+    <div class="row">
+      <div class="span6">
+        <table class="table table-condensed" ng-hide="tableOption">
+          <thead>
+            <tr>
+              <th class="lead">Stats</th>
+              <th>Iq</th>
+              <th>Aw</th>
+              <th>Mt</th>
+              <th>Ps</th>
+              <th>A</th>
+              <th>E</th>
+              <th>S</th>
+              <th>R</th>
+              <th>As</th>
+              <th>Ai</th>
+              <th>Dx</th>
+              <th>Sp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-show="editable">
+              <td class="muted">Base:</td>
+              <td class="muted">{{stats.iqBase}}</td>
+              <td class="muted">{{stats.awBase}}</td>
+              <td class="muted">{{stats.mtBase}}</td>
+              <td class="muted">{{stats.psBase}}</td>
+              <td class="muted">{{stats.aBase}}</td>
+              <td class="muted">{{stats.eBase}}</td>
+              <td class="muted">{{stats.sBase}}</td>
+              <td class="muted">{{stats.rBase}}</td>
+              <td class="muted">{{stats.asBase}}</td>
+              <td class="muted">{{stats.aiBase}}</td>
+              <td class="muted">{{stats.dxBase}}</td>
+              <td class="muted">{{stats.spBase}}</td>
+            </tr>
+            <tr>
+              <td>Upgraded:</td>
+              <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.iqUp"></td>
+              <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.awUp"></td>
+              <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.mtUp"></td>
+              <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.psUp"></td>
+              <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.aUp"></td>
+              <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.eUp"></td>
+              <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.sUp"></td>
+              <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.rUp"></td>
+              <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.asUp"></td>
+              <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.aiUp"></td>
+              <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.dxUp"></td>
+              <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.spUp"></td>
+            </tr>
+            <tr>
+              <td>Temporary:</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>{{stats.eTmp}}</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table table-condensed">
+          <thead>
+            <tr>
+              <th class="span3 lead">Wounds</th>
+              <th>
+                <abbr title="Damage">Dmg</abbr></th>
+              <th>
+                <abbr title="Location">Loc</abbr></th>
+              <th>
+                <abbr title="Critical">Crit?</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="wound in wounds">
+              <td ng-class="stateClass(wound)" contenteditable="{{editable}}" on-ok="wound.ui.edit=true" ng-model="wound.note"></td>
+              <td ng-class="stateClass(wound)" contenteditable="{{editable}}" on-ok="wound.ui.edit=true" ng-model="wound.damage"></td>
+              <td ng-class="stateClass(wound)" contenteditable="{{editable}}" on-ok="wound.ui.edit=true" ng-model="wound.location"></td>
+              <td ng-class="stateClass(wound)">
+                <span ng-show="(wound.ui.delete || !editable) && wound.critical">&#10004;</span>
+                <input type="checkbox" ng-show="editable && !wound.ui.delete" ng-model="wound.critical" ng-change="wound.ui.edit=true" />
+
+                <span class="pull-right" ng-show="editable && !wound.ui.delete && !wound.ui.add" ng-click="wound.ui.delete = true"><i class="icon-remove-circle"></i></span>
+                <span class="pull-right" ng-show="editable && wound.ui.delete" ng-click="wound.ui.delete = false"><i class="icon-undo"></i></span>
+              </td>
+            </tr>
+            <tr ng-show="wounds && !editable">
+              <td><span class="muted">Total Damage</span></td>
+              <td><span class="muted">{{wounds.totalDamage}}</span></td>
+              <td></td>
+              <td><span class="muted" ng-show="wounds.anyCritical"><i class="icon-ok"></i></span></td>
+            </tr>
+            <tr ng-show="editable">
+              <td colspan="4">
+                <button type="submit" class="btn btn-success pull-right" ng-click="addWound()" ng-show="editable">
+                  <i class="icon-plus"></i>&nbsp;Add Wound
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="span5 offset1">
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th class="lead">Skills</th>
+            <th>
+              <abbr title="Level">Lvl</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="skill in skills">
+            <td ng-class="stateClass(skill)" contenteditable="{{editable}}" ng-model="skill.name" on-ok="skill.ui.edit=true"></td>
+            <td ng-class="stateClass(skill)" contenteditable="{{editable}}" ng-model="skill.level" on-ok="skill.ui.edit=true"></td>
+            <td ng-show="editable">
+              <span class="pull-right" ng-show="editable && !skill.ui.delete && !skill.ui.add" ng-click="skill.ui.delete = true"><i class="icon-remove-circle"></i></span>
+              <span class="pull-right" ng-show="editable && skill.ui.delete" ng-click="skill.ui.delete = false"><i class="icon-undo"></i></span>
+            </td>
+          </tr>
+          <tr ng-show="editable">
+            <td colspan="3">
+              <button type="submit" class="btn btn-success pull-right" ng-click="addSkill()" ng-show="editable">
+                <i class="icon-plus"></i>&nbsp;Add Skill
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </pane>
+
+  <!-- ============================================================================== -->
+  <!-- Weapons tab                                                                    -->
+  <!-- ============================================================================== -->
+  <pane heading="Weapons" icon="screenshot">
+    <!-- Ranged Weapons -->
+    <div class="row">
+      <div class="span12">
+        <h3>Ranged Weapons
+          <button type="submit" class="btn btn-success pull-right" ng-click="addRanged()" ng-show="editable">
+            <i class="icon-plus"></i>&nbsp;Add Ranged Weapon
+          </button>
+        </h3>
+        <div class="columns">
+          <div class="well card span5" ng-repeat="ranged in rangedList">
+            <span class="lead">
+              <b ng-class="stateClass(ranged)" contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.name"></b>
+            </span>
+            <span ng-show="editable && !ranged.ui.delete && !ranged.ui.add" ng-click="ranged.ui.delete = true"><i class="icon-remove-circle"></i></span>
+            <span ng-show="editable && ranged.ui.delete" ng-click="ranged.ui.delete = false"><i class="icon-undo"></i></span>
+
+            <div class="row muted">
+              <div class="span5">
+                <span ng-show="editable && !ranged.notes">Notes:</span>
+                <span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.notes"></span>
+              </div>
+
+              <div class="span5">
+                <span class="lead muted">
+                  <i class="icon-wrench"tooltip="Strength"></i></a>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.strength"></span> &nbsp;
+                  <i class="icon-heart" tooltip="Damage"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.damage"></span>&nbsp;
+                  <i class="icon-retweet"tooltip="Rate of Fire"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.rof"></span> &nbsp;
+                </span>
+              </div>
+
+              <div class="span5">
+                <span class="lead muted">
+                  <i class="icon-screenshot" tooltip="To Hit"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.tohit"></span>&nbsp;
+                  <i class="icon-time" tooltip="Dx"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.dx"></span> &nbsp;
+                  <i class="icon-resize-horizontal" tooltip="Range: Short/Medium/Long"></i>&nbsp;
+                    <span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.short"></span>&nbsp;/
+                    <span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.medium"></span>&nbsp;/
+                    <span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.long"></span>&nbsp;
+                </span>
+              </div>
+          
+              <div class="span5">
+                <!-- External Ports table -->
+                <table class="table table-condensed">
+                  <thead>
+                    <tr>
+                      <th class="span2">External Ports</th>
+                      <th class="span2">
+                        <i class="icon-cog"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.ports"></span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="extport in ranged.extports">
+                      <td ng-class="stateClass(extport)"  contenteditable="{{editable}}" on-ok="extport.ui.edit=true" ng-model="extport.name"></td>
+                      <td ng-class="stateClass(extport)" >
+                        <span contenteditable="{{editable}}" on-ok="extport.ui.edit=true" ng-model="extport.effect"></span>
+                        <span class="pull-right" ng-show="editable && !extport.ui.delete && !extport.ui.add" ng-click="extport.ui.delete = true"><i class="icon-remove-circle"></i></span>
+                        <span class="pull-right" ng-show="editable && extport.ui.delete" ng-click="extport.ui.delete = false"><i class="icon-undo"></i></span>
+                      </td>
+                    </tr>
+                    <tr ng-show="editable">
+                      <td colspan="3">
+                        <button type="submit" class="btn pull-right" ng-click="addExtPort(ranged)" ng-show="editable">
+                          <i class="icon-plus muted"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="span5">
+                <!-- Ammo table -->
+                <table class="table table-condensed">
+                  <thead>
+                    <tr>
+                      <th class="span2">Ammo</th>
+                      <th class="span2">Notes</th>
+                      <th class="span1">
+                        <span ng-show="ranged.drain || editable">
+                          <i class="icon-bolt"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.drain"></span>
+                        </span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="ammo in ranged.ammos">
+                      <td ng-class="stateClass(ammo)"  contenteditable="{{editable}}" on-ok="ammo.ui.edit=true" ng-model="ammo.name"></td>
+                      <td ng-class="stateClass(ammo)"  contenteditable="{{editable}}" on-ok="ammo.ui.edit=true" ng-model="ammo.notes"></td>
+                      <td ng-class="stateClass(ammo)" >
+                        <span contenteditable="{{editable}}" on-ok="ammo.ui.edit=true" ng-model="ammo.count"></span>
+                        <span class="pull-right" ng-show="editable && !ammo.ui.delete && !ammo.ui.add" ng-click="ammo.ui.delete = true"><i class="icon-remove-circle"></i></span>
+                        <span class="pull-right" ng-show="editable && ammo.ui.delete" ng-click="ammo.ui.delete = false"><i class="icon-undo"></i></span>
+                      </td>
+                    </tr>
+                    <tr ng-show="editable">
+                      <td colspan="3">
+                        <button type="submit" class="btn pull-right" ng-click="addAmmo(ranged)" ng-show="editable">
+                          <i class="icon-plus muted"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Melee Weapons -->
+    <div class="row">
+      <div class="span12">
+        <h3>Melee Weapons
+          <button type="submit" class="btn btn-success pull-right" ng-click="addMelee()" ng-show="editable">
+            <i class="icon-plus"></i>&nbsp;Add Melee Weapon
+          </button>
+        </h3>
+        <div class="columns">
+          <div class="well card span5" ng-repeat="melee in meleeList">
+            <span class="lead">
+              <b ng-class="stateClass(melee)" contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.name"></b>
+            </span>
+            <span ng-show="editable && !melee.ui.delete && !melee.ui.add" ng-click="melee.ui.delete = true"><i class="icon-remove-circle"></i></span>
+            <span ng-show="editable && melee.ui.delete" ng-click="melee.ui.delete = false"><i class="icon-undo"></i></span>
+
+            <div class="row muted">
+              <div class="span5">
+                <span ng-show="editable && !melee.notes">Notes:</span>
+                <span contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.notes"></span>
+              </div>
+
+              <div class="span5">
+                <span class="lead muted">
+                  <i class="icon-wrench"tooltip="Strength"></i></a>&nbsp;<span contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.strength"></span> &nbsp;
+                  <i class="icon-heart" tooltip="Damage"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.damage"></span>&nbsp;
+                  <i class="icon-legal" tooltip="Attack Skill"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.as"></span>&nbsp;
+                  <i class="icon-time" tooltip="Dx"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.dx"></span> &nbsp;
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Area of Effect Weapons -->
+    <div class="row">
+      <div class="span12">
+        <h3>Area of Effect Weapons
+          <button type="submit" class="btn btn-success pull-right" ng-click="addAreaEffect()" ng-show="editable">
+            <i class="icon-plus"></i>&nbsp;Add Area Effect Weapon
+          </button>
+        </h3>
+        <div class="columns">
+          <div class="well card span5" ng-repeat="areaEffect in areaEffectList">
+            <span class="lead">
+              <b ng-class="stateClass(areaEffect)" contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.name"></b>
+              <span class="pull-right">
+                [&nbsp;<span ng-class="stateClass(areaEffect)" contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.number"></span>&nbsp;]
+              </span>
+            </span>
+            <span ng-show="editable && !areaEffect.ui.delete && !areaEffect.ui.add" ng-click="areaEffect.ui.delete = true"><i class="icon-remove-circle"></i></span>
+            <span ng-show="editable && areaEffect.ui.delete" ng-click="areaEffect.ui.delete = false"><i class="icon-undo"></i></span>
+
+            <div class="row muted">
+              <div class="span5">
+                <span ng-show="editable && !areaEffect.notes">Notes:</span>
+                <span contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.notes"></span>
+              </div>
+
+              <div class="span5">
+                <span class="lead muted">
+                  <i class="icon-wrench"tooltip="Strength"></i></a>&nbsp;<span contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.strength"></span> &nbsp;
+                  <i class="icon-heart" tooltip="Damage"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.damage"></span>&nbsp;
+                  <i class="icon-move" tooltip="Area"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.area"></span>&nbsp;m<sup>2</sup>&nbsp;
+                  <i class="icon-group" tooltip="Hits"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.hits"></span> &nbsp;
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </pane>
+ 
+  <!-- ============================================================================== -->
+  <!-- Equipment tab                                                                    -->
+  <!-- ============================================================================== -->
+  <pane heading="Equipment" icon="briefcase">
+    <div class="row">
+      <div class="span12">Equipment</div>
+    </div>
+  </pane>
+</tabs>
+
+<!-- Enable the first tab by default 
+<script>
+  $(function () {
+    $('#myTab a:first').tab('show');
+  })
+</script>
+-->

@@ -1,0 +1,37 @@
+{
+	"type": "Collection",
+	"properties": {
+		"characterId": {
+			"name": "characterId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "characterId",
+			"order": 0
+		},
+		"modifiedDate": {
+			"name": "modifiedDate",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "modifiedDate",
+			"order": 1
+		},
+		"name": {
+			"name": "name",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "name",
+			"order": 2
+		},
+		"level": {
+			"name": "level",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "level",
+			"order": 3
+		}
+	}
+}

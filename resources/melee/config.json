@@ -1,0 +1,77 @@
+{
+	"type": "Collection",
+	"properties": {
+		"characterId": {
+			"name": "characterId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "characterId",
+			"order": 0
+		},
+		"name": {
+			"name": "name",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "name",
+			"order": 1
+		},
+		"notes": {
+			"name": "notes",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "notes",
+			"order": 2
+		},
+		"strength": {
+			"name": "strength",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "strength",
+			"order": 3
+		},
+		"damage": {
+			"name": "damage",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "damage",
+			"order": 4
+		},
+		"as": {
+			"name": "as",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "as",
+			"order": 5
+		},
+		"dx": {
+			"name": "dx",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "dx",
+			"order": 6
+		},
+		"c": {
+			"name": "c",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "c",
+			"order": 7
+		},
+		"enc": {
+			"name": "enc",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "enc",
+			"order": 8
+		}
+	}
+}

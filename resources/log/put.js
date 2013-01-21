@@ -1,0 +1,1 @@
+cancel("Can't modify the log", 403);
