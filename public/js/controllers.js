@@ -169,8 +169,11 @@ function CharactersCtrl($scope, $routeParams, Character, CharacterStats) {
   // It depends on the ui.xyz parameters added to the object
   //
   $scope.sync = function (obj) {
+    if (!obj.hasOwnProperty('ui')) {
+      return;
+    }
 
-    if (obj.hasOwnProperty('ui') && obj.ui.add === true) {
+    if (obj.ui.add === true) {
       //
       // Marked for adding so add
       //
@@ -181,12 +184,12 @@ function CharactersCtrl($scope, $routeParams, Character, CharacterStats) {
         console.log('Added: ', obj);
         $scope.calls -= 1;
       });
-    } else if (obj.hasOwnProperty('ui') && obj.ui.delete === true) {
+    } else if (obj.ui.delete === true) {
       //
       // Marked for deletion so delete
       //
       console.log('Not Deleting!', obj);
-    } else if (obj.hasOwnProperty('ui') && obj.ui.edit === true) {
+    } else if (obj.ui.edit === true) {
       //
       // Marked as edited, so save
       //
@@ -250,7 +253,8 @@ function CharacterCtrl(
   CharacterExtPort,
   CharacterAmmo,
   CharacterMelee,
-  CharacterAreaEffect
+  CharacterAreaEffect,
+  CharacterEquipment
   ) {
 
   $scope.editable = false;
@@ -265,13 +269,19 @@ function CharacterCtrl(
   // Returns appropriate classes for display of objects based on their modification state
   //
   $scope.stateClass = function (obj) {
-    if (obj.hasOwnProperty('ui') && obj.ui.add === true) {
-      return "state-adding";
-    } else if (obj.hasOwnProperty('ui') && obj.ui.delete === true) {
-      return "muted state-deleting";
-    } else {
+    if (!obj.hasOwnProperty('ui')) {
       return "";
     }
+
+    var classString = "";
+    if (obj.ui.add === true) {
+      classString += "state-adding";
+    }
+    if (obj.ui.delete === true) {
+      classString += " muted state-deleting";
+    }
+
+    return classString;
   }
 
   //
@@ -279,8 +289,19 @@ function CharacterCtrl(
   // It depends on the ui.xyz parameters added to the object
   //
   $scope.sync = function (obj) {
+    if (!obj.hasOwnProperty('ui')) {
+      return;
+    }
 
-    if (obj.hasOwnProperty('ui') && obj.ui.add === true) {
+    if (obj.ui.add && obj.ui.delete) {
+      //
+      // Added then deleted so just remove (but force a refresh
+      //
+      $scope.refreshNeeded = true;
+      return;
+    }
+
+    if (obj.ui.add === true) {
       //
       // Marked for adding so add
       //
@@ -291,7 +312,7 @@ function CharacterCtrl(
         console.log('Added: ', obj);
         $scope.calls -= 1;
       });
-    } else if (obj.hasOwnProperty('ui') && obj.ui.delete === true) {
+    } else if (obj.ui.delete === true) {
       //
       // Marked for deletion so delete
       //
@@ -301,7 +322,7 @@ function CharacterCtrl(
         console.log('Deleted: ', obj);
         $scope.calls -= 1;
       });
-    } else if (obj.hasOwnProperty('ui') && obj.ui.edit === true) {
+    } else if (obj.ui.edit === true) {
       //
       // Marked as edited, so save
       //
@@ -327,6 +348,8 @@ function CharacterCtrl(
   //
   $scope.endEdit = function () {
     $scope.editable = false;
+    $scope.calls = 0;
+    $scope.refreshNeeded = false;
     
     //
     // Sync everything
@@ -355,6 +378,17 @@ function CharacterCtrl(
     angular.forEach($scope.areaEffectList, function (aoe) {
       $scope.sync(aoe);
     });
+
+    angular.forEach($scope.equipmentList, function (equipment) {
+      $scope.sync(equipment);
+    });
+
+
+    if ($scope.refreshNeeded === true && $scope.calls === 0) {
+      $scope.refreshAll();
+    }
+
+    $scope.refreshNeeded = false;
   }
 
   //
@@ -535,6 +569,25 @@ function CharacterCtrl(
   }
 
   //
+  // Equipment
+  //
+  $scope.refreshEquipment = function () {
+    $scope.equipmentList = CharacterEquipment.query({ characterId: $routeParams.id });
+  };
+
+  $scope.addEquipment = function (carried) {
+    var equipment = new CharacterEquipment();
+    equipment.characterId = $routeParams.id;
+    equipment.name = "New Equipment";
+    equipment.count = "1";
+    equipment.carried = carried;
+
+    equipment.ui = function () { };
+    equipment.ui.add = true;
+    $scope.equipmentList.push(equipment);
+  }
+
+  //
   // Function to reload all of the character
   //
   $scope.refreshAll = function () {
@@ -554,6 +607,7 @@ function CharacterCtrl(
     $scope.refreshRanged();
     $scope.refreshMelees();
     $scope.refreshAreaEffects();
+    $scope.refreshEquipment();
 
   }
   $scope.refreshAll();
@@ -571,4 +625,5 @@ CharacterCtrl.$inject = [
   'CharacterAmmo',
   'CharacterMelee',
   'CharacterAreaEffect',
+  'CharacterEquipment',
 ];

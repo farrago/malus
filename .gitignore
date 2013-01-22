@@ -1,3 +1,4 @@
 .hg/*
 .dpd/*
 data/*
+.hgignore

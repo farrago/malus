@@ -63,3 +63,11 @@ angular.module('myApp.areaEffectServices', ['ngResource']).
   factory('CharacterAreaEffect', function ($resource) {
     return $resource('areaeffect/:id', { id: '@id' }, {});
   });
+
+//
+// Character equipment modules
+//
+angular.module('myApp.equipmentServices', ['ngResource']).
+  factory('CharacterEquipment', function ($resource) {
+    return $resource('equipment/:id', { id: '@id' }, {});
+  });
