@@ -1,15 +1,14 @@
 <div class="row">
-  <div class="span10">
+  <div class="span12">
     <h1><span contenteditable="{{editable}}" ng-model="character.name" on-ok="character.ui.edit=true"></span>
-      <small contenteditable="{{editable}}" ng-model="character.career" on-ok="character.ui.edit=true"></small></h1>
-  </div>
-  <div class="pull-right">
-    <h1 class="pull-right">
-      <small>
+      <small contenteditable="{{editable}}" ng-model="character.career" on-ok="character.ui.edit=true"></small>
+
+      <!-- Edit button -->
+      <span class="pull-right">
         <button class="btn" ng-click="allowEdit()" ng-hide="editable"><i class="icon-edit muted" tooltip="Enable Editing"></i></button>
         <button class="btn btn-primary" ng-click="endEdit()" ng-show="editable"><span tooltip="Save Changes"><i class="icon-cloud-upload"></i>&nbsp;Save</span></button>
         <button class="btn" ng-click="cancelEdit()" ng-show="editable">Cancel</button>
-      </small>
+      </span>
     </h1>
   </div>
 </div>
@@ -47,7 +46,7 @@
         <table class="table table-condensed" ng-hide="tableOption">
           <thead>
             <tr>
-              <th class="lead">Stats</th>
+              <th class="lead hidden-phone">Stats</th>
               <th>Iq</th>
               <th>Aw</th>
               <th>Mt</th>
@@ -64,7 +63,7 @@
           </thead>
           <tbody>
             <tr ng-show="editable">
-              <td class="muted">Base:</td>
+              <td class="muted hidden-phone">Base:</td>
               <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.iqBase"></td>
               <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.awBase"></td>
               <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.mtBase"></td>
@@ -79,7 +78,7 @@
               <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.spBase"></td>
             </tr>
             <tr>
-              <td>Upgraded:</td>
+              <td class="hidden-phone">Upgraded:</td>
               <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.iqUp"></td>
               <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.awUp"></td>
               <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.mtUp"></td>
@@ -94,7 +93,7 @@
               <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.spUp"></td>
             </tr>
             <tr>
-              <td>Temporary:</td>
+              <td class="hidden-phone">Temporary:</td>
               <td></td>
               <td></td>
               <td></td>

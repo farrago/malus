@@ -36,8 +36,10 @@
   font-style:italic;
 }
 
-/*Columns*/
-.columns {
+/*Columns - not on phones!*/
+@media (min-width: 767px) {
+
+  .columns {
     -moz-column-count: 2;
     -moz-column-gap: 0px;
     -moz-column-fill: auto;
@@ -47,11 +49,12 @@
     column-count: 2;
     column-gap: 0px;
     column-fill: auto;
-}
+  }
 
-.card { 
-  -moz-column-break-inside: avoid; 
-  -webkit-column-break-inside: avoid; 
-  column-break-inside: avoid; 
-  display: inline-block;
+  .card {
+    -moz-column-break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    column-break-inside: avoid;
+    display: inline-block;
+  }
 }
