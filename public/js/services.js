@@ -71,3 +71,7 @@ angular.module('myApp.equipmentServices', ['ngResource']).
   factory('CharacterEquipment', function ($resource) {
     return $resource('equipment/:id', { id: '@id' }, {});
   });
+angular.module('myApp.armourServices', ['ngResource']).
+  factory('CharacterArmour', function ($resource) {
+    return $resource('armour/:id', { id: '@id' }, {});
+  });

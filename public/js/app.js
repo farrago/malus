@@ -19,6 +19,7 @@ angular.module(
   'myApp.meleeServices',
   'myApp.areaEffectServices',
   'myApp.equipmentServices',
+  'myApp.armourServices',
   ]).
   config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/', { templateUrl: 'partials/front.html', controller: MyCtrl2 });

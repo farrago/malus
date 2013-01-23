@@ -378,6 +378,49 @@
   <!-- Equipment tab                                                                    -->
   <!-- ============================================================================== -->
   <pane heading="Equipment" icon="briefcase">
+    <!-- Armour -->
+    <div class="row">
+
+      <div class="span12">
+        <table class="table table-condensed">
+          <thead>
+            <tr>
+              <th class="lead">Armour</th>
+              <th><abbr title="Location">Loc</abbr></th>
+              <th colspan="3">Condition</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="armour in armourList">
+              <td>
+                <span ng-class="stateClass(armour)" contenteditable="{{editable}}" ng-model="armour.name" on-ok="armour.ui.edit=true"></span>
+              </td>
+              <td ng-class="stateClass(armour)" contenteditable="{{editable}}" ng-model="armour.location" on-ok="armour.ui.edit=true"></td>
+              <td ng-class="stateClass(armour)" contenteditable="{{editable}}" ng-model="armour.cBase" on-ok="armour.ui.edit=true"></td>
+              <td ng-class="stateClass(armour)" contenteditable="{{editable}}" ng-model="armour.cUp" on-ok="armour.ui.edit=true"></td>
+              <td ng-class="stateClass(armour)" contenteditable="{{editable}}" ng-model="armour.cCurrent" on-ok="armour.ui.edit=true"></td>
+              <td ng-class="stateClass(armour)" contenteditable="{{editable}}" ng-model="armour.notes" on-ok="armour.ui.edit=true"></td>
+              <td ng-show="editable">
+                <span class="pull-right" ng-show="editable && !armour.ui.delete" ng-click="armour.ui.delete = true"><i class="icon-remove-circle"></i></span>
+                <span class="pull-right" ng-show="editable && armour.ui.delete" ng-click="armour.ui.delete = false"><i class="icon-undo"></i></span>
+              </td>
+            </tr>
+            <tr ng-show="editable">
+              <td colspan="7">
+                <button type="submit" class="btn btn-success pull-right" ng-click="addArmour()" ng-show="editable">
+                  <i class="icon-plus"></i>&nbsp;Add Armour
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="span1"></div>
+
+    </div>
+
+    <!-- Equipment -->
     <div class="row">
       <div ng-repeat="carriedOption in [true, false]">
         <div class="span5">

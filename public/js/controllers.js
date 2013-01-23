@@ -254,7 +254,8 @@ function CharacterCtrl(
   CharacterAmmo,
   CharacterMelee,
   CharacterAreaEffect,
-  CharacterEquipment
+  CharacterEquipment,
+  CharacterArmour
   ) {
 
   $scope.editable = false;
@@ -381,6 +382,10 @@ function CharacterCtrl(
 
     angular.forEach($scope.equipmentList, function (equipment) {
       $scope.sync(equipment);
+    });
+
+    angular.forEach($scope.armourList, function (armour) {
+      $scope.sync(armour);
     });
 
 
@@ -588,6 +593,29 @@ function CharacterCtrl(
   }
 
   //
+  // Armour
+  //
+  $scope.refreshArmour = function () {
+    $scope.armourList = CharacterArmour.query({ characterId: $routeParams.id });
+  };
+
+  $scope.addArmour = function (carried) {
+    var armour = new CharacterArmour();
+    armour.characterId = $routeParams.id;
+    armour.name = "New Armour";
+    armour.location = "1";
+    armour.cBase = "1";
+    armour.cUp = "1";
+    armour.cCurrent = "1";
+    armour.c = "1";
+    armour.notes = "notes";
+
+    armour.ui = function () { };
+    armour.ui.add = true;
+    $scope.armourList.push(armour);
+  }
+
+  //
   // Function to reload all of the character
   //
   $scope.refreshAll = function () {
@@ -608,7 +636,7 @@ function CharacterCtrl(
     $scope.refreshMelees();
     $scope.refreshAreaEffects();
     $scope.refreshEquipment();
-
+    $scope.refreshArmour();
   }
   $scope.refreshAll();
 
@@ -626,4 +654,5 @@ CharacterCtrl.$inject = [
   'CharacterMelee',
   'CharacterAreaEffect',
   'CharacterEquipment',
+  'CharacterArmour',
 ];

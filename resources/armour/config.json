@@ -1,0 +1,61 @@
+{
+	"type": "Collection",
+	"properties": {
+		"characterId": {
+			"name": "characterId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "characterId",
+			"order": 0
+		},
+		"name": {
+			"name": "name",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "name",
+			"order": 1
+		},
+		"location": {
+			"name": "location",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "location",
+			"order": 2
+		},
+		"cBase": {
+			"name": "cBase",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "cBase",
+			"order": 3
+		},
+		"cUp": {
+			"name": "cUp",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "cUp",
+			"order": 4
+		},
+		"cCurrent": {
+			"name": "cCurrent",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "cCurrent",
+			"order": 5
+		},
+		"notes": {
+			"name": "notes",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "notes",
+			"order": 6
+		}
+	}
+}
