@@ -838,6 +838,25 @@ function CharacterCtrl(
     $scope.accountList.push(account);
   }
 
+  $scope.withdraw = function (account, amount) {
+    var newBalance = Number(account.balance) - Number(amount);
+    account.balance = String(newBalance);
+    if (!account.ui.hasOwnProperty('transactions')) {
+      account.ui.transactions = [];
+    }
+    account.ui.transactions.push("Withdrew " + amount);
+    console.log(account.ui.transactions);
+  }
+  $scope.deposit = function (account, amount) {
+    var newBalance = Number(account.balance) + Number(amount);
+    account.balance = String(newBalance);
+    if (!account.ui.hasOwnProperty('transactions')) {
+      account.ui.transactions = [];
+    }
+    account.ui.transactions.push("Deposited " + amount);
+    console.log(account.ui.transactions);
+  }
+
   //
   // Function to reload all of the character
   //

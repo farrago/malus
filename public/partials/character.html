@@ -195,7 +195,7 @@
 
         <div class="span5 offset1">
           <!-- Skills -->
-          <table class="table table-condensed">
+          <table class="table table-condensed table-striped">
             <thead>
               <tr>
                 <th class="lead">Skills</th>
@@ -435,7 +435,7 @@
               <span ng-show="editable && !set.ui.delete" ng-click="set.ui.delete = true"><i class="icon-remove-circle"></i></span>
               <span ng-show="editable && set.ui.delete" ng-click="set.ui.delete = false"><i class="icon-undo"></i></span>
 
-              <div class="row muted">
+              <div class="row">
                 <div class="span5">
                   <span ng-show="editable && !set.notes">Notes:</span>
                   <span contenteditable="{{editable}}" on-ok="set.ui.edit=true" ng-model="set.notes"></span>
@@ -446,24 +446,22 @@
                   <table class="table table-condensed">
                     <thead>
                       <tr>
-                        <th class="span1">Location</th>
-                        <th class="span1" ng-show="editable">Base Cond</th>
-                        <th class="span1">Condition</th>
+                        <th class="span1">Loc<span class="hidden-phone">ation</span></th>
+                        <th class="span1" ng-show="editable">Base Con</th>
+                        <th class="span1">Con<span class="hidden-phone">dition</span></th>
                         <th class="span2">Notes</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr ng-repeat="piece in set.pieces | filter:pieceFilter | orderBy:'location'">
-                        <td ng-class="stateClass(piece)">{{piece.location}}</td>
-                        <td ng-class="stateClass(piece)"  contenteditable="{{editable}}" ng-show="editable" on-ok="piece.ui.edit=true" ng-model="piece.baseCondition"></td>
-                        <td ng-class="stateClass(piece)"  contenteditable="{{editable}}" on-ok="piece.ui.edit=true" ng-model="piece.currentCondition"></td>
-                        <td ng-class="stateClass(piece)" >
-                          <span contenteditable="{{editable}}" on-ok="piece.ui.edit=true" ng-model="piece.notes"></span>
-                        </td>
+                        <td>{{piece.location}}</td>
+                        <td contenteditable="{{editable}}" ng-show="editable" on-ok="piece.ui.edit=true" ng-model="piece.baseCondition"></td>
+                        <td contenteditable="{{editable}}" on-ok="piece.ui.edit=true" ng-model="piece.currentCondition"></td>
+                        <td contenteditable="{{editable}}" on-ok="piece.ui.edit=true" ng-model="piece.notes"></td>
                       </tr>
                     </tbody>
                   </table>
-                  <i ng-show="editable">Remove "Base Cond" from pieces that you don't own to hide them.</i>
+                  <i ng-show="editable">Remove "Base Con" from pieces that you don't own to hide them.</i>
                 </div>
               </div>
             </div>
@@ -575,6 +573,17 @@
               <div class="muted">
                   <span ng-show="editable && !account.notes">Notes:</span>
                   <span contenteditable="{{editable}}" on-ok="account.ui.edit=true" ng-model="account.notes"></span>
+              </div>
+
+              <div ng-show="editable">
+                <form name="AccountForm" class="form-inline">
+                  <input type="text" name="amount" ng-model="account.ui.amount" required ng-pattern="/^[-+]?([0-9]*\.)?[0-9]+$/" placeholder="amount"/>
+                  <button type="submit" class="btn btn-success" ng-disabled="!AccountForm.$valid" ng-click="withdraw(account, account.ui.amount)">Withdraw</button>
+                  <button type="submit" class="btn btn-success" ng-disabled="!AccountForm.$valid" ng-click="deposit(account, account.ui.amount)">Deposit</button>
+                </form>
+                <div ng-repeat="transaction in account.ui.transactions">
+                  {{transaction}} &#xa2;
+                </div>
               </div>
             </div>
           </div>
