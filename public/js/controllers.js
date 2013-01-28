@@ -248,6 +248,7 @@ function CharacterCtrl(
   Character,
   CharacterStats,
   CharacterSkill,
+  CharacterEffect,
   CharacterWound,
   CharacterRanged,
   CharacterExtPort,
@@ -255,7 +256,10 @@ function CharacterCtrl(
   CharacterMelee,
   CharacterAreaEffect,
   CharacterEquipment,
-  CharacterArmour
+  CharacterArmourSet,
+  CharacterArmourPiece,
+  CharacterAccount,
+  CharacterMagicItem
   ) {
 
   $scope.editable = false;
@@ -265,6 +269,104 @@ function CharacterCtrl(
       $scope.refreshAll();
     }
   }, true);
+
+  //
+  // Outstanding reads / refreshing handling
+  //
+  $scope.outstandingReads = 0;
+  $scope.maxReads = 0;
+  $scope.progress = "0%";
+  $scope.incrementOutstanding = function () {
+    $scope.outstandingReads += 1;
+    $scope.maxReads = Math.max($scope.maxReads, $scope.outstandingReads);
+    $scope.progress = "0%";
+  };
+  $scope.decrementOutstanding = function () {
+    if ($scope.outstandingReads === 0) {
+      console.log("Too many read completions!!");
+    }
+    $scope.outstandingReads -= 1;
+    var progress = ($scope.maxReads - $scope.outstandingReads) / $scope.maxReads;
+    progress = Math.floor(progress * 100);
+    $scope.progress = progress + "%";
+  };
+
+  $scope.$watch('outstandingReads', function (newValue, oldValue) {
+    if (newValue != oldValue && newValue == 0) {
+      $scope.calculateTemporaries();
+    }
+  }, true);
+
+  $scope.calculateTemporaries = function () {
+    //
+    // Check that the objects exist
+    //
+    if (!$scope.hasOwnProperty('stats')) {
+      console.log("No Stats", $scope);
+      return;
+    }
+    if (!$scope.hasOwnProperty('effects')) {
+      console.log("No effects", $scope);
+      return;
+    }
+    if (!Array.isArray($scope.effects)) {
+      console.log("Effects are not an array");
+      return;
+    };
+
+    //
+    // Build an array of all the current values
+    //
+    var stats = ['iq', 'aw', 'mt', 'ps', 'a', 'e', 's', 'r', 'as', 'ai', 'dx', 'sp'];
+    $scope.tmpStats = [];
+    var suffix = 'Up';
+
+    //
+    // Get the "upgraded" values for all stats
+    //
+    angular.forEach(stats, function (value) {
+      var tmpName = value + suffix;
+      $scope.tmpStats[value] = $scope.stats[tmpName];
+    });
+
+    //
+    // Iterate through the effects, applying them if possible
+    //
+    angular.forEach($scope.effects, function (value) {
+      var statLowercase = value.stat.toLowerCase();
+      var effectNumber = Number(value.effect);
+      if ($scope.tmpStats.hasOwnProperty(statLowercase) && !isNaN(effectNumber)) {
+        $scope.tmpStats[statLowercase] += effectNumber;
+      } else {
+        console.log("Couldn't apply", value);
+        console.log("Value", effectNumber);
+      }
+    });
+
+    //
+    // Now iterate through the wounds, applying them to Endurance
+    //
+    angular.forEach($scope.wounds, function (value) {
+      var damageNumber = Number(value.damage);
+      if (!isNaN(damageNumber)) {
+        $scope.tmpStats['e'] -= damageNumber;
+      } else {
+        console.log("Couldn't apply", value);
+        console.log("Value", damageNumber);
+      }
+    });
+
+    //
+    // Finally, iterate through all the temp values, and if they
+    // haven't changed then set then back to ""
+    //
+    angular.forEach(stats, function (value) {
+      var tmpName = value + suffix;
+      if ($scope.tmpStats[value] == $scope.stats[tmpName]) {
+        $scope.tmpStats[value] = "";
+      }
+    });
+  };
 
   //
   // Returns appropriate classes for display of objects based on their modification state
@@ -337,6 +439,12 @@ function CharacterCtrl(
     }
   }
 
+  $scope.syncArray = function (arr) {
+    angular.forEach(arr, function (item) {
+      $scope.sync(item);
+    });
+  };
+
   //
   // Enable the edit controls and reset the edit flags
   //
@@ -357,38 +465,26 @@ function CharacterCtrl(
     //
     $scope.sync($scope.character);
     $scope.sync($scope.stats);
-    angular.forEach($scope.skills, function (skill) {
-      $scope.sync(skill);
-    });
-    angular.forEach($scope.wounds, function (wound) {
-      $scope.sync(wound);
-    });
+    $scope.syncArray($scope.skills);
+    $scope.syncArray($scope.wounds);
+    $scope.syncArray($scope.effects);
+    $scope.syncArray($scope.meleeList);
+    $scope.syncArray($scope.areaEffectList);
+    $scope.syncArray($scope.equipmentList);
+    $scope.syncArray($scope.magicItemList);
+    $scope.syncArray($scope.accountList);
+
     angular.forEach($scope.rangedList, function (ranged) {
       $scope.sync(ranged);
-      angular.forEach(ranged.extports, function (extport) {
-        $scope.sync(extport);
-      });
-      angular.forEach(ranged.ammos, function (ammo) {
-        $scope.sync(ammo);
-      });
+      $scope.syncArray(ranged.extports);
+      $scope.syncArray(ranged.ammos);
     });
 
-    angular.forEach($scope.meleeList, function (melee) {
-      $scope.sync(melee);
-    });
-    angular.forEach($scope.areaEffectList, function (aoe) {
-      $scope.sync(aoe);
-    });
-
-    angular.forEach($scope.equipmentList, function (equipment) {
-      $scope.sync(equipment);
-    });
-
-    angular.forEach($scope.armourList, function (armour) {
+    angular.forEach($scope.armourSetList, function (armour) {
       $scope.sync(armour);
+      $scope.syncArray(armour.pieces);
     });
-
-
+    
     if ($scope.refreshNeeded === true && $scope.calls === 0) {
       $scope.refreshAll();
     }
@@ -409,7 +505,10 @@ function CharacterCtrl(
   // Skills
   //
   $scope.refreshSkills = function () {
-    $scope.skills = CharacterSkill.query({ characterId: $routeParams.id });
+    $scope.incrementOutstanding();
+    $scope.skills = CharacterSkill.query({ characterId: $routeParams.id }, function (slist) {
+      $scope.decrementOutstanding();
+    });
   };
 
   $scope.addSkill = function () {
@@ -426,6 +525,7 @@ function CharacterCtrl(
   // Wounds
   //
   $scope.refreshWounds = function () {
+    $scope.incrementOutstanding();
     //
     // Load the wounds, then do some maths on the results
     //
@@ -439,9 +539,8 @@ function CharacterCtrl(
           if (wound.critical) {
             $scope.wounds.anyCritical = true;
           }
-        })
-
-        $scope.stats.eTmp = $scope.stats.eUp - $scope.wounds.totalDamage;
+        });
+        $scope.decrementOutstanding();
       });
   };
 
@@ -458,9 +557,31 @@ function CharacterCtrl(
   }
 
   //
+  // Effects
+  //
+  $scope.refreshEffects = function () {
+    $scope.incrementOutstanding();
+    $scope.effects = CharacterEffect.query({ characterId: $routeParams.id }, function () {
+      $scope.decrementOutstanding();
+    });
+  };
+
+  $scope.addEffect = function () {
+    var effect = new CharacterEffect();
+    effect.characterId = $routeParams.id;
+    effect.notes = "Description";
+    effect.stat = "Stat";
+    effect.effect = "-1";
+    effect.ui = function () { };
+    effect.ui.add = true;
+    $scope.effects.push(effect);
+  }
+
+  //
   // Ranged weapons
   //
   $scope.refreshRanged = function () {
+    $scope.incrementOutstanding();
     $scope.rangedList = CharacterRanged.query({ characterId: $routeParams.id },
       function (rlist) {
         //
@@ -481,8 +602,8 @@ function CharacterCtrl(
             ranged.ammos.push(new CharacterAmmo( item ));
           })
         })
-      }
-    );
+        $scope.decrementOutstanding();
+      });
   };
 
   $scope.addRanged = function () {
@@ -529,7 +650,10 @@ function CharacterCtrl(
   // Melee weapons
   //
   $scope.refreshMelees = function () {
-    $scope.meleeList = CharacterMelee.query({ characterId: $routeParams.id });
+    $scope.incrementOutstanding();
+    $scope.meleeList = CharacterMelee.query({ characterId: $routeParams.id }, function () {
+      $scope.decrementOutstanding();
+    });
   };
 
   $scope.addMelee = function () {
@@ -553,7 +677,10 @@ function CharacterCtrl(
   // AoE weapons
   //
   $scope.refreshAreaEffects = function () {
-    $scope.areaEffectList = CharacterAreaEffect.query({ characterId: $routeParams.id });
+    $scope.incrementOutstanding();
+    $scope.areaEffectList = CharacterAreaEffect.query({ characterId: $routeParams.id }, function () {
+      $scope.decrementOutstanding();
+    });
   };
 
   $scope.addAreaEffect = function () {
@@ -577,7 +704,10 @@ function CharacterCtrl(
   // Equipment
   //
   $scope.refreshEquipment = function () {
-    $scope.equipmentList = CharacterEquipment.query({ characterId: $routeParams.id });
+    $scope.incrementOutstanding();
+    $scope.equipmentList = CharacterEquipment.query({ characterId: $routeParams.id }, function () {
+      $scope.decrementOutstanding();
+    });
   };
 
   $scope.addEquipment = function (carried) {
@@ -593,34 +723,133 @@ function CharacterCtrl(
   }
 
   //
-  // Armour
+  // ArmourSet
   //
-  $scope.refreshArmour = function () {
-    $scope.armourList = CharacterArmour.query({ characterId: $routeParams.id });
+  $scope.refreshArmourSets = function () {
+    $scope.incrementOutstanding();
+    $scope.armourSetList = CharacterArmourSet.query({ characterId: $routeParams.id },
+      function (rlist) {
+        //
+        // Need to change the related items into resources
+        //
+        angular.forEach(rlist, function (armourSet, key) {
+          // Pieces of the set
+          var copyPieces = armourSet.pieces;
+          armourSet.pieces = [];
+          angular.forEach(copyPieces, function (item) {
+            var resourcePiece = new CharacterArmourPiece(item);
+            armourSet.pieces.push(resourcePiece);
+          });
+        })
+        $scope.decrementOutstanding();
+      });
   };
 
-  $scope.addArmour = function (carried) {
-    var armour = new CharacterArmour();
-    armour.characterId = $routeParams.id;
-    armour.name = "New Armour";
-    armour.location = "1";
-    armour.cBase = "1";
-    armour.cUp = "1";
-    armour.cCurrent = "1";
-    armour.c = "1";
-    armour.notes = "notes";
+  $scope.addArmourSet = function () {
+    var armourSet = new CharacterArmourSet();
+    armourSet.characterId = $routeParams.id;
+    
+    armourSet.$save({}, function (s, saveResponseHeaders) {
+      console.log("Saved:", s);
+      armourSet.id = s.id;
+      
+      armourSet.name = "New Armour";
+      armourSet.notes = "Notes";
+      armourSet.pieces = [];
 
-    armour.ui = function () { };
-    armour.ui.add = true;
-    $scope.armourList.push(armour);
+      armourSet.ui = function () { };
+      armourSet.ui.add = true;
+      
+      $scope.armourSetList.push(armourSet);
+
+      for (var i = 1; i <= 8; ++i) {
+        var piece = new CharacterArmourPiece();
+        piece.armoursetId = armourSet.id;
+        piece.location = String(i);
+        piece.baseCondition = "1";
+        piece.currentCondition = "1";
+        piece.notes = "Notes";
+        piece.owned = false;
+        piece.ui = function () { };
+        piece.ui.add = true;
+
+        armourSet.pieces.push(piece);
+      }
+
+      var piece = new CharacterArmourPiece();
+      piece.armoursetId = armourSet.id;
+      piece.location = "All";
+      piece.baseCondition = "1";
+      piece.currentCondition = "1";
+      piece.notes = "Notes";
+      piece.owned = false;
+      piece.ui = function () { };
+      piece.ui.add = true;
+
+      armourSet.pieces.push(piece);
+    });
+  }
+
+  $scope.pieceFilter = function (piece) {
+    return $scope.editable || (piece.baseCondition !== null && piece.baseCondition !== "");
+  };
+
+  //
+  // MagicItems
+  //
+  $scope.refreshMagicItems = function () {
+    $scope.incrementOutstanding();
+    $scope.magicItemList = CharacterMagicItem.query({ characterId: $routeParams.id }, function () {
+      $scope.decrementOutstanding();
+    });
+  };
+
+  $scope.addMagicItem = function (carried) {
+    var magicItem = new CharacterMagicItem();
+    magicItem.characterId = $routeParams.id;
+    magicItem.name = "New Item";
+    magicItem.uses = "0";
+    magicItem.notes = "notes";
+
+    magicItem.ui = function () { };
+    magicItem.ui.add = true;
+    $scope.magicItemList.push(magicItem);
+  }
+
+  //
+  // Accounts
+  //
+  $scope.refreshAccounts = function () {
+    $scope.incrementOutstanding();
+    $scope.accountList = CharacterAccount.query({ characterId: $routeParams.id }, function () {
+      $scope.decrementOutstanding();
+    });
+  };
+
+  $scope.addAccount = function (carried) {
+    var account = new CharacterAccount();
+    account.characterId = $routeParams.id;
+    account.name = "New Account";
+    account.balance = "0";
+    account.notes = "notes";
+
+    account.ui = function () { };
+    account.ui.add = true;
+    $scope.accountList.push(account);
   }
 
   //
   // Function to reload all of the character
   //
-  $scope.refreshAll = function () {
-    $scope.character = Character.get({ id: $routeParams.id });
+  $scope.refreshCharacter = function () {
+    $scope.incrementOutstanding();
+    $scope.character = Character.get({ id: $routeParams.id }, function () {
+      $scope.decrementOutstanding();
+    });
+  };
 
+  $scope.refreshStats = function () {
+    $scope.incrementOutstanding();
     //
     // Bit of a cheat to query the stats by characterId then take the first response
     // as the stats for this character (should never have multiple stats anyway)
@@ -628,15 +857,27 @@ function CharacterCtrl(
     $scope.statsList = CharacterStats.query({ characterId: $routeParams.id },
       function (sList, respHeaders) {
         $scope.stats = sList[0];
+        $scope.decrementOutstanding();
       });
+  };
+  $scope.refreshAll = function () {
+    if ($scope.outstandingReads !== 0) {
+      console.log("Refreshing with outstanding reads!");
+    }
+    $scope.outstandingReads = 0;
 
+    $scope.refreshCharacter();
+    $scope.refreshStats();
     $scope.refreshSkills();
+    $scope.refreshEffects();
     $scope.refreshWounds();
     $scope.refreshRanged();
     $scope.refreshMelees();
     $scope.refreshAreaEffects();
     $scope.refreshEquipment();
-    $scope.refreshArmour();
+    $scope.refreshArmourSets();
+    $scope.refreshMagicItems();
+    $scope.refreshAccounts();
   }
   $scope.refreshAll();
 
@@ -647,6 +888,7 @@ CharacterCtrl.$inject = [
   'Character',
   'CharacterStats',
   'CharacterSkill',
+  'CharacterEffect',
   'CharacterWound',
   'CharacterRanged',
   'CharacterExtPort',
@@ -654,5 +896,8 @@ CharacterCtrl.$inject = [
   'CharacterMelee',
   'CharacterAreaEffect',
   'CharacterEquipment',
-  'CharacterArmour',
+  'CharacterArmourSet',
+  'CharacterArmourPiece',
+  'CharacterAccount',
+  'CharacterMagicItem',
 ];

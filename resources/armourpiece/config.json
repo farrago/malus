@@ -1,0 +1,45 @@
+{
+	"type": "Collection",
+	"properties": {
+		"armoursetId": {
+			"name": "armoursetId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "armoursetId",
+			"order": 0
+		},
+		"location": {
+			"name": "location",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "location",
+			"order": 1
+		},
+		"baseCondition": {
+			"name": "baseCondition",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "baseCondition",
+			"order": 2
+		},
+		"currentCondition": {
+			"name": "currentCondition",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "currentCondition",
+			"order": 3
+		},
+		"notes": {
+			"name": "notes",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "notes",
+			"order": 4
+		}
+	}
+}

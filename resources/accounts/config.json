@@ -1,0 +1,37 @@
+{
+	"type": "Collection",
+	"properties": {
+		"characterId": {
+			"name": "characterId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "characterId",
+			"order": 0
+		},
+		"name": {
+			"name": "name",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "name",
+			"order": 1
+		},
+		"balance": {
+			"name": "balance",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "balance",
+			"order": 2
+		},
+		"notes": {
+			"name": "notes",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "notes",
+			"order": 3
+		}
+	}
+}

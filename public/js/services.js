@@ -24,6 +24,11 @@ angular.module('myApp.statsServices', ['ngResource']).
     return $resource('stats/:statId', { statId: '@id' }, {});
   });
 
+angular.module('myApp.effectsServices', ['ngResource']).
+  factory('CharacterEffect', function ($resource) {
+    return $resource('effects/:id', { id: '@id' }, {});
+  });
+
 //
 // Character skills module
 //
@@ -71,7 +76,24 @@ angular.module('myApp.equipmentServices', ['ngResource']).
   factory('CharacterEquipment', function ($resource) {
     return $resource('equipment/:id', { id: '@id' }, {});
   });
-angular.module('myApp.armourServices', ['ngResource']).
-  factory('CharacterArmour', function ($resource) {
-    return $resource('armour/:id', { id: '@id' }, {});
+angular.module('myApp.armourSetServices', ['ngResource']).
+  factory('CharacterArmourSet', function ($resource) {
+    return $resource('armourset/:id', { id: '@id' }, {});
+  });
+angular.module('myApp.armourPieceServices', ['ngResource']).
+  factory('CharacterArmourPiece', function ($resource) {
+    return $resource('armourpiece/:id', { id: '@id' }, {});
+  });
+
+angular.module('myApp.magicItemsServices', ['ngResource']).
+  factory('CharacterMagicItem', function ($resource) {
+    return $resource('magicitems/:id', { id: '@id' }, {});
+  });
+
+//
+// Character accounts modules
+//
+angular.module('myApp.accountServices', ['ngResource']).
+  factory('CharacterAccount', function ($resource) {
+    return $resource('accounts/:id', { id: '@id' }, {});
   });

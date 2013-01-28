@@ -1,0 +1,37 @@
+{
+	"type": "Collection",
+	"properties": {
+		"characterId": {
+			"name": "characterId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "characterId",
+			"order": 0
+		},
+		"notes": {
+			"name": "notes",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "notes",
+			"order": 1
+		},
+		"stat": {
+			"name": "stat",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "stat",
+			"order": 2
+		},
+		"effect": {
+			"name": "effect",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "effect",
+			"order": 3
+		}
+	}
+}
