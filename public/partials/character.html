@@ -454,7 +454,7 @@
                     </thead>
                     <tbody>
                       <tr ng-repeat="piece in set.pieces | filter:pieceFilter | orderBy:'location'">
-                        <td ng-class="stateClass(piece)"  contenteditable="{{editable}}" on-ok="piece.ui.edit=true" ng-model="piece.location"></td>
+                        <td ng-class="stateClass(piece)">{{piece.location}}</td>
                         <td ng-class="stateClass(piece)"  contenteditable="{{editable}}" ng-show="editable" on-ok="piece.ui.edit=true" ng-model="piece.baseCondition"></td>
                         <td ng-class="stateClass(piece)"  contenteditable="{{editable}}" on-ok="piece.ui.edit=true" ng-model="piece.currentCondition"></td>
                         <td ng-class="stateClass(piece)" >
@@ -564,12 +564,12 @@
               </span>
 
               <span class="pull-right">
-                <span class="lead" ng-show="editable && !account.ui.delete" ng-click="account.ui.delete = true">&nbsp;<i class="icon-remove-circle"></i></span>
-                <span class="lead" ng-show="editable && account.ui.delete" ng-click="account.ui.delete = false">&nbsp;<i class="icon-undo"></i></span>
-
                 <span class="lead">
                   <b ng-class="stateClass(account)" contenteditable="{{editable}}" on-ok="account.ui.edit=true" ng-model="account.balance"></b>&nbsp;&#xa2;
                 </span>
+
+                <span class="lead" ng-show="editable && !account.ui.delete" ng-click="account.ui.delete = true">&nbsp;<i class="icon-remove-circle"></i></span>
+                <span class="lead" ng-show="editable && account.ui.delete" ng-click="account.ui.delete = false">&nbsp;<i class="icon-undo"></i></span>
               </span>
 
               <div class="muted">
