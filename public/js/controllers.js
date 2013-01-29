@@ -11,7 +11,7 @@ function MyCtrl2() {
 }
 MyCtrl2.$inject = [];
 
-function LoginCtrl( $scope, $rootScope ) {
+function LoginCtrl( $scope, $rootScope, $window ) {
   function getMe() {
     dpd.users.me(function (user, error) {
         $rootScope.currentUser = user;
@@ -29,9 +29,11 @@ function LoginCtrl( $scope, $rootScope ) {
       if (error) {
         alert(error.message);
       } else {
-        getMe();
-
-        $scope.$apply();
+        // Reload the page
+        console.log($scope);
+        console.log(window.location);
+        $window.location.reload();
+        
       }
     });
   };
@@ -58,7 +60,7 @@ function LoginCtrl( $scope, $rootScope ) {
     });
   };
 };
-LoginCtrl.$inject = ['$scope', '$rootScope'];
+LoginCtrl.$inject = ['$scope', '$rootScope', '$window'];
 
 function CharactersCtrl($scope, $routeParams, Character, CharacterStats) {
   //

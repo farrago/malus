@@ -1,5 +1,17 @@
+<!-- Login control if we are not already logged in -->
+<div ng-controller="LoginCtrl" ng-hide="currentUser">
+  <form class="form-inline">
+    <fieldset>
+      <legend>Log in required</legend>
+      <input type="text" placeholder="username" ng-model="username" />
+      <input type="password" placeholder="password" ng-model="password" />
+      <button type="submit" class="btn btn-primary" ng-click="login()">Log in</button>
+      <button type="submit" class="btn" ng-click="register()">Register</button>
+    </fieldset>
+  </form>
+</div>
 <!-- Refreshing progress bar -->
-<div class="row" ng-show="outstandingReads">
+<div class="row" ng-show="outstandingReads && currentUser">
   <div class="span12">
     <h1>Refreshing <small><i class="icon-spinner icon-spin"></i></small></h1>
     <div class="progress progress-striped active">
@@ -7,7 +19,7 @@
     </div>
   </div>
 </div>
-<div ng-hide="outstandingReads">
+<div ng-hide="outstandingReads || !currentUser">
   <div class="row">
     <div class="span12">
       <h1><span contenteditable="{{editable}}" ng-model="character.name" on-ok="character.ui.edit=true"></span>
