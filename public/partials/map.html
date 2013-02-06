@@ -1,0 +1,111 @@
+﻿<div class="row">
+  <div class="span12">
+    <h3>Starmap
+      <!-- Edit button -->
+        <span class="pull-right">
+          <button class="btn" ng-click="allowEdit()" ng-hide="editable"><i class="icon-edit muted" tooltip="Enable Editing"></i></button>
+          <button class="btn btn-primary" ng-click="endEdit()" ng-show="editable"><span tooltip="Save Changes"><i class="icon-cloud-upload"></i>&nbsp;Save</span></button>
+          <button class="btn" ng-click="cancelEdit()" ng-show="editable">Cancel</button>
+        </span>
+    </h3>
+  </div>
+</div>
+<div class="row">
+  <div class="span9">
+    <malus-map systems="systems" selection="selectedSystem" id="map"></malus-map>
+  </div>
+  <div class="span3">
+    <h4>System Details</h4>
+    <p ng-show="selectedSystem == '(none)'">Select a system to see more details.</p>
+    <div class="well" ng-repeat="system in systems | filter:{id:selectedSystem}">
+      <div>
+        <span class="lead">
+          <b ng-class="stateClass(system)" contenteditable="{{editable}}" on-ok="system.ui.edit=true" ng-model="system.name"></b>
+        </span>
+        <span ng-show="editable && !system.ui.delete" ng-click="system.ui.delete = true"><i class="icon-remove-circle"></i></span>
+        <span ng-show="editable && system.ui.delete" ng-click="system.ui.delete = false"><i class="icon-undo"></i></span>
+      </div>
+
+      <div>
+        x: <span contenteditable="{{editable}}" on-ok="system.ui.edit=true" ng-model="system.x"></span>,
+        y: <span contenteditable="{{editable}}" on-ok="system.ui.edit=true" ng-model="system.y"></span>
+      </div>
+      <div>
+        <form class="form-inline">
+          <label>Economy: 
+            <span ng-hide="editable">{{system.economy | niceEconomy}}</span>
+            <select ng-show="editable" ng-model="system.economy" ng-options="key as value for (key,value) in econTypes" ng-change="system.ui.edit=true" class="input-medium"></select>
+          </label>
+          <label>Law Level: 
+            <span ng-hide="editable">{{system.law | niceLaw}}</span>
+            <select ng-show="editable" ng-model="system.law" ng-options="key as value for (key,value) in lawTypes" ng-change="system.ui.edit=true" class="input-medium"></select>
+          </label>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="row" ng-show="editable">
+  <div class="span12">
+    <h4>Add systems</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Coordinates</th>
+          <th>Economy</th>
+          <th>Law Level</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="system in systems | filter:{ui.add:true}">
+          <td><input ng-model="system.name" /></td>
+          <td>
+            <span class="input-prepend">
+              <span class="add-on">x</span><input ng-model="system.x" class="span1" type="number"/>
+            </span>
+            <span class="lead">,</span> 
+            <span class="input-prepend">
+              <span class="add-on">y</span><input ng-model="system.y" class="input-mini" type="number"/>
+            </span>
+          </td>
+          <td>
+            <select ng-model="system.economy" ng-options="key as value for (key,value) in econTypes" ng-change="system.ui.edit=true" class="input-medium"></select>
+          </td>
+          <td>
+            <select ng-model="system.law" ng-options="key as value for (key,value) in lawTypes" ng-change="system.ui.edit=true" class="input-medium"></select>
+          </td>
+          <td>
+            <span ng-show="editable && !system.ui.delete" ng-click="system.ui.delete = true"><i class="icon-remove-circle"></i></span>
+            <span ng-show="editable && system.ui.delete" ng-click="system.ui.delete = false"><i class="icon-undo"></i></span>
+          </td>
+        </tr>
+        <form ng-submit="addSystem()">
+          <tr class="success">
+            <td><input ng-model="newsystem.name" type="text" id="newsystemname"/></td>
+            <td>
+              <span class="input-prepend">
+                <span class="add-on">x</span><input ng-model="newsystem.x" class="span1" type="number"/>
+              </span>
+              <span class="lead">,</span> 
+              <span class="input-prepend">
+                <span class="add-on">y</span><input ng-model="newsystem.y" class="input-mini" type="number"/>
+              </span>
+            </td>
+            <td>
+              <select ng-model="newsystem.economy" ng-options="key as value for (key,value) in econTypes" ng-change="system.ui.edit=true" class="input-medium"></select>
+            </td>
+            <td>
+              <select ng-model="newsystem.law" ng-options="key as value for (key,value) in lawTypes" ng-change="system.ui.edit=true" class="input-medium"></select>
+            </td>
+            <td>
+              <button type="submit" class="btn btn-success"><i class="icon-plus"></i>&nbsp;Add System</button>
+            </td>
+          </tr>
+        </form>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -35,6 +35,12 @@
     </div>
   </div>
   <div class="row">
+    <div class="span12 muted">
+      <span ng-hide="character.notes">Notes:</span>
+      <span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.notes"></span>
+    </div>
+  </div>
+  <div class="row">
     <div class="span6">
       <p class="muted">
         <span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.race"></span>

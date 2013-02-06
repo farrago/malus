@@ -15,8 +15,8 @@
       <li ng-repeat="character in characters | filter:filterDeleted">
         <h3>
           <a href="#/characters/{{character.id}}" ng-class="stateClass(character)">
-            <i class="icon-user"></i>&nbsp;{{character.name}}</small>
-          </a>
+            <i class="icon-user"></i>&nbsp;{{character.name}}
+          </a><small>{{character.career}} - {{character.notes}}</small>
           <span ng-show="editable && !character.deleted && !character.ui.add" ng-click="deleteCharacter(character)"><i class="icon-remove-circle"></i></span>
           <span ng-show="editable && character.deleted" ng-click="restoreCharacter(character)"><i class="icon-undo"></i></span>
         </h3>

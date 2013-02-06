@@ -1,0 +1,45 @@
+{
+	"type": "Collection",
+	"properties": {
+		"name": {
+			"name": "name",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "name",
+			"order": 0
+		},
+		"x": {
+			"name": "x",
+			"type": "number",
+			"typeLabel": "number",
+			"required": true,
+			"id": "x",
+			"order": 1
+		},
+		"y": {
+			"name": "y",
+			"type": "number",
+			"typeLabel": "number",
+			"required": true,
+			"id": "y",
+			"order": 2
+		},
+		"economy": {
+			"name": "economy",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "economy",
+			"order": 3
+		},
+		"law": {
+			"name": "law",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "law",
+			"order": 4
+		}
+	}
+}

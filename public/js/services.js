@@ -9,6 +9,14 @@ angular.module('myApp.services', []).
   value('version', '0.1');
 
 //
+// Map services
+//
+angular.module('map.systemsServices', ['ngResource']).
+  factory('System', function ($resource) {
+    return $resource('systems/:id', { id: '@id' }, {});
+  });
+
+//
 // Character services module
 //
 angular.module('characterServices', ['ngResource']).
@@ -97,3 +105,4 @@ angular.module('myApp.accountServices', ['ngResource']).
   factory('CharacterAccount', function ($resource) {
     return $resource('accounts/:id', { id: '@id' }, {});
   });
+

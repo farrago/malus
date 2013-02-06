@@ -8,6 +8,8 @@ angular.module(
   'myApp.filters',
   'myApp.services',
   'myApp.directives',
+  'map.directives',
+  'map.filters',
   'ui.bootstrap',
   'characterServices',
   'myApp.statsServices',
@@ -24,9 +26,11 @@ angular.module(
   'myApp.accountServices',
   'myApp.magicItemsServices',
   'myApp.effectsServices',
+  'map.systemsServices',
   ]).
   config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/', { templateUrl: 'partials/front.html', controller: MyCtrl2 });
+    $routeProvider.when('/map', { templateUrl: 'partials/map.html', controller: MapCtrl });
     $routeProvider.when('/characters', { templateUrl: 'partials/characters.html', controller: CharactersCtrl });
     $routeProvider.when('/characters/:id', { templateUrl: 'partials/character.html', controller: CharacterCtrl });
     $routeProvider.otherwise({ redirectTo: '/' });

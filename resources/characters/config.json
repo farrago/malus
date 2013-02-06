@@ -104,6 +104,14 @@
 			"required": false,
 			"id": "deleted",
 			"order": 12
+		},
+		"notes": {
+			"name": "notes",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "notes",
+			"order": 13
 		}
 	}
 }
