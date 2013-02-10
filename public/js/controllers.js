@@ -291,6 +291,19 @@ function CharacterCtrl(
   }, true);
 
   //
+  // Check for other updates
+  //
+  dpd.on('wounds:changed', function (characterId) {
+    console.log("Wounds changed!", characterId);
+    if (characterId === $scope.characterId && $scope.outstandingReads === 0) {
+      console.log("For me, and nothing in progress, refreshing wounds...");
+      $scope.refreshWounds();
+    } else {
+      console.log("Not for me, or refresh already in progress");
+    }
+  });
+
+  //
   // Outstanding reads / refreshing handling
   //
   $scope.outstandingReads = 0;
@@ -909,8 +922,7 @@ function CharacterCtrl(
     if ($scope.outstandingReads !== 0) {
       console.log("Refreshing with outstanding reads!");
     }
-    $scope.outstandingReads = 0;
-
+    
     $scope.refreshCharacter();
     $scope.refreshStats();
     $scope.refreshSkills();
@@ -924,7 +936,6 @@ function CharacterCtrl(
     $scope.refreshMagicItems();
     $scope.refreshAccounts();
   }
-  //$scope.refreshAll();
 
 };
 CharacterCtrl.$inject = [
