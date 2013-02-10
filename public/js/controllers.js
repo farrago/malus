@@ -294,12 +294,9 @@ function CharacterCtrl(
   // Check for other updates
   //
   dpd.on('wounds:changed', function (characterId) {
-    console.log("Wounds changed!", characterId);
-    if (characterId === $scope.characterId && $scope.outstandingReads === 0) {
-      console.log("For me, and nothing in progress, refreshing wounds...");
+    if (characterId === $scope.characterId) {
+      console.log("My wounds changed, refreshing...");
       $scope.refreshWounds();
-    } else {
-      console.log("Not for me, or refresh already in progress");
     }
   });
 

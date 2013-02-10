@@ -1,19 +1,23 @@
 <!-- Refreshing progress bar -->
-<div class="row" ng-show="outstandingReads && currentUser">
+<div class="row" ng-show="!currentUser || !party">
   <div class="span12">
     <h1>Refreshing <small><i class="icon-spinner icon-spin"></i></small></h1>
   </div>
 </div>
-<div ng-hide="outstandingReads || !currentUser">
+<div ng-show="currentUser && party">
   <div class="row">
     <div class="span12">
       <h1><span contenteditable="{{editable}}" ng-model="party.name" on-ok="party.ui.edit=true"></span>
         
         <!-- Edit button -->
-        <span class="pull-right">
+        <span class="pull-right" ng-hide="outstandingReads">
           <button class="btn" ng-click="allowEdit()" ng-hide="editable"><i class="icon-edit muted" tooltip="Enable Editing"></i></button>
+          <button class="btn" ng-click="refreshAll()" ng-hide="editable"><i class="icon-refresh muted" tooltip="Refresh"></i></button>
           <button class="btn btn-primary" ng-click="endEdit()" ng-show="editable"><span tooltip="Save Changes"><i class="icon-cloud-upload"></i>&nbsp;Save</span></button>
           <button class="btn" ng-click="cancelEdit()" ng-show="editable">Cancel</button>
+        </span>
+        <span class="pull-right" ng-show="outstandingReads">
+          <i class="icon-spinner icon-spin"></i>
         </span>
       </h1>
     </div>
