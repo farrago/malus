@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="span12">
+    <h1>Parties
+      <span class="pull-right">
+        <button class="btn" ng-click="editable = true" ng-hide="editable"><i class="icon-edit muted" tooltip="Enable Editing"></i></button>
+        <button class="btn btn-primary" ng-click="endEdit()" ng-show="editable"><span tooltip="Save Changes"><i class="icon-cloud-upload"></i>&nbsp;Save</span></button>
+        <button class="btn" ng-click="cancelEdit()" ng-show="editable">Cancel</button>
+      </span>
+    </h1>
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <ul class="unstyled">
+      <li ng-repeat="party in parties | filter:filterDeleted">
+        <h3>
+          <a href="#/parties/{{party.id}}" ng-class="stateClass(party)">
+            <i class="icon-user"></i>&nbsp;{{party.name}}
+          </a><small>{{party.notes}}</small>
+          <span ng-show="editable && !party.deleted && !party.ui.add" ng-click="deleteParty(party)"><i class="icon-remove-circle"></i></span>
+          <span ng-show="editable && party.deleted" ng-click="restoreParty(party)"><i class="icon-undo"></i></span>
+        </h3>
+      </li>
+    </ul>
+    <button type="submit" class="btn btn-success pull-right" ng-click="addParty()" ng-show="editable">
+      <i class="icon-plus"></i>&nbsp;Add Party
+    </button>
+  </div>
+</div>

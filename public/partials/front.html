@@ -1,3 +1,22 @@
-﻿<h1>Malus</h1>
-
-<p>Malus webapp</p>
+﻿<div class="row" id="front-page-hero">
+  <div class="span12">
+    <img src="/img/malus.jpg" alt="malus - galaxy spanning adventure"/ id="front-page-image" class="img-rounded">
+  </div>
+</div>
+<div class="row" ng-controller="LoginCtrl" ng-hide="currentUser">
+  <div class="span12">
+    <ul class="thumbnails">
+      <li class="span12">
+        <div class="thumbnail">
+          <h3>Log in</h3>
+            <form class="form-inline">
+              <input type="text" class="input-large" placeholder="username" ng-model="username" />
+              <input type="password" class="input-large" placeholder="password" ng-model="password" />
+              <button type="submit" class="btn btn-primary" ng-click="login()">Log in</button> or
+              <button type="submit" class="btn" ng-click="register()">Register</button>
+            </form>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

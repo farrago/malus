@@ -36,6 +36,14 @@
   font-style:italic;
 }
 
+.nobr {
+  white-space:nowrap;
+}
+
+.popover {
+  width:auto;
+}
+
 /*Columns - not on phones!*/
 @media (min-width: 767px) {
 
@@ -57,6 +65,19 @@
     column-break-inside: avoid;
     display: inline-block;
   }
+
+  .columns [class*="span"] {
+    margin-left: 0px;
+  }
+}
+@media (max-width: 766px) {
+  .navbar .nav > li > a {
+    padding: 10px 10px 10px;
+  }
+}
+
+#front-page-image {
+  border: 1px solid #fafafa;
 }
 
 /* SVG stuff*/

@@ -9,6 +9,14 @@ angular.module('myApp.services', []).
   value('version', '0.1');
 
 //
+// Users services
+//
+angular.module('myApp.userServices', ['ngResource']).
+  factory('User', function ($resource) {
+    return $resource('users/:id', { id: '@id' }, {});
+  });
+
+//
 // Map services
 //
 angular.module('map.systemsServices', ['ngResource']).
@@ -106,3 +114,10 @@ angular.module('myApp.accountServices', ['ngResource']).
     return $resource('accounts/:id', { id: '@id' }, {});
   });
 
+//
+// Parties
+//
+angular.module('party.partyServices', ['ngResource']).
+  factory('Party', function ($resource) {
+    return $resource('parties/:id', { id: '@id' }, {});
+  });

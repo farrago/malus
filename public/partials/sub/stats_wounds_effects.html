@@ -1,0 +1,141 @@
+﻿<!-- Stats -->
+<table class="table table-condensed" ng-hide="tableOption">
+  <thead>
+    <tr>
+      <th class="lead hidden-phone">Stats</th>
+      <th>Iq</th>
+      <th>Aw</th>
+      <th>Mt</th>
+      <th>Ps</th>
+      <th>A</th>
+      <th>E</th>
+      <th>S</th>
+      <th>R</th>
+      <th>As</th>
+      <th>Ai</th>
+      <th>Dx</th>
+      <th>Sp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-show="editable">
+      <td class="muted hidden-phone">Base:</td>
+      <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.iqBase"></td>
+      <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.awBase"></td>
+      <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.mtBase"></td>
+      <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.psBase"></td>
+      <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.aBase"></td>
+      <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.eBase"></td>
+      <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.sBase"></td>
+      <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.rBase"></td>
+      <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.asBase"></td>
+      <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.aiBase"></td>
+      <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.dxBase"></td>
+      <td class="muted" contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.spBase"></td>
+    </tr>
+    <tr>
+      <td class="hidden-phone">Upgraded:</td>
+      <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.iqUp"></td>
+      <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.awUp"></td>
+      <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.mtUp"></td>
+      <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.psUp"></td>
+      <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.aUp"></td>
+      <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.eUp"></td>
+      <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.sUp"></td>
+      <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.rUp"></td>
+      <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.asUp"></td>
+      <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.aiUp"></td>
+      <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.dxUp"></td>
+      <td contenteditable="{{editable}}" on-ok="stats.ui.edit=true" ng-model="stats.spUp"></td>
+    </tr>
+    <tr ng-hide="editable">
+      <td class="hidden-phone">Current:</td>
+      <td>{{tmpStats["iq"]}}</td>
+      <td>{{tmpStats["aw"]}}</td>
+      <td>{{tmpStats["mt"]}}</td>
+      <td>{{tmpStats["ps"]}}</td>
+      <td>{{tmpStats["a"]}}</td>
+      <td>{{tmpStats["e"]}}</td>
+      <td>{{tmpStats["s"]}}</td>
+      <td>{{tmpStats["r"]}}</td>
+      <td>{{tmpStats["as"]}}</td>
+      <td>{{tmpStats["ai"]}}</td>
+      <td>{{tmpStats["dx"]}}</td>
+      <td>{{tmpStats["sp"]}}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Wounds -->
+<table class="table table-condensed">
+  <thead>
+    <tr>
+      <th class="lead">Wounds</th>
+      <th>
+        <abbr title="Damage">Dmg</abbr></th>
+      <th>
+        <abbr title="Location">Loc</abbr></th>
+      <th>
+        <abbr title="Critical">Crit?</abbr></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="wound in wounds | orderBy:'-damage'">
+      <td ng-class="stateClass(wound)" contenteditable="{{editable}}" on-ok="wound.ui.edit=true" ng-model="wound.note"></td>
+      <td ng-class="stateClass(wound)" contenteditable="{{editable}}" on-ok="wound.ui.edit=true" ng-model="wound.damage"></td>
+      <td ng-class="stateClass(wound)" contenteditable="{{editable}}" on-ok="wound.ui.edit=true" ng-model="wound.location"></td>
+      <td ng-class="stateClass(wound)">
+        <span ng-show="(wound.ui.delete || !editable) && wound.critical">&#10004;</span>
+        <input type="checkbox" ng-show="editable && !wound.ui.delete" ng-model="wound.critical" ng-change="wound.ui.edit=true" />
+
+        <span class="pull-right" ng-show="editable && !wound.ui.delete" ng-click="wound.ui.delete = true"><i class="icon-remove-circle"></i></span>
+        <span class="pull-right" ng-show="editable && wound.ui.delete" ng-click="wound.ui.delete = false"><i class="icon-undo"></i></span>
+      </td>
+    </tr>
+    <tr ng-hide="wounds.length"><td colspan="4">No wounds</td></tr>
+    <tr ng-show="wounds.length && !editable">
+      <td><span class="muted">Total Damage</span></td>
+      <td><span class="muted">{{wounds.totalDamage}}</span></td>
+      <td></td>
+      <td><span class="muted" ng-show="wounds.anyCritical"><i class="icon-ok"></i></span></td>
+    </tr>
+    <tr ng-show="editable">
+      <td colspan="4">
+        <button type="submit" class="btn btn-success pull-right" ng-click="addWound()" ng-show="editable">
+          <i class="icon-plus"></i>&nbsp;Add Wound
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Effects -->
+<table class="table table-condensed">
+  <thead>
+    <tr>
+      <th class="lead">Effects</th>
+      <th>Stat</th>
+      <th>Effect</th>
+  </thead>
+  <tbody>
+    <tr ng-repeat="effect in effects">
+      <td ng-class="stateClass(effect)" contenteditable="{{editable}}" on-ok="effect.ui.edit=true" ng-model="effect.notes"></td>
+      <td ng-class="stateClass(effect)" contenteditable="{{editable}}" on-ok="effect.ui.edit=true" ng-model="effect.stat"></td>
+      <td ng-class="stateClass(effect)">
+        <span ng-show="(effect.ui.delete || !editable) && effect.critical">&#10004;</span>
+        <span ng-class="stateClass(effect)" contenteditable="{{editable}}" on-ok="effect.ui.edit=true" ng-model="effect.effect"></span>
+
+        <span class="pull-right" ng-show="editable && !effect.ui.delete" ng-click="effect.ui.delete = true"><i class="icon-remove-circle"></i></span>
+        <span class="pull-right" ng-show="editable && effect.ui.delete" ng-click="effect.ui.delete = false"><i class="icon-undo"></i></span>
+      </td>
+    </tr>
+    <tr ng-hide="effects.length"><td colspan="3">No effects</td></tr>
+    <tr ng-show="editable">
+      <td colspan="4">
+        <button type="submit" class="btn btn-success pull-right" ng-click="addEffect()" ng-show="editable">
+          <i class="icon-plus"></i>&nbsp;Add Effect
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

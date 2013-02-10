@@ -1,0 +1,14 @@
+﻿<div class="muted">
+  <div>
+    <span ng-show="editable && !areaEffect.notes">Notes:</span>
+    <span contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.notes"></span>
+  </div>
+
+  <div>
+    <span class="lead muted">
+      <i class="icon-wrench" tooltip="Strength"></i></a>&nbsp;<span contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.strength"></span> &nbsp;
+      <i class="icon-heart" tooltip="Damage"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.damage"></span>&nbsp;
+      <i class="icon-move" tooltip="Area"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.area"></span>&nbsp;m<sup>2</sup>&nbsp;
+      <i class="icon-group" tooltip="Hits"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.hits"></span> &nbsp;
+  </div>
+</div>

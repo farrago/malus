@@ -1,0 +1,15 @@
+﻿<div class="muted">
+  <div>
+    <span ng-show="editable && !melee.notes">Notes:</span>
+    <span contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.notes"></span>
+  </div>
+
+  <div>
+    <span class="lead muted">
+      <i class="icon-wrench"tooltip="Strength"></i></a>&nbsp;<span contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.strength"></span> &nbsp;
+      <i class="icon-heart" tooltip="Damage"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.damage"></span>&nbsp;
+      <i class="icon-legal" tooltip="Attack Skill"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.as"></span>&nbsp;
+      <i class="icon-time" tooltip="Dx"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.dx"></span> &nbsp;
+    </span>
+  </div>
+</div>

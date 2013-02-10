@@ -1,0 +1,29 @@
+﻿<div>
+  <div>
+    <span ng-show="editable && !set.notes">Notes:</span>
+    <span contenteditable="{{editable}}" on-ok="set.ui.edit=true" ng-model="set.notes"></span>
+  </div>
+
+  <div>
+    <!-- Pieces table -->
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Loc<span class="hidden-phone">ation</span></th>
+          <th ng-show="editable">Base Con</th>
+          <th>Con<span class="hidden-phone">dition</span></th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="piece in set.pieces | filter:pieceFilter | orderBy:'location'">
+          <td>{{piece.location}}</td>
+          <td contenteditable="{{editable}}" ng-show="editable" on-ok="piece.ui.edit=true" ng-model="piece.baseCondition"></td>
+          <td contenteditable="{{editable}}" on-ok="piece.ui.edit=true" ng-model="piece.currentCondition"></td>
+          <td contenteditable="{{editable}}" on-ok="piece.ui.edit=true" ng-model="piece.notes"></td>
+        </tr>
+      </tbody>
+    </table>
+    <i ng-show="editable">Remove "Base Con" from pieces that you don't own to hide them.</i>
+  </div>
+</div>

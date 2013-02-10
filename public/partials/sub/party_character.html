@@ -1,0 +1,101 @@
+﻿<!-- Character Name -->
+<h2>{{character.name}}&nbsp;
+    <small>
+      <a href="/#/characters/{{character.id}}" class="muted"><i class="icon-external-link"></i></a>
+    </small>
+</h2>
+<!-- Health -->
+<div class="lead">
+  <i class="icon-heart"></i>
+  <span ng-show="tmpStats['e']">&nbsp;{{tmpStats['e']}}<span class="muted">&nbsp;/&nbsp;{{stats['eUp']}}</span></span>
+  <span ng-hide="tmpStats['e']">{{stats['eUp']}}</span>
+</div>
+
+<!-- Stats, wounds, & effects -->
+<p>
+  <i class="icon-info-sign muted"
+    data-unique="1"
+    bs-popover="'partials/sub/stats_wounds_effects.html'"
+    data-title="<b>Stats, Wounds & Effects</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
+  <b>Stats, Wounds & Effects</b>
+</p>
+<!-- Skills -->
+<p>
+  <i class="icon-info-sign muted"
+    data-unique="1"
+    bs-popover="'partials/sub/skills.html'"
+    data-title="<b>Skills</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
+  <b>Skills</b>
+</p>
+
+<!-- Weapons -->
+<table class="table table-condensed">
+  <tbody>
+    <tr>
+      <td class="hidden-phone"><b>Ranged:</b></td>
+      <td>
+        <span ng-repeat="ranged in rangedList | orderBy:'name'">
+          <i class="icon-info-sign muted"
+            data-unique="1"
+            bs-popover="'partials/sub/ranged.html'"
+            data-title="<b>{{ranged.name}}</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
+          &nbsp;{{ranged.name}}<br />
+        </span>
+        <span ng-hide="rangedList.length">No ranged weapons</span>
+      </td>
+    </tr>
+    <tr>
+      <td class="hidden-phone"><b>Melee:</b></td>
+      <td>
+        <span ng-repeat="melee in meleeList | orderBy:'name'">
+          <i class="icon-info-sign muted"
+            data-unique="1"
+            bs-popover="'partials/sub/melee.html'"
+            data-title="<b>{{melee.name}}</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
+          {{melee.name}}<br />
+        </span>
+        <span ng-hide="meleeList.length">No melee weapons</span>
+      </td>
+    </tr>
+    <tr>
+      <td class="hidden-phone"><b>AoE:</b></td>
+      <td>
+        <span ng-repeat="areaEffect in areaEffectList | orderBy:'name'">
+          <i class="icon-info-sign muted"
+            data-unique="1"
+            bs-popover="'partials/sub/aoe.html'"
+            data-title="<b>{{areaEffect.name}}</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
+          {{areaEffect.name}} (x{{areaEffect.number}})<br />
+        </span>
+        <span ng-hide="areaEffectList.length">No AoE weapons</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Armour and Equipment -->
+<table class="table table-condensed">
+  <tbody>
+    <tr>
+      <td class="hidden-phone"><b>Armour:</b></td>
+      <td>
+        <span ng-repeat="set in armourSetList">
+          <i class="icon-info-sign muted"
+            data-unique="1"
+            bs-popover="'partials/sub/armour.html'"
+            data-title="<b>{{set.name}}</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
+          {{set.name}}<br />
+        </span>
+        <span ng-hide="armourSetList.length">No armour</span>
+      </td>
+    </tr>
+    <tr>
+      <td class="hidden-phone"><b>Equipment:</b></td>
+      <td>
+        <span ng-repeat="eq in equipmentList | filter:{carried:true} | orderBy:'name'">{{eq.name}}<br />
+        </span>
+        <span ng-hide="equipmentList.length">No equipment</span>
+      </td>
+    </tr>
+  </tbody>
+</table>

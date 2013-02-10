@@ -1,0 +1,90 @@
+﻿<div class="muted">
+  <div>
+    <span ng-show="editable && !ranged.notes">Notes:</span>
+    <span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.notes"></span>
+  </div>
+
+  <div>
+    <span class="lead muted">
+      <i class="icon-wrench"tooltip="Strength"></i></a>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.strength"></span> &nbsp;
+      <i class="icon-heart" tooltip="Damage"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.damage"></span>&nbsp;
+      <i class="icon-retweet"tooltip="Rate of Fire"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.rof"></span>
+    </span>
+    <br/>
+    <span class="lead muted">
+      <i class="icon-screenshot" tooltip="To Hit"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.tohit"></span>&nbsp;
+      <i class="icon-time" tooltip="Dx"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.dx"></span>&nbsp;
+      <span class="nobr">
+        <i class="icon-resize-horizontal" tooltip="Range: Short/Medium/Long"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.short"></span>&nbsp;/
+        <span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.medium"></span>&nbsp;/
+        <span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.long"></span>&nbsp;
+      </span>
+    </span>
+  </div>
+  <div>
+    <!-- External Ports table -->
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>External Ports</th>
+          <th>
+            <i class="icon-cog"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.ports"></span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="extport in ranged.extports">
+          <td ng-class="stateClass(extport)"  contenteditable="{{editable}}" on-ok="extport.ui.edit=true" ng-model="extport.name"></td>
+          <td ng-class="stateClass(extport)" >
+            <span contenteditable="{{editable}}" on-ok="extport.ui.edit=true" ng-model="extport.effect"></span>
+            <span class="pull-right" ng-show="editable && !extport.ui.delete" ng-click="extport.ui.delete = true"><i class="icon-remove-circle"></i></span>
+            <span class="pull-right" ng-show="editable && extport.ui.delete" ng-click="extport.ui.delete = false"><i class="icon-undo"></i></span>
+          </td>
+        </tr>
+        <tr ng-hide="ranged.extports.length"><td colspan="2">None</td></tr>
+        <tr ng-show="editable">
+          <td colspan="3">
+            <button type="submit" class="btn pull-right" ng-click="addExtPort(ranged)" ng-show="editable">
+              <i class="icon-plus muted"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <!-- Ammo table -->
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Ammo</th>
+          <th>Notes</th>
+          <th>
+            <span ng-show="ranged.drain || editable">
+              <i class="icon-bolt"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.drain"></span>
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="ammo in ranged.ammos">
+          <td ng-class="stateClass(ammo)"  contenteditable="{{editable}}" on-ok="ammo.ui.edit=true" ng-model="ammo.name"></td>
+          <td ng-class="stateClass(ammo)"  contenteditable="{{editable}}" on-ok="ammo.ui.edit=true" ng-model="ammo.notes"></td>
+          <td ng-class="stateClass(ammo)" >
+            <span contenteditable="{{editable}}" on-ok="ammo.ui.edit=true" ng-model="ammo.count"></span>
+            <span class="pull-right" ng-show="editable && !ammo.ui.delete" ng-click="ammo.ui.delete = true"><i class="icon-remove-circle"></i></span>
+            <span class="pull-right" ng-show="editable && ammo.ui.delete" ng-click="ammo.ui.delete = false"><i class="icon-undo"></i></span>
+          </td>
+        </tr>
+        <tr ng-hide="ranged.ammos.length"><td colspan="2">None</td></tr>
+        <tr ng-show="editable">
+          <td colspan="3">
+            <button type="submit" class="btn pull-right" ng-click="addAmmo(ranged)" ng-show="editable">
+              <i class="icon-plus muted"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

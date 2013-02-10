@@ -5,12 +5,14 @@
 angular.module(
   'myApp',
   [
+  'myApp.userServices',
   'myApp.filters',
   'myApp.services',
   'myApp.directives',
   'map.directives',
   'map.filters',
   'ui.bootstrap',
+  '$strap.directives',
   'characterServices',
   'myApp.statsServices',
   'myApp.skillsServices',
@@ -27,11 +29,14 @@ angular.module(
   'myApp.magicItemsServices',
   'myApp.effectsServices',
   'map.systemsServices',
+  'party.partyServices'
   ]).
   config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/', { templateUrl: 'partials/front.html', controller: MyCtrl2 });
     $routeProvider.when('/map', { templateUrl: 'partials/map.html', controller: MapCtrl });
     $routeProvider.when('/characters', { templateUrl: 'partials/characters.html', controller: CharactersCtrl });
     $routeProvider.when('/characters/:id', { templateUrl: 'partials/character.html', controller: CharacterCtrl });
+    $routeProvider.when('/parties', { templateUrl: 'partials/parties.html', controller: PartiesCtrl });
+    $routeProvider.when('/parties/:id', { templateUrl: 'partials/party.html', controller: PartyCtrl });
     $routeProvider.otherwise({ redirectTo: '/' });
   }]);

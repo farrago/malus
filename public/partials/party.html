@@ -1,0 +1,100 @@
+<!-- Refreshing progress bar -->
+<div class="row" ng-show="outstandingReads && currentUser">
+  <div class="span12">
+    <h1>Refreshing <small><i class="icon-spinner icon-spin"></i></small></h1>
+  </div>
+</div>
+<div ng-hide="outstandingReads || !currentUser">
+  <div class="row">
+    <div class="span12">
+      <h1><span contenteditable="{{editable}}" ng-model="party.name" on-ok="party.ui.edit=true"></span>
+        
+        <!-- Edit button -->
+        <span class="pull-right">
+          <button class="btn" ng-click="allowEdit()" ng-hide="editable"><i class="icon-edit muted" tooltip="Enable Editing"></i></button>
+          <button class="btn btn-primary" ng-click="endEdit()" ng-show="editable"><span tooltip="Save Changes"><i class="icon-cloud-upload"></i>&nbsp;Save</span></button>
+          <button class="btn" ng-click="cancelEdit()" ng-show="editable">Cancel</button>
+        </span>
+      </h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span12 muted">
+      <span ng-hide="party.notes">Notes:</span>
+      <span contenteditable="{{editable}}" on-ok="party.ui.edit=true" ng-model="party.notes"></span>
+    </div>
+  </div>
+  
+  <!-- spacer -->
+  <div class="row">
+    <div class="span12">&nbsp;</div>
+  </div>
+
+  <tabs>
+    <!-- ============================================================================== -->
+    <!-- Characters tab                                                                 -->
+    <!-- ============================================================================== -->
+    <pane heading="Characters" icon="group">
+      
+      <!-- Modify Party members -->
+      <div ng-show="editable" class="form-horizontal">
+        <fieldset>
+          <legend>Modify party members</legend>
+          <select ng-model="selectedChar" ng-options="c.id as c.name for c in availableChars" class="input-large" placeholder="Select character"></select>
+          <button class="btn btn-primary" ng-click="addPC(selectedChar)"><i class="icon-plus"></i>&nbsp;Add PC</button>
+          <button class="btn btn-primary" ng-click="addNPC(selectedChar)"><i class="icon-plus"></i>&nbsp;Add NPC</button>
+          <button class="btn btn-primary" ng-click="removeChar(selectedChar)"><i class="icon-trash"></i>&nbsp;Remove</button>
+        </fieldset>
+      </div>
+
+      <!-- PCs -->
+      <h1>P<span class="hidden-phone">layer </span>C<span class="hidden-phone">haracter</span>s</h1>
+      <div class="columns">
+        <div ng-repeat="pcId in party.pcs"  ng-controller="CharacterCtrl" ng-init="initFromId(pcId)">
+          <div class="span5 well card">
+            <ng-include src="'/partials/sub/party_character.html'"></ng-include>
+          </div>
+        </div>
+      </div>
+      <div ng-hide="party.pcs.length">
+        You should add characters to this party.
+      </div>
+
+      <!-- NPCs -->
+      <div ng-show="editable || party.npcs.length">
+        <h1>N<span class="hidden-phone">on-</span>P<span class="hidden-phone">layer </span>C<span class="hidden-phone">haracter</span>s</h1>
+        <div class="columns">
+          <div ng-repeat="npcId in party.npcs"  ng-controller="CharacterCtrl" ng-init="initFromId(npcId)">
+            <div class="span5 well card">
+              <ng-include src="'/partials/sub/party_character.html'"></ng-include>
+            </div>
+          </div>
+        </div>
+        <div ng-show="!party.npcs.length">
+          You might want to add NPCs this party.
+        </div>
+      </div>
+    </pane>
+
+    <!-- ============================================================================== -->
+    <!-- Settings tab  (always make it last)                                            -->
+    <!-- ============================================================================== -->
+    <pane heading="Settings" icon="cog">
+      <!-- Users List -->
+      <div ng-show="editable" class="form-horizontal">
+        <fieldset>
+          <legend>Modify users</legend>
+          <select ng-model="selectedUser" ng-options="u.id as u.username for u in availableUsers" class="input-large"></select>
+          <button class="btn btn-primary" ng-click="addUser(selectedUser)"><i class="icon-plus"></i>&nbsp;Add</button>
+          <button class="btn btn-primary" ng-click="removeUser(selectedUser)"><i class="icon-trash"></i>&nbsp;Remove</button>
+        </fieldset>
+      </div>
+
+      <h1>Players</h1>
+      <div ng-repeat="player in players">
+        {{player.username}}
+      </div>
+    </pane>
+ 
+  </tabs>
+</div>

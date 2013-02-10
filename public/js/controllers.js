@@ -11,7 +11,7 @@ function MyCtrl2() {
 }
 MyCtrl2.$inject = [];
 
-function LoginCtrl( $scope, $rootScope, $window ) {
+function LoginCtrl( $scope, $rootScope, $location, $window ) {
   function getMe() {
     dpd.users.me(function (user, error) {
         $rootScope.currentUser = user;
@@ -30,10 +30,7 @@ function LoginCtrl( $scope, $rootScope, $window ) {
         alert(error.message);
       } else {
         // Reload the page
-        console.log($scope);
-        console.log(window.location);
         $window.location.reload();
-        
       }
     });
   };
@@ -42,7 +39,8 @@ function LoginCtrl( $scope, $rootScope, $window ) {
     dpd.users.logout(function () {
       $rootScope.currentUser = null;
       $scope.password = null;
-      $scope.$apply();
+      $location.path("/");
+      $window.location.reload();
     });
   };
 
@@ -60,9 +58,9 @@ function LoginCtrl( $scope, $rootScope, $window ) {
     });
   };
 };
-LoginCtrl.$inject = ['$scope', '$rootScope', '$window'];
+LoginCtrl.$inject = ['$scope', '$rootScope', '$location', '$window'];
 
-function CharactersCtrl($scope, $routeParams, Character, CharacterStats) {
+function CharactersCtrl($scope, $routeParams, $location, Character, CharacterStats) {
   //
   // Async updates
   //
@@ -232,12 +230,16 @@ function CharactersCtrl($scope, $routeParams, Character, CharacterStats) {
   // Refresh
   //
   $scope.refreshAll = function () {
-    $scope.characters = Character.query();
+    if ( $scope.currentUser ) {
+      $scope.characters = Character.query({ creatorId: $scope.currentUser.id });
+    } else {
+      $location.path("/");
+    }
   };
   $scope.refreshAll();
 
 };
-CharactersCtrl.$inject = ['$scope', '$routeParams', 'Character', 'CharacterStats'];
+CharactersCtrl.$inject = ['$scope', '$routeParams', '$location', 'Character', 'CharacterStats'];
 
 //-----------------------------------------------------------------------------------------------------
 // 
@@ -247,6 +249,7 @@ CharactersCtrl.$inject = ['$scope', '$routeParams', 'Character', 'CharacterStats
 function CharacterCtrl(
   $scope,
   $routeParams,
+  $location,
   Character,
   CharacterStats,
   CharacterSkill,
@@ -263,6 +266,21 @@ function CharacterCtrl(
   CharacterAccount,
   CharacterMagicItem
   ) {
+
+  //
+  // Core id
+  //
+  $scope.characterId = null;
+  $scope.initFromRoute = function () {
+    console.log("Initialising Id from route params", $routeParams.id);
+    $scope.characterId = $routeParams.id;
+    $scope.refreshAll();
+  }
+  $scope.initFromId = function (id) {
+    console.log("Initialising Id from function parameter", id);
+    $scope.characterId = id;
+    $scope.refreshAll();
+  }
 
   $scope.editable = false;
   $scope.calls = 0;
@@ -368,6 +386,8 @@ function CharacterCtrl(
         $scope.tmpStats[value] = "";
       }
     });
+
+    console.log("Finished temporaries: ", $scope);
   };
 
   //
@@ -508,14 +528,14 @@ function CharacterCtrl(
   //
   $scope.refreshSkills = function () {
     $scope.incrementOutstanding();
-    $scope.skills = CharacterSkill.query({ characterId: $routeParams.id }, function (slist) {
+    $scope.skills = CharacterSkill.query({ characterId: $scope.characterId }, function (slist) {
       $scope.decrementOutstanding();
     });
   };
 
   $scope.addSkill = function () {
     var skill = new CharacterSkill();
-    skill.characterId = $routeParams.id;
+    skill.characterId = $scope.characterId;
     skill.name = "New Skill";
     skill.level = 1;
     skill.ui = function () { };
@@ -531,7 +551,7 @@ function CharacterCtrl(
     //
     // Load the wounds, then do some maths on the results
     //
-    $scope.wounds = CharacterWound.query({ characterId: $routeParams.id },
+    $scope.wounds = CharacterWound.query({ characterId: $scope.characterId },
       function (wlist) {
         $scope.wounds.totalDamage = 0;
         $scope.wounds.anyCritical = false;
@@ -548,7 +568,7 @@ function CharacterCtrl(
 
   $scope.addWound = function () {
     var wound = new CharacterWound();
-    wound.characterId = $routeParams.id;
+    wound.characterId = $scope.characterId;
     wound.note = "Note";
     wound.damage = 1;
     wound.location = 1;
@@ -563,14 +583,14 @@ function CharacterCtrl(
   //
   $scope.refreshEffects = function () {
     $scope.incrementOutstanding();
-    $scope.effects = CharacterEffect.query({ characterId: $routeParams.id }, function () {
+    $scope.effects = CharacterEffect.query({ characterId: $scope.characterId }, function () {
       $scope.decrementOutstanding();
     });
   };
 
   $scope.addEffect = function () {
     var effect = new CharacterEffect();
-    effect.characterId = $routeParams.id;
+    effect.characterId = $scope.characterId;
     effect.notes = "Description";
     effect.stat = "Stat";
     effect.effect = "-1";
@@ -584,7 +604,7 @@ function CharacterCtrl(
   //
   $scope.refreshRanged = function () {
     $scope.incrementOutstanding();
-    $scope.rangedList = CharacterRanged.query({ characterId: $routeParams.id },
+    $scope.rangedList = CharacterRanged.query({ characterId: $scope.characterId },
       function (rlist) {
         //
         // Need to change the related items into resources
@@ -610,7 +630,7 @@ function CharacterCtrl(
 
   $scope.addRanged = function () {
     var ranged = new CharacterRanged();
-    ranged.characterId = $routeParams.id;
+    ranged.characterId = $scope.characterId;
     ranged.name = "New Weapon";
     ranged.strength = "1";
     ranged.damage = "1D6";
@@ -653,14 +673,14 @@ function CharacterCtrl(
   //
   $scope.refreshMelees = function () {
     $scope.incrementOutstanding();
-    $scope.meleeList = CharacterMelee.query({ characterId: $routeParams.id }, function () {
+    $scope.meleeList = CharacterMelee.query({ characterId: $scope.characterId }, function () {
       $scope.decrementOutstanding();
     });
   };
 
   $scope.addMelee = function () {
     var melee = new CharacterMelee();
-    melee.characterId = $routeParams.id;
+    melee.characterId = $scope.characterId;
     melee.name = "New Weapon";
     melee.notes = "Notes";
     melee.strength = "1";
@@ -680,14 +700,14 @@ function CharacterCtrl(
   //
   $scope.refreshAreaEffects = function () {
     $scope.incrementOutstanding();
-    $scope.areaEffectList = CharacterAreaEffect.query({ characterId: $routeParams.id }, function () {
+    $scope.areaEffectList = CharacterAreaEffect.query({ characterId: $scope.characterId }, function () {
       $scope.decrementOutstanding();
     });
   };
 
   $scope.addAreaEffect = function () {
     var areaEffect = new CharacterAreaEffect();
-    areaEffect.characterId = $routeParams.id;
+    areaEffect.characterId = $scope.characterId;
     areaEffect.name = "New Weapon";
     areaEffect.notes = "Notes";
     areaEffect.strength = "1";
@@ -707,14 +727,14 @@ function CharacterCtrl(
   //
   $scope.refreshEquipment = function () {
     $scope.incrementOutstanding();
-    $scope.equipmentList = CharacterEquipment.query({ characterId: $routeParams.id }, function () {
+    $scope.equipmentList = CharacterEquipment.query({ characterId: $scope.characterId }, function () {
       $scope.decrementOutstanding();
     });
   };
 
   $scope.addEquipment = function (carried) {
     var equipment = new CharacterEquipment();
-    equipment.characterId = $routeParams.id;
+    equipment.characterId = $scope.characterId;
     equipment.name = "New Equipment";
     equipment.count = "1";
     equipment.carried = carried;
@@ -729,7 +749,7 @@ function CharacterCtrl(
   //
   $scope.refreshArmourSets = function () {
     $scope.incrementOutstanding();
-    $scope.armourSetList = CharacterArmourSet.query({ characterId: $routeParams.id },
+    $scope.armourSetList = CharacterArmourSet.query({ characterId: $scope.characterId },
       function (rlist) {
         //
         // Need to change the related items into resources
@@ -749,7 +769,7 @@ function CharacterCtrl(
 
   $scope.addArmourSet = function () {
     var armourSet = new CharacterArmourSet();
-    armourSet.characterId = $routeParams.id;
+    armourSet.characterId = $scope.characterId;
     
     armourSet.$save({}, function (s, saveResponseHeaders) {
       console.log("Saved:", s);
@@ -801,14 +821,14 @@ function CharacterCtrl(
   //
   $scope.refreshMagicItems = function () {
     $scope.incrementOutstanding();
-    $scope.magicItemList = CharacterMagicItem.query({ characterId: $routeParams.id }, function () {
+    $scope.magicItemList = CharacterMagicItem.query({ characterId: $scope.characterId }, function () {
       $scope.decrementOutstanding();
     });
   };
 
   $scope.addMagicItem = function (carried) {
     var magicItem = new CharacterMagicItem();
-    magicItem.characterId = $routeParams.id;
+    magicItem.characterId = $scope.characterId;
     magicItem.name = "New Item";
     magicItem.uses = "0";
     magicItem.notes = "notes";
@@ -823,14 +843,14 @@ function CharacterCtrl(
   //
   $scope.refreshAccounts = function () {
     $scope.incrementOutstanding();
-    $scope.accountList = CharacterAccount.query({ characterId: $routeParams.id }, function () {
+    $scope.accountList = CharacterAccount.query({ characterId: $scope.characterId }, function () {
       $scope.decrementOutstanding();
     });
   };
 
   $scope.addAccount = function (carried) {
     var account = new CharacterAccount();
-    account.characterId = $routeParams.id;
+    account.characterId = $scope.characterId;
     account.name = "New Account";
     account.balance = "0";
     account.notes = "notes";
@@ -864,7 +884,7 @@ function CharacterCtrl(
   //
   $scope.refreshCharacter = function () {
     $scope.incrementOutstanding();
-    $scope.character = Character.get({ id: $routeParams.id }, function () {
+    $scope.character = Character.get({ id: $scope.characterId }, function () {
       $scope.decrementOutstanding();
     });
   };
@@ -875,13 +895,17 @@ function CharacterCtrl(
     // Bit of a cheat to query the stats by characterId then take the first response
     // as the stats for this character (should never have multiple stats anyway)
     //
-    $scope.statsList = CharacterStats.query({ characterId: $routeParams.id },
+    $scope.statsList = CharacterStats.query({ characterId: $scope.characterId },
       function (sList, respHeaders) {
         $scope.stats = sList[0];
         $scope.decrementOutstanding();
       });
   };
   $scope.refreshAll = function () {
+    if (!$scope.currentUser) {
+      $location.path("/");
+    }
+
     if ($scope.outstandingReads !== 0) {
       console.log("Refreshing with outstanding reads!");
     }
@@ -900,12 +924,13 @@ function CharacterCtrl(
     $scope.refreshMagicItems();
     $scope.refreshAccounts();
   }
-  $scope.refreshAll();
+  //$scope.refreshAll();
 
 };
 CharacterCtrl.$inject = [
   '$scope',
   '$routeParams',
+  '$location',
   'Character',
   'CharacterStats',
   'CharacterSkill',
