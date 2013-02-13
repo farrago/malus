@@ -32,6 +32,14 @@
 			"required": false,
 			"id": "carried",
 			"order": 3
+		},
+		"loadout": {
+			"name": "loadout",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "loadout",
+			"order": 4
 		}
 	}
 }

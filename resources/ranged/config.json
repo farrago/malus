@@ -120,6 +120,14 @@
 			"required": false,
 			"id": "enc",
 			"order": 14
+		},
+		"loadout": {
+			"name": "loadout",
+			"type": "boolean",
+			"typeLabel": "boolean",
+			"required": false,
+			"id": "loadout",
+			"order": 15
 		}
 	}
 }

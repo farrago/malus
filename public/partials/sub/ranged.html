@@ -8,7 +8,10 @@
     <span class="lead muted">
       <i class="icon-wrench"tooltip="Strength"></i></a>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.strength"></span> &nbsp;
       <i class="icon-heart" tooltip="Damage"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.damage"></span>&nbsp;
-      <i class="icon-retweet"tooltip="Rate of Fire"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.rof"></span>
+      <i class="icon-retweet" tooltip="Rate of Fire"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.rof"></span>
+      <span ng-show="editable || ranged.drain">
+        <i class="icon-bolt" tooltip="Ammo Consumption"></i>&nbsp<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.drain"></span>
+      </span>
     </span>
     <br/>
     <span class="lead muted">
@@ -59,19 +62,18 @@
         <tr>
           <th>Ammo</th>
           <th>Notes</th>
-          <th>
-            <span ng-show="ranged.drain || editable">
-              <i class="icon-bolt"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.drain"></span>
-            </span>
-          </th>
+          <th ng-hide="showLoadout"><i class="icon-cogs"></i><span class="hidden-phone">&nbsp;Stores</span></th>
+          <th><i class="icon-briefcase"></i><span class="hidden-phone">&nbsp;Loadout</span></th>
+          <th ng-show="editable"></th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="ammo in ranged.ammos">
-          <td ng-class="stateClass(ammo)"  contenteditable="{{editable}}" on-ok="ammo.ui.edit=true" ng-model="ammo.name"></td>
-          <td ng-class="stateClass(ammo)"  contenteditable="{{editable}}" on-ok="ammo.ui.edit=true" ng-model="ammo.notes"></td>
-          <td ng-class="stateClass(ammo)" >
-            <span contenteditable="{{editable}}" on-ok="ammo.ui.edit=true" ng-model="ammo.count"></span>
+        <tr ng-repeat="ammo in ranged.ammos | filter:limitIfShowLoadout">
+          <td ng-class="stateClass(ammo)" contenteditable="{{editable}}" on-ok="ammo.ui.edit=true" ng-model="ammo.name"></td>
+          <td ng-class="stateClass(ammo)" contenteditable="{{editable}}" on-ok="ammo.ui.edit=true" ng-model="ammo.notes"></td>
+          <td ng-class="stateClass(ammo)" contenteditable="{{editable}}" on-ok="ammo.ui.edit=true" ng-model="ammo.count" ng-hide="showLoadout"></td>
+          <td ng-class="stateClass(ammo)" contenteditable="{{editable}}" on-ok="ammo.ui.edit=true" ng-model="ammo.loadout"></td>
+          <td ng-show="editable">
             <span class="pull-right" ng-show="editable && !ammo.ui.delete" ng-click="ammo.ui.delete = true"><i class="icon-remove-circle"></i></span>
             <span class="pull-right" ng-show="editable && ammo.ui.delete" ng-click="ammo.ui.delete = false"><i class="icon-undo"></i></span>
           </td>

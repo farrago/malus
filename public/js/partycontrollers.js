@@ -313,6 +313,11 @@ function PartyCtrl(
   }
 
   //
+  // Show loadout or everything
+  //
+  $scope.showLoadout = true;
+
+  //
   // Functions for adding and removing characters
   //
   $scope.selectedChar = "";

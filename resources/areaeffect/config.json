@@ -72,6 +72,14 @@
 			"required": false,
 			"id": "enc",
 			"order": 8
+		},
+		"loadout": {
+			"name": "loadout",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "loadout",
+			"order": 9
 		}
 	}
 }

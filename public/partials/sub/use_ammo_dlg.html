@@ -1,0 +1,25 @@
+﻿<div class="modal-header">
+  <h1>Use Ammo</h1>
+</div>
+<div class="modal-body">
+  <h3>Use ammo for {{ranged.name}}</h3>
+  <form class="form-horizontal">
+    <div class="control-group">
+      <label class="control-label" for="ammoAmount">Amount to use</label>
+      <div class="controls">
+        <input type="number" id="ammoAmount" placeholder="amount" ng-model="drain" />
+      </div>
+    </div>
+    <div class="control-group" ng-repeat="ammo in ranged.ammos | filter:loadoutFilter">
+      <label class="control-label" for="healthDamage">{{ammo.name}}</label>
+      <div class="controls">
+        {{ammo.loadout}}
+        <button ng-click="ok(ammo)" class="btn btn-primary" ng-disabled="!drain">Use</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button ng-click="cancel()" class="btn">Cancel</button>
+</div>

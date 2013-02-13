@@ -4,11 +4,14 @@
       <a href="/#/characters/{{character.id}}" class="muted"><i class="icon-external-link"></i></a>
     </small>
 </h2>
+
 <!-- Health -->
 <div class="lead">
-  <i class="icon-heart"></i>
-  <span ng-show="tmpStats['e']">&nbsp;{{tmpStats['e']}}<span class="muted">&nbsp;/&nbsp;{{stats['eUp']}}</span></span>
-  <span ng-hide="tmpStats['e']">{{stats['eUp']}}</span>
+  <span ng-click="showWoundsDlg(character.id)">
+    <i class="icon-heart"></i>
+    <span ng-show="tmpStats['e']">&nbsp;{{tmpStats['e']}}<span class="muted">&nbsp;/&nbsp;{{stats['eUp']}}</span></span>
+    <span ng-hide="tmpStats['e']">{{stats['eUp']}}</span>
+  </span>
 </div>
 
 <!-- Stats, wounds, & effects -->
@@ -34,12 +37,14 @@
     <tr>
       <td class="hidden-phone"><b>Ranged:</b></td>
       <td>
-        <span ng-repeat="ranged in rangedList | orderBy:'name'">
+        <span ng-repeat="ranged in rangedList | filter:limitIfShowLoadout | orderBy:'name'">
           <i class="icon-info-sign muted"
             data-unique="1"
             bs-popover="'partials/sub/ranged.html'"
             data-title="<b>{{ranged.name}}</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
-          &nbsp;{{ranged.name}}<br />
+          &nbsp;{{ranged.name}}
+          &nbsp;<i class="icon-screenshot muted" ng-click="useAmmoDlg(ranged)"></i>
+          <br />
         </span>
         <span ng-hide="rangedList.length">No ranged weapons</span>
       </td>
@@ -47,7 +52,7 @@
     <tr>
       <td class="hidden-phone"><b>Melee:</b></td>
       <td>
-        <span ng-repeat="melee in meleeList | orderBy:'name'">
+        <span ng-repeat="melee in meleeList | filter:limitIfShowLoadout | orderBy:'name'">
           <i class="icon-info-sign muted"
             data-unique="1"
             bs-popover="'partials/sub/melee.html'"
@@ -60,12 +65,14 @@
     <tr>
       <td class="hidden-phone"><b>AoE:</b></td>
       <td>
-        <span ng-repeat="areaEffect in areaEffectList | orderBy:'name'">
+        <span ng-repeat="areaEffect in areaEffectList | filter:limitIfShowLoadout | orderBy:'name'">
           <i class="icon-info-sign muted"
             data-unique="1"
             bs-popover="'partials/sub/aoe.html'"
             data-title="<b>{{areaEffect.name}}</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
-          {{areaEffect.name}} (x{{areaEffect.number}})<br />
+          {{areaEffect.name}} [{{areaEffect.loadout}}]
+          &nbsp;<i class="icon-screenshot muted" ng-click="confirmUseAoE(areaEffect)"></i>
+          <br />
         </span>
         <span ng-hide="areaEffectList.length">No AoE weapons</span>
       </td>
@@ -79,7 +86,7 @@
     <tr>
       <td class="hidden-phone"><b>Armour:</b></td>
       <td>
-        <span ng-repeat="set in armourSetList">
+        <span ng-repeat="set in armourSetList | filter:limitIfShowLoadout | orderBy:'name'">
           <i class="icon-info-sign muted"
             data-unique="1"
             bs-popover="'partials/sub/armour.html'"
@@ -92,7 +99,7 @@
     <tr>
       <td class="hidden-phone"><b>Equipment:</b></td>
       <td>
-        <span ng-repeat="eq in equipmentList | filter:{carried:true} | orderBy:'name'">{{eq.name}}<br />
+        <span ng-repeat="eq in equipmentList | filter:limitIfShowLoadout | orderBy:'name'">{{eq.name}} <span ng-hide="eq.loadout == '1'">[{{eq.loadout}}]</span><br />
         </span>
         <span ng-hide="equipmentList.length">No equipment</span>
       </td>

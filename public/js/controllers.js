@@ -250,6 +250,7 @@ function CharacterCtrl(
   $scope,
   $routeParams,
   $location,
+  $dialog,
   Character,
   CharacterStats,
   CharacterSkill,
@@ -291,15 +292,47 @@ function CharacterCtrl(
   }, true);
 
   //
-  // Check for other updates
+  // Realtime updates
   //
   dpd.on('wounds:changed', function (characterId) {
     if (characterId === $scope.characterId) {
-      console.log("My wounds changed, refreshing...");
+      console.log("My wounds changed, refreshing...", $scope);
       $scope.refreshWounds();
     }
   });
-
+  dpd.on('ammo:updated', function (updatedAmmo) {
+    console.log("Ammo Updated",updatedAmmo);
+    angular.forEach($scope.rangedList, function(ranged) {
+      angular.forEach(ranged.ammos, function(ammo) {
+        if (ammo.id === updatedAmmo.id) {
+          console.log("Found and updating:", ammo);
+          $scope.$apply(function () { ammo.loadout = updatedAmmo.loadout });
+          console.log("Updated to:", ammo);
+        }
+      });
+    });
+  });
+  dpd.on('aoe:updated', function (updatedAoE) {
+    console.log("AoEUpdated",updatedAoE);
+    angular.forEach($scope.areaEffectList, function (areaEffect) {
+      if (areaEffect.id === updatedAoE.id) {
+        console.log("Found and updating:", areaEffect);
+        $scope.$apply(function () { areaEffect.loadout = updatedAoE.loadout });
+        console.log("Updated to:", areaEffect);
+      }
+    });
+  });
+  //
+  // When we get told the socket is ready we do an update
+  // to catch anything we missed when it wasn't ready
+  //
+  dpd.socketReady(function () {
+    console.log("SOCKET READY!");
+    $scope.refreshWounds();
+    $scope.refreshRanged();
+    $scope.refreshAreaEffects();
+  });
+  
   //
   // Outstanding reads / refreshing handling
   //
@@ -310,6 +343,7 @@ function CharacterCtrl(
     $scope.outstandingReads += 1;
     $scope.maxReads = Math.max($scope.maxReads, $scope.outstandingReads);
     $scope.progress = "0%";
+    console.log("Incremented outstanding, now:", $scope.outstandingReads);
   };
   $scope.decrementOutstanding = function () {
     if ($scope.outstandingReads === 0) {
@@ -319,13 +353,16 @@ function CharacterCtrl(
     var progress = ($scope.maxReads - $scope.outstandingReads) / $scope.maxReads;
     progress = Math.floor(progress * 100);
     $scope.progress = progress + "%";
+
+    console.log("Decremented outstanding, now:", $scope.outstandingReads);
   };
 
   $scope.$watch('outstandingReads', function (newValue, oldValue) {
+    console.log('Outstanding reads changed:', newValue, oldValue);
     if (newValue != oldValue && newValue == 0) {
       $scope.calculateTemporaries();
     }
-  }, true);
+  });
 
   $scope.calculateTemporaries = function () {
     //
@@ -477,6 +514,13 @@ function CharacterCtrl(
     });
   };
 
+  $scope.markEdited = function (item) {
+    if (!item.hasOwnProperty('ui')) {
+      item.ui = function () { };
+    }
+    item.ui.edit = true;
+  }
+
   //
   // Enable the edit controls and reset the edit flags
   //
@@ -589,6 +633,35 @@ function CharacterCtrl(
   }
 
   //
+  // Add wounds dialog
+  //
+  $scope.showWoundsDlg = function (id) {
+    console.log("Add Wounds Dialog called");
+    var opts = {
+      backdrop: true,
+      keyboard: true,
+      backdropClick: true,
+      templateUrl: '/partials/sub/add_wound_dlg.html', // OR: templateUrl: 'path/to/view.html',
+      controller: 'AddWoundsDialogController'
+    };
+    var characterId = id;
+    var d = $dialog.dialog(opts);
+    d.open().then(function (result) {
+      console.log('dialog closed for character: ', characterId);
+      if (result) {
+        var wound = new CharacterWound();
+        wound.characterId = characterId;
+        wound.note = result.note;
+        wound.damage = result.damage;
+        wound.location = result.location;
+        wound.critical = result.critical;
+        wound.$save();
+        console.log("Added wound", wound);
+      }
+    });
+  };
+
+  //
   // Effects
   //
   $scope.refreshEffects = function () {
@@ -679,6 +752,34 @@ function CharacterCtrl(
   }
 
   //
+  // Remove ammo dialog
+  //
+  $scope.useAmmoDlg = function (ranged) {
+    console.log("Use Ammo Dialog called");
+    var opts = {
+      backdrop: true,
+      keyboard: true,
+      backdropClick: true,
+      templateUrl: '/partials/sub/use_ammo_dlg.html', // OR: templateUrl: 'path/to/view.html',
+      controller: 'UseAmmoDialogController',
+      ranged: ranged, // Pass along the object of interest
+      loadoutFilter: $scope.editableOrInLoadout,  // Filter function
+    };
+    var d = $dialog.dialog(opts);
+    d.open().then(function (result) {
+      if (result) {
+        console.log("Used", result.ammo, result.drain);
+        var temp = Number(result.ammo.loadout) - result.drain;
+        if (temp < 0) {
+          temp = 0;
+        }
+        result.ammo.loadout = String(temp);
+        result.ammo.$save();
+      }
+    });
+  };
+
+  //
   // Melee weapons
   //
   $scope.refreshMelees = function () {
@@ -731,6 +832,23 @@ function CharacterCtrl(
     areaEffect.ui.add = true;
     $scope.areaEffectList.push(areaEffect);
   }
+
+  $scope.confirmUseAoE = function (aoe) {
+    var title = 'Use ' + aoe.name + '?';
+    var msg = 'Hit ok to remove one ' + aoe.name + '.';
+    var btns = [{ result: 'cancel', label: 'Cancel' }, { result: 'ok', label: 'OK', cssClass: 'btn-primary' }];
+    var thisAoE = aoe;
+
+    $dialog.messageBox(title, msg, btns)
+      .open()
+      .then(function (result) {
+        if (result === 'ok') {
+          var temp = Number(thisAoE.loadout) - 1;
+          thisAoE.loadout = String(temp);
+          thisAoE.$save();
+        }
+      });
+  };
 
   //
   // Equipment
@@ -890,6 +1008,66 @@ function CharacterCtrl(
   }
 
   //
+  // Loadout functionality
+  //
+  $scope.moveAll = function (item,from,to) {
+    console.log("Taking all ammo", item, from, to);
+    if (!item.hasOwnProperty(from)) {
+      console.log("Couldn't use the from");
+      return; //Don't mark edited
+    } else if (!item[to]) {
+      // Empty destination so just copy everything across
+      item[to] = item[from];
+      item[from] = "0";
+    } else if (isNaN(item[to]) || isNaN(item[from])) {
+      // Not an empty destination so we would need numbers to do maths
+      console.log("Can't do anything with not numbers");
+      return; // Don't mark edited
+    } else {
+      var temp = Number(item[to]) + Number(item[from]);
+      item[to] = String(temp);
+      item[from] = "0";
+    }
+    
+    $scope.markEdited(item);
+    console.log("Updated:", item);
+  };
+  // Filter to limit to only loadout items
+  $scope.editableOrInLoadout = function (item) {
+    if ($scope.editable) {
+      return true;
+    } else if (!item.loadout) {
+      return false;
+    } else if (!isNaN(Number(item.loadout))) {
+      return Number(item.loadout) > 0;
+    } else {
+      // Some kind of string
+      return true;
+    }
+  };
+  // Filter to limit to only non-loadout items
+  $scope.editableOrNotInLoadout = function (item) {
+    if ($scope.editable) {
+      return true;
+    } else if (!item.count) {
+      return false;
+    } else if (!isNaN(Number(item.count))) {
+      return Number(item.count) > 0;
+    } else {
+      // Some kind of string
+      return true;
+    }
+  };
+  // Filter to limit the view if showLoadout is true
+  $scope.limitIfShowLoadout = function (item) {
+    if ($scope.showLoadout) {
+      return $scope.editableOrInLoadout(item);
+    }
+
+    return true;
+  }
+
+  //
   // Function to reload all of the character
   //
   $scope.refreshCharacter = function () {
@@ -939,6 +1117,7 @@ CharacterCtrl.$inject = [
   '$scope',
   '$routeParams',
   '$location',
+  '$dialog',
   'Character',
   'CharacterStats',
   'CharacterSkill',
@@ -955,3 +1134,43 @@ CharacterCtrl.$inject = [
   'CharacterAccount',
   'CharacterMagicItem',
 ];
+
+//
+// Controller for the add wounds dialog
+//
+function AddWoundsDialogController($scope, dialog) {
+  $scope.ok = function (result) {
+    console.log('Close called', $scope);
+    var data = {
+      note: $scope.note,
+      damage: $scope.damage,
+      location: $scope.location,
+      critical: $scope.critical
+    };
+    dialog.close(data);
+  };
+  $scope.cancel = function () {
+    dialog.close(null);
+  }
+}
+
+//
+// Controller for the use ammo dialog
+//
+function UseAmmoDialogController($scope, dialog) {
+  $scope.ranged = dialog.options.ranged;
+  $scope.loadoutFilter = dialog.options.loadoutFilter;
+  $scope.drain = Number($scope.ranged.drain);
+
+  $scope.ok = function (result) {
+    console.log('Close called', result);
+    var data = {
+      ammo: result,
+      drain: $scope.drain
+    };
+    dialog.close(data);
+  };
+  $scope.cancel = function () {
+    dialog.close(null);
+  }
+}
