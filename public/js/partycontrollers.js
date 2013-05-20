@@ -163,7 +163,8 @@ function PartyCtrl(
   $http,
   User,
   Party,
-  Character
+  Character,
+  CharacterStats
   ) {
 
   $scope.editable = false;
@@ -283,6 +284,7 @@ function PartyCtrl(
   //
   $scope.allowEdit = function () {
     $scope.editable = true;
+    $scope.editableParty = true;
     $scope.refreshAvailableChars();
     $scope.refreshAvailableUsers();
   }
@@ -292,6 +294,7 @@ function PartyCtrl(
   //
   $scope.endEdit = function () {
     $scope.editable = false;
+    $scope.editableParty = false;
     $scope.calls = 0;
     $scope.refreshNeeded = false;
 
@@ -309,6 +312,7 @@ function PartyCtrl(
   $scope.cancelEdit = function () {
     console.log("Edit cancelled");
     $scope.editable = false;
+    $scope.editableParty = false;
     $scope.refreshAll();
   }
 
@@ -371,6 +375,27 @@ function PartyCtrl(
     }
     $scope.party.ui.edit = true;
   }
+
+  $scope.newNPC = {};
+  $scope.addNewNPC = function () {
+    console.log("Adding new NPC", $scope.newNPC.name, $scope.newNPC.eUP);
+    var char = new Character();
+    char.name = ( $scope.newNPC && $scope.newNPC.name ) ? $scope.newNPC.name : "New NPC";
+    char.$save({}, function (newChar, saveResponseHeaders) {
+      console.log('Added: ', newChar);
+      console.log('Adding stats');
+      var stats = new CharacterStats();
+      stats.characterId = newChar.id;
+      stats.eUp = ($scope.newNPC && $scope.newNPC.eUP) ? $scope.newNPC.eUP : 0;
+      stats.$save({}, function (stats, saveResponseHeaders) {
+        console.log('Added stats to: ', newChar);
+        console.log('Done adding char');
+        $scope.newNPC.name = null;
+        $scope.newNPC.eUP = null;
+        $scope.addNPC(newChar.id);
+      });
+    });
+  };
 
   //
   // Functions for adding and removing players
@@ -471,5 +496,6 @@ PartyCtrl.$inject = [
   '$http',
   'User',
   'Party',
-  'Character'
+  'Character',
+  'CharacterStats'
 ];

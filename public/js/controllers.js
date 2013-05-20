@@ -87,44 +87,11 @@ function CharactersCtrl($scope, $routeParams, $location, Character, CharacterSta
   $scope.addCharacter = function () {
     var char = new Character();
     char.name = "New Character";
-    char.race = "Race";
-    char.gender = "Gender";
-    char.career = "Career";
-    char.age = "Age";
-    char.weight = "Weight";
-    char.height = "Height";
-    char.experience = "0";
-    char.caste = "Caste";
-    char.deleted = false;
     char.$save({}, function (newChar, saveResponseHeaders) {
       console.log('Added: ', newChar);
       console.log('Adding stats');
       var stats = new CharacterStats();
       stats.characterId = newChar.id;
-      stats.iqBase = 0;
-      stats.mtBase = 0;
-      stats.awBase = 0;
-      stats.psBase = 0;
-      stats.aBase = 0;
-      stats.asBase = 0;
-      stats.eBase = 0;
-      stats.aibase = 0;
-      stats.sBase = 0;
-      stats.dxBase = 0;
-      stats.rBase = 0;
-      stats.spBase = 0;
-      stats.iqUp = 0;
-      stats.mtUp = 0;
-      stats.awUp = 0;
-      stats.psUp = 0;
-      stats.aUp = 0;
-      stats.asUp = 0;
-      stats.eUp = 0;
-      stats.aiUp = 0;
-      stats.sUp = 0;
-      stats.dxUp = 0;
-      stats.rUp = 0;
-      stats.spUp = 0;
       stats.$save({}, function (stats, saveResponseHeaders) {
         console.log('Added stats to: ', newChar);
         console.log('Done adding char');

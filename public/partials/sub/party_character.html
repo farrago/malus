@@ -2,6 +2,9 @@
 <h2>{{character.name}}&nbsp;
     <small>
       <a href="/#/characters/{{character.id}}" class="muted"><i class="icon-external-link"></i></a>
+      <button class="btn btn-danger" ng-click="removeChar(character.id)" ng-show="editableParty">
+        <i class="icon-trash"></i> Remove
+      </button>
     </small>
 </h2>
 

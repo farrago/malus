@@ -195,16 +195,16 @@
 		},
 		"spBase": {
 			"name": "spBase",
-			"type": "string",
-			"typeLabel": "string",
+			"type": "number",
+			"typeLabel": "number",
 			"required": false,
 			"id": "spBase",
 			"order": 24
 		},
 		"spUp": {
 			"name": "spUp",
-			"type": "string",
-			"typeLabel": "string",
+			"type": "number",
+			"typeLabel": "number",
 			"required": false,
 			"id": "spUp",
 			"order": 25
