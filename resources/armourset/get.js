@@ -1,5 +1,7 @@
 var armourset = this;
 dpd.armourpiece.get({armoursetId: armourset.id}, 
   function(pieces) {
-    armourset.pieces = pieces;
+      if (pieces && pieces.length) {
+        armourset.pieces = pieces;
+      }
 });

@@ -261,6 +261,7 @@ function CharacterCtrl(
   //
   // Realtime updates
   //
+  /*
   dpd.on('wounds:changed', function (characterId) {
     if (characterId === $scope.characterId) {
       console.log("My wounds changed, refreshing...", $scope);
@@ -299,6 +300,7 @@ function CharacterCtrl(
     $scope.refreshRanged();
     $scope.refreshAreaEffects();
   });
+  */
   
   //
   // Outstanding reads / refreshing handling
@@ -1039,9 +1041,114 @@ function CharacterCtrl(
   //
   $scope.refreshCharacter = function () {
     $scope.incrementOutstanding();
-    $scope.character = Character.get({ id: $scope.characterId }, function () {
+    $scope.character = Character.get({ id: $scope.characterId }, function (char, respHeaders) {
+      console.log("Received character data", char);
       $scope.decrementOutstanding();
-    });
+
+      //
+      // Stats
+      //
+      $scope.stats = new CharacterStats(char.stats[0]);
+
+      //
+      // Skills
+      //
+      $scope.skills = [];
+      angular.forEach(char.skills, function (skill, index) {
+        $scope.skills.push(new CharacterSkill(skill));
+      });
+
+      //
+      // Effects
+      //
+      $scope.effects = [];
+      angular.forEach(char.effects, function (effect, index) {
+        $scope.effects.push(new CharacterEffect(effect));
+      });
+
+      //
+      // Wounds
+      //
+      $scope.wounds = [];
+      angular.forEach(char.wounds, function (wound, index) {
+        $scope.wounds.push(new CharacterWound(wound));
+      });
+      
+      //
+      // Ranged
+      //
+      $scope.rangedList = [];
+      angular.forEach(char.ranged, function (rangedItem, index) {
+        var ranged = new CharacterRanged(rangedItem);
+        // Ext Ports
+        ranged.extports = [];
+        angular.forEach(rangedItem.extports, function (item) {
+          ranged.extports.push(new CharacterExtPort(item));
+        });
+        // Ammo
+        ranged.ammos = [];
+        angular.forEach(rangedItem.ammos, function (item) {
+          ranged.ammos.push(new CharacterAmmo(item));
+        })
+        $scope.rangedList.push(ranged);
+      });
+      
+      //
+      // Melee Weapons
+      //
+      $scope.meleeList = [];
+      angular.forEach(char.melees, function (melee, index) {
+        $scope.meleeList.push(new CharacterMelee(melee));
+      });
+
+      //
+      // Area Effect Weapons
+      //
+      $scope.areaEffectList = [];
+      angular.forEach(char.aoes, function (aoe, index) {
+        $scope.areaEffectList.push(new CharacterAreaEffect(aoe));
+      });
+
+      //
+      // Equipment
+      //
+      $scope.equipmentList = [];
+      angular.forEach(char.equipments, function (equipment, index) {
+        $scope.equipmentList.push(new CharacterEquipment(equipment));
+      });
+
+      //
+      // Armour sets
+      //
+      $scope.armourSetList = [];
+      angular.forEach(char.armoursets, function (set, index) {
+        var armourSet = new CharacterArmourSet(set);
+        // pieces
+        armourSet.pieces = [];
+        angular.forEach(set.pieces, function (item) {
+          armourSet.pieces.push(new CharacterArmourPiece(item));
+        });
+        
+        $scope.armourSetList.push(armourSet);
+      });
+
+      //
+      // Magic items
+      //
+      $scope.magicItemList = [];
+      angular.forEach(char.magicitems, function (item, index) {
+        $scope.magicItemList.push(new CharacterMagicItem(item));
+      });
+
+      //
+      // Accounts
+      //
+      $scope.accountList = [];
+      angular.forEach(char.accounts, function (item, index) {
+        $scope.accountList.push(new CharacterAccount(item));
+      });
+
+    }); // End got character data
   };
 
   $scope.refreshStats = function () {
@@ -1066,17 +1173,6 @@ function CharacterCtrl(
     }
     
     $scope.refreshCharacter();
-    $scope.refreshStats();
-    $scope.refreshSkills();
-    $scope.refreshEffects();
-    $scope.refreshWounds();
-    $scope.refreshRanged();
-    $scope.refreshMelees();
-    $scope.refreshAreaEffects();
-    $scope.refreshEquipment();
-    $scope.refreshArmourSets();
-    $scope.refreshMagicItems();
-    $scope.refreshAccounts();
   }
 
 };
