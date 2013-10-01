@@ -1,0 +1,14 @@
+﻿<div ng-init="initFromRoute()">
+  <!-- Name and info -->
+  <div class="row"> 
+    <div class="span12">
+      <h1>{{user.username}}</h1>
+    </div>
+  </div>
+
+  <form class="form">
+    <input type="new password" class="span2" placeholder="password" ng-model="password" />
+    <button type="submit" class="btn" ng-click="update()">Update Password</button>
+  </form>
+
+</div>

@@ -121,3 +121,13 @@ angular.module('party.partyServices', ['ngResource']).
   factory('Party', function ($resource) {
     return $resource('parties/:id', { id: '@id' }, {});
   });
+
+//
+// Admin
+//
+angular.module('admin.userServices', ['ngResource']).
+  factory('AdminUser', function ($resource) {
+    return $resource('users/:userId', { userId: '@id' }, {});
+  });
+
+

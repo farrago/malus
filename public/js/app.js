@@ -29,7 +29,8 @@ angular.module(
   'myApp.magicItemsServices',
   'myApp.effectsServices',
   'map.systemsServices',
-  'party.partyServices'
+  'party.partyServices',
+  'admin.userServices'
   ]).
   config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/', { templateUrl: 'partials/front.html', controller: MyCtrl2 });
@@ -38,5 +39,7 @@ angular.module(
     $routeProvider.when('/characters/:id', { templateUrl: 'partials/character.html', controller: CharacterCtrl });
     $routeProvider.when('/parties', { templateUrl: 'partials/parties.html', controller: PartiesCtrl });
     $routeProvider.when('/parties/:id', { templateUrl: 'partials/party.html', controller: PartyCtrl });
+    $routeProvider.when('/admin/users', { templateUrl: 'partials/admin/users.html', controller: AdminUsersCtrl });
+    $routeProvider.when('/admin/users/:id', { templateUrl: 'partials/admin/user.html', controller: AdminUserCtrl });
     $routeProvider.otherwise({ redirectTo: '/' });
   }]);

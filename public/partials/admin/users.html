@@ -1,0 +1,11 @@
+﻿<div class="row">
+  <div class="span12">
+    <ul class="unstyled">
+      <li ng-repeat="user in users">
+        <a href="#/admin/users/{{user.id}}" ng-class="stateClass(user)">
+          <i class="icon-user"></i>&nbsp;{{user.username}}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

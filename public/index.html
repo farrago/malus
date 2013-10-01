@@ -64,7 +64,9 @@
                       <i class="icon-user"></i>&nbsp;{{currentUser.username}}<b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a href="#" ng-click="logout()"><i class="icon-off"></i>Logout</a></li>
+                      <li ng-show="currentUser.admin"><a href="#/admin/users" ><i class="icon-group"></i> Users</a></li>
+                      <li><a ng-href="#/admin/users/{{currentUser.id}}" ><i class="icon-user"></i> Me</a></li>
+                      <li><a href="#" ng-click="logout()"><i class="icon-off"></i> Logout</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -106,6 +108,7 @@
   <script src="js/app.js"></script>
   <script src="js/services.js"></script>
   <script src="js/controllers.js"></script>
+  <script src="js/admincontrollers.js"></script>
   <script src="js/mapcontrollers.js"></script>
   <script src="js/partycontrollers.js"></script>
   <script src="js/filters.js"></script>
