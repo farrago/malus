@@ -960,6 +960,7 @@ function CharacterCtrl(
   $scope.withdraw = function (account, amount) {
     var newBalance = Number(account.balance) - Number(amount);
     account.balance = String(newBalance);
+    account.ui.edit = true;
     if (!account.ui.hasOwnProperty('transactions')) {
       account.ui.transactions = [];
     }
@@ -969,6 +970,7 @@ function CharacterCtrl(
   $scope.deposit = function (account, amount) {
     var newBalance = Number(account.balance) + Number(amount);
     account.balance = String(newBalance);
+    account.ui.edit = true;
     if (!account.ui.hasOwnProperty('transactions')) {
       account.ui.transactions = [];
     }

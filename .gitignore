@@ -2,3 +2,5 @@
 .dpd/*
 data/*
 .hgignore
+node_modules/dpd-importer/
+resources/importer/config.json
