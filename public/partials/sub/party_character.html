@@ -8,82 +8,45 @@
     </small>
 </h2>
 
-<!-- Health -->
-<div class="lead">
-  <span ng-click="showWoundsDlg(character.id)">
-    <i class="icon-heart"></i>
-    <span ng-show="tmpStats['e']">&nbsp;{{tmpStats['e']}}<span class="muted">&nbsp;/&nbsp;{{stats['eUp']}}</span></span>
-    <span ng-hide="tmpStats['e']">{{stats['eUp']}}</span>
-  </span>
-</div>
-
 <!-- Stats, wounds, & effects -->
-<p>
-  <i class="icon-info-sign muted"
-    data-unique="1"
-    bs-popover="'partials/sub/stats_wounds_effects.html'"
-    data-title="<b>Stats, Wounds & Effects</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
-  <b>Stats, Wounds & Effects</b>
-</p>
-<!-- Skills -->
-<p>
-  <i class="icon-info-sign muted"
-    data-unique="1"
-    bs-popover="'partials/sub/skills.html'"
-    data-title="<b>Skills</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
-  <b>Skills</b>
-</p>
+<ng-include src="'/partials/sub/party/party_stats_wounds_effects.html'"></ng-include>
 
 <!-- Weapons -->
-<table class="table table-condensed">
-  <tbody>
-    <tr>
-      <td class="hidden-phone"><b>Ranged:</b></td>
-      <td>
-        <span ng-repeat="ranged in rangedList | filter:limitIfShowLoadout | orderBy:'name'">
-          <i class="icon-info-sign muted"
-            data-unique="1"
-            bs-popover="'partials/sub/ranged.html'"
-            data-title="<b>{{ranged.name}}</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
-          &nbsp;{{ranged.name}}
-          &nbsp;<i class="icon-screenshot muted" ng-click="useAmmoDlg(ranged)"></i>
-          <br />
-        </span>
-        <span ng-hide="rangedList.length">No ranged weapons</span>
-      </td>
-    </tr>
-    <tr>
-      <td class="hidden-phone"><b>Melee:</b></td>
-      <td>
-        <span ng-repeat="melee in meleeList | filter:limitIfShowLoadout | orderBy:'name'">
-          <i class="icon-info-sign muted"
-            data-unique="1"
-            bs-popover="'partials/sub/melee.html'"
-            data-title="<b>{{melee.name}}</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
-          {{melee.name}}<br />
-        </span>
-        <span ng-hide="meleeList.length">No melee weapons</span>
-      </td>
-    </tr>
-    <tr>
-      <td class="hidden-phone"><b>AoE:</b></td>
-      <td>
-        <span ng-repeat="areaEffect in areaEffectList | filter:limitIfShowLoadout | orderBy:'name'">
-          <i class="icon-info-sign muted"
-            data-unique="1"
-            bs-popover="'partials/sub/aoe.html'"
-            data-title="<b>{{areaEffect.name}}</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
-          {{areaEffect.name}} [{{areaEffect.loadout}}]
-          &nbsp;<i class="icon-screenshot muted" ng-click="confirmUseAoE(areaEffect)"></i>
-          <br />
-        </span>
-        <span ng-hide="areaEffectList.length">No AoE weapons</span>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="panel panel-primary">
+  <div class="panel-heading">Ranged</div>
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="ranged in rangedList | filter:limitIfShowLoadout | orderBy:'name'">
+      <h4>{{ranged.name}}</h4>
+      <ng-include src="'/partials/sub/ranged.html'"></ng-include>
+    </li>
+  </ul>
+</div>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">Melee</div>
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="melee in meleeList | filter:limitIfShowLoadout | orderBy:'name'">
+      <h4>{{melee.name}}</h4>
+      <ng-include src="'/partials/sub/melee.html'"></ng-include>
+    </li>
+  </ul>
+</div>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">Area Effect</div>
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="areaEffect in areaEffectList | filter:limitIfShowLoadout | orderBy:'name'">
+      <h4>{{areaEffect.name}}</h4>
+      <ng-include src="'/partials/sub/aoe.html'"></ng-include>
+    </li>
+  </ul>
+</div>
+
+<!-- Skills -->
+<ng-include src="'/partials/sub/skills.html'"></ng-include>
 
 <!-- Armour and Equipment -->
+<!--
 <table class="table table-condensed">
   <tbody>
     <tr>
@@ -109,3 +72,4 @@
     </tr>
   </tbody>
 </table>
+-->

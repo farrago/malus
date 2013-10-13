@@ -23,5 +23,16 @@ var statics = {
     ELL: "Extermely Low",
     NL: "None",
     U:"Unknown"
+  },
+  hitLocations: {
+    "1": "[1] Head",
+    "2": "[2] L Shoulder",
+    "3": "[3] R Shoulder",
+    "4": "[4] L Arm",
+    "5": "[5] R Arm",
+    "6": "[6] Torso",
+    "7": "[7] L Leg",
+    "8": "[8] R Leg",
+    "All": "All"
   }
 };

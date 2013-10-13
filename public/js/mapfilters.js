@@ -20,4 +20,13 @@ angular.module('map.filters', []).
         return "Unknown";
       }
     }
+  }).
+  filter('location', function () {
+    return function (input) {
+      if (statics.hitLocations.hasOwnProperty(input)) {
+        return statics.hitLocations[input];
+      } else {
+        return "Unknown";
+      }
+    }
   });

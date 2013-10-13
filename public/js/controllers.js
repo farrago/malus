@@ -249,6 +249,19 @@ function CharacterCtrl(
     $scope.characterId = id;
     $scope.refreshAll();
   }
+  $scope.initFromData = function (char, type) {
+    if (char) {
+      $scope.characterType = type;
+      $scope.characterId = char.id;
+      $scope.processCharObject(char);
+    }
+  }
+
+  $scope.$watch('selection.char', function (newVal, oldVal) {
+    if (newVal) {
+      $scope.initFromData(newVal);
+    }
+  });
 
   $scope.editable = false;
   $scope.calls = 0;
@@ -257,50 +270,6 @@ function CharacterCtrl(
       $scope.refreshAll();
     }
   }, true);
-
-  //
-  // Realtime updates
-  //
-  /*
-  dpd.on('wounds:changed', function (characterId) {
-    if (characterId === $scope.characterId) {
-      console.log("My wounds changed, refreshing...", $scope);
-      $scope.refreshWounds();
-    }
-  });
-  dpd.on('ammo:updated', function (updatedAmmo) {
-    console.log("Ammo Updated",updatedAmmo);
-    angular.forEach($scope.rangedList, function(ranged) {
-      angular.forEach(ranged.ammos, function(ammo) {
-        if (ammo.id === updatedAmmo.id) {
-          console.log("Found and updating:", ammo);
-          $scope.$apply(function () { ammo.loadout = updatedAmmo.loadout });
-          console.log("Updated to:", ammo);
-        }
-      });
-    });
-  });
-  dpd.on('aoe:updated', function (updatedAoE) {
-    console.log("AoEUpdated",updatedAoE);
-    angular.forEach($scope.areaEffectList, function (areaEffect) {
-      if (areaEffect.id === updatedAoE.id) {
-        console.log("Found and updating:", areaEffect);
-        $scope.$apply(function () { areaEffect.loadout = updatedAoE.loadout });
-        console.log("Updated to:", areaEffect);
-      }
-    });
-  });
-  //
-  // When we get told the socket is ready we do an update
-  // to catch anything we missed when it wasn't ready
-  //
-  dpd.socketReady(function () {
-    console.log("SOCKET READY!");
-    $scope.refreshWounds();
-    $scope.refreshRanged();
-    $scope.refreshAreaEffects();
-  });
-  */
   
   //
   // Outstanding reads / refreshing handling
@@ -354,7 +323,7 @@ function CharacterCtrl(
     // Build an array of all the current values
     //
     var stats = ['iq', 'aw', 'mt', 'ps', 'a', 'e', 's', 'r', 'as', 'ai', 'dx', 'sp'];
-    $scope.tmpStats = [];
+    $scope.tmpStats = {};
     var suffix = 'Up';
 
     //
@@ -380,17 +349,12 @@ function CharacterCtrl(
     });
 
     //
-    // Now iterate through the wounds, applying them to Endurance
+    // Now handle wounds, applying them to Endurance
     //
-    angular.forEach($scope.wounds, function (value) {
-      var damageNumber = Number(value.damage);
-      if (!isNaN(damageNumber)) {
-        $scope.tmpStats['e'] -= damageNumber;
-      } else {
-        console.log("Couldn't apply", value);
-        console.log("Value", damageNumber);
-      }
-    });
+    $scope.updateWoundTotals($scope.wounds);
+    if (!isNaN($scope.wounds.totalDamage)) {
+      $scope.tmpStats['e'] -= $scope.wounds.totalDamage;
+    }
 
     //
     // Finally, iterate through all the temp values, and if they
@@ -402,8 +366,7 @@ function CharacterCtrl(
         $scope.tmpStats[value] = "";
       }
     });
-
-    console.log("Finished temporaries: ", $scope);
+    $scope.character.tmpStats = $scope.tmpStats;
   };
 
   //
@@ -569,26 +532,19 @@ function CharacterCtrl(
   //
   // Wounds
   //
-  $scope.refreshWounds = function () {
-    $scope.incrementOutstanding();
-    //
-    // Load the wounds, then do some maths on the results
-    //
-    $scope.wounds = CharacterWound.query({ characterId: $scope.characterId },
-      function (wlist) {
-        $scope.wounds.totalDamage = 0;
-        $scope.wounds.anyCritical = false;
+  $scope.updateWoundTotals = function (wounds) {
+    $scope.wounds.totalDamage = 0;
+    $scope.wounds.anyCritical = false;
 
-        angular.forEach(wlist, function (wound, key) {
-          $scope.wounds.totalDamage += wound.damage;
-          if (wound.critical) {
-            $scope.wounds.anyCritical = true;
-          }
-        });
-        $scope.decrementOutstanding();
-      });
-  };
-
+    angular.forEach(wounds, function (wound, key) {
+      if (!isNaN(wound.damage)) {
+        $scope.wounds.totalDamage += wound.damage;
+        if (wound.critical) {
+          $scope.wounds.anyCritical = true;
+        }
+      }
+    });
+  }
   $scope.addWound = function () {
     var wound = new CharacterWound();
     wound.characterId = $scope.characterId;
@@ -601,34 +557,29 @@ function CharacterCtrl(
     $scope.wounds.push(wound);
   }
 
-  //
-  // Add wounds dialog
-  //
-  $scope.showWoundsDlg = function (id) {
-    console.log("Add Wounds Dialog called");
-    var opts = {
-      backdrop: true,
-      keyboard: true,
-      backdropClick: true,
-      templateUrl: '/partials/sub/add_wound_dlg.html', // OR: templateUrl: 'path/to/view.html',
-      controller: 'AddWoundsDialogController'
-    };
-    var characterId = id;
-    var d = $dialog.dialog(opts);
-    d.open().then(function (result) {
-      console.log('dialog closed for character: ', characterId);
-      if (result) {
-        var wound = new CharacterWound();
-        wound.characterId = characterId;
-        wound.note = result.note;
-        wound.damage = result.damage;
-        wound.location = result.location;
-        wound.critical = result.critical;
-        wound.$save();
-        console.log("Added wound", wound);
-      }
-    });
-  };
+  $scope.wform = {};
+  $scope.addWoundFromForm = function () {
+    if ($scope.wform.note && $scope.wform.damage && $scope.wform.location) {
+      var wound = new CharacterWound();
+      wound.characterId = $scope.characterId;
+      wound.note = $scope.wform.note;
+      wound.damage = $scope.wform.damage;
+      wound.location = $scope.wform.location;
+      wound.critical = $scope.wform.critical;
+
+      wound.$save();
+      $scope.wounds.push(wound);
+      $scope.calculateTemporaries();
+      
+      $scope.wform.note = "";
+      $scope.wform.damage = "";
+      $scope.wform.location = "";
+      $scope.wform.critical = false;
+
+    } else {
+      console.log("Missing something", $scope.wform);
+    }
+  }
 
   //
   // Effects
@@ -649,6 +600,27 @@ function CharacterCtrl(
     effect.ui = function () { };
     effect.ui.add = true;
     $scope.effects.push(effect);
+  }
+  $scope.eform = {};
+  $scope.addEffectFromForm = function () {
+    if ($scope.eform.note && $scope.eform.stat && $scope.eform.effect) {
+      var effect = new CharacterEffect();
+      effect.characterId = $scope.characterId;
+      effect.notes = $scope.eform.note;
+      effect.stat = $scope.eform.stat;
+      effect.effect = $scope.eform.effect;
+
+      effect.$save();
+      $scope.effects.push(effect);
+      $scope.calculateTemporaries();
+      
+      $scope.eform.note = "";
+      $scope.eform.stat = "";
+      $scope.eform.effect = "";
+      
+    } else {
+      console.log("Missing something", $scope.eform);
+    }
   }
 
   //
@@ -1041,114 +1013,126 @@ function CharacterCtrl(
   //
   // Function to reload all of the character
   //
+  $scope.processCharObject = function (char) {
+    //
+    // Base character
+    //
+    $scope.character = char;
+
+    //
+    // Stats
+    //
+    $scope.stats = new CharacterStats(char.stats);
+
+    //
+    // Skills
+    //
+    $scope.skills = [];
+    angular.forEach(char.skills, function (skill, index) {
+      $scope.skills.push(new CharacterSkill(skill));
+    });
+
+    //
+    // Effects
+    //
+    $scope.effects = [];
+    angular.forEach(char.effects, function (effect, index) {
+      $scope.effects.push(new CharacterEffect(effect));
+    });
+
+    //
+    // Wounds
+    //
+    $scope.wounds = [];
+    angular.forEach(char.wounds, function (wound, index) {
+      $scope.wounds.push(new CharacterWound(wound));
+    });
+    $scope.updateWoundTotals($scope.wounds);
+
+    //
+    // Ranged
+    //
+    $scope.rangedList = [];
+    angular.forEach(char.ranged, function (rangedItem, index) {
+      var ranged = new CharacterRanged(rangedItem);
+      // Ext Ports
+      ranged.extports = [];
+      angular.forEach(rangedItem.extports, function (item) {
+        ranged.extports.push(new CharacterExtPort(item));
+      });
+      // Ammo
+      ranged.ammos = [];
+      angular.forEach(rangedItem.ammos, function (item) {
+        ranged.ammos.push(new CharacterAmmo(item));
+      })
+      $scope.rangedList.push(ranged);
+    });
+
+    //
+    // Melee Weapons
+    //
+    $scope.meleeList = [];
+    angular.forEach(char.melees, function (melee, index) {
+      $scope.meleeList.push(new CharacterMelee(melee));
+    });
+
+    //
+    // Area Effect Weapons
+    //
+    $scope.areaEffectList = [];
+    angular.forEach(char.aoes, function (aoe, index) {
+      $scope.areaEffectList.push(new CharacterAreaEffect(aoe));
+    });
+
+    //
+    // Equipment
+    //
+    $scope.equipmentList = [];
+    angular.forEach(char.equipments, function (equipment, index) {
+      $scope.equipmentList.push(new CharacterEquipment(equipment));
+    });
+
+    //
+    // Armour sets
+    //
+    $scope.armourSetList = [];
+    angular.forEach(char.armoursets, function (set, index) {
+      var armourSet = new CharacterArmourSet(set);
+      // pieces
+      armourSet.pieces = [];
+      angular.forEach(set.pieces, function (item) {
+        armourSet.pieces.push(new CharacterArmourPiece(item));
+      });
+
+      $scope.armourSetList.push(armourSet);
+    });
+
+    //
+    // Magic items
+    //
+    $scope.magicItemList = [];
+    angular.forEach(char.magicitems, function (item, index) {
+      $scope.magicItemList.push(new CharacterMagicItem(item));
+    });
+
+    //
+    // Accounts
+    //
+    $scope.accountList = [];
+    angular.forEach(char.accounts, function (item, index) {
+      $scope.accountList.push(new CharacterAccount(item));
+    });
+
+    //
+    // Calculate the temporaries from this new data
+    //
+    $scope.calculateTemporaries();
+  }
   $scope.refreshCharacter = function () {
     $scope.incrementOutstanding();
-    $scope.character = Character.get({ id: $scope.characterId }, function (char, respHeaders) {
-      console.log("Received character data", char);
+    Character.get({ id: $scope.characterId }, function (char, respHeaders) {
       $scope.decrementOutstanding();
-
-      //
-      // Stats
-      //
-      $scope.stats = new CharacterStats(char.stats[0]);
-
-      //
-      // Skills
-      //
-      $scope.skills = [];
-      angular.forEach(char.skills, function (skill, index) {
-        $scope.skills.push(new CharacterSkill(skill));
-      });
-
-      //
-      // Effects
-      //
-      $scope.effects = [];
-      angular.forEach(char.effects, function (effect, index) {
-        $scope.effects.push(new CharacterEffect(effect));
-      });
-
-      //
-      // Wounds
-      //
-      $scope.wounds = [];
-      angular.forEach(char.wounds, function (wound, index) {
-        $scope.wounds.push(new CharacterWound(wound));
-      });
-      
-      //
-      // Ranged
-      //
-      $scope.rangedList = [];
-      angular.forEach(char.ranged, function (rangedItem, index) {
-        var ranged = new CharacterRanged(rangedItem);
-        // Ext Ports
-        ranged.extports = [];
-        angular.forEach(rangedItem.extports, function (item) {
-          ranged.extports.push(new CharacterExtPort(item));
-        });
-        // Ammo
-        ranged.ammos = [];
-        angular.forEach(rangedItem.ammos, function (item) {
-          ranged.ammos.push(new CharacterAmmo(item));
-        })
-        $scope.rangedList.push(ranged);
-      });
-      
-      //
-      // Melee Weapons
-      //
-      $scope.meleeList = [];
-      angular.forEach(char.melees, function (melee, index) {
-        $scope.meleeList.push(new CharacterMelee(melee));
-      });
-
-      //
-      // Area Effect Weapons
-      //
-      $scope.areaEffectList = [];
-      angular.forEach(char.aoes, function (aoe, index) {
-        $scope.areaEffectList.push(new CharacterAreaEffect(aoe));
-      });
-
-      //
-      // Equipment
-      //
-      $scope.equipmentList = [];
-      angular.forEach(char.equipments, function (equipment, index) {
-        $scope.equipmentList.push(new CharacterEquipment(equipment));
-      });
-
-      //
-      // Armour sets
-      //
-      $scope.armourSetList = [];
-      angular.forEach(char.armoursets, function (set, index) {
-        var armourSet = new CharacterArmourSet(set);
-        // pieces
-        armourSet.pieces = [];
-        angular.forEach(set.pieces, function (item) {
-          armourSet.pieces.push(new CharacterArmourPiece(item));
-        });
-        
-        $scope.armourSetList.push(armourSet);
-      });
-
-      //
-      // Magic items
-      //
-      $scope.magicItemList = [];
-      angular.forEach(char.magicitems, function (item, index) {
-        $scope.magicItemList.push(new CharacterMagicItem(item));
-      });
-
-      //
-      // Accounts
-      //
-      $scope.accountList = [];
-      angular.forEach(char.accounts, function (item, index) {
-        $scope.accountList.push(new CharacterAccount(item));
-      });
+      $scope.processCharObject(char);
 
     }); // End got character data
   };

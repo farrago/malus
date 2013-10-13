@@ -42,7 +42,7 @@ function PartiesCtrl($scope, $routeParams, Party, User) {
 
   $scope.deleteParty = function (party) {
     //
-    // We don't really delete the partyacter, we just set the 
+    // We don't really delete the party, we just set the 
     // deleted flag on them and mark them modifed
     //
     party.deleted = true;
@@ -119,7 +119,7 @@ function PartiesCtrl($scope, $routeParams, Party, User) {
     //
     // Sync everything
     //
-    angular.forEach($scope.partyacters, function (party) {
+    angular.forEach($scope.parties, function (party) {
       $scope.sync(party);
     });
   }
@@ -166,14 +166,10 @@ function PartyCtrl(
   Character,
   CharacterStats
   ) {
+  $scope.statics = statics;
 
   $scope.editable = false;
   $scope.calls = 0;
-  $scope.$watch('calls', function (newValue, oldValue) {
-    if (newValue != oldValue && newValue == 0) {
-      $scope.refreshAll();
-    }
-  }, true);
 
   //
   // Outstanding reads / refreshing handling
@@ -195,12 +191,6 @@ function PartyCtrl(
     progress = Math.floor(progress * 100);
     $scope.progress = progress + "%";
   };
-
-  $scope.$watch('outstandingReads', function (newValue, oldValue) {
-    if (newValue != oldValue && newValue == 0) {
-      // Nothing right now
-    }
-  }, true);
 
   //
   // Returns appropriate classes for display of objects based on their modification state
@@ -442,38 +432,34 @@ function PartyCtrl(
     $scope.party.ui.edit = true;
   }
 
-  $scope.refreshUsernames = function (data) {
-    $scope.players = [];
-
-    var queryStr = 'users/?{"id": { "$in": ';
-    queryStr += angular.toJson(data.users);
-    queryStr += "}}";
-
-    $http.get(queryStr).success(function (data, status) {
-      console.log("Data:", data, status);
-      $scope.players = data;
-
-      console.log("Final scope", $scope);
-    });
-  }
+  //
+  // Have to do this horrible thing because you can't have enough nested quotes
+  $scope.npcsortid = "stats['eUp']";
+  $scope.selection = {
+    "char": null,
+    "showWoundsEffects": false,
+  };
 
   //
   // Function to reload all of the character
   //
   $scope.refreshParty = function () {
+    console.log("Refresh Party");
     $scope.incrementOutstanding();
     $scope.party = Party.get({ id: $routeParams.id }, function (data, headers) {
       //
       // Get the players info based on the data we got back.
-      // Fancy querying is a bit of a pain in the ass!
       //
-      $scope.refreshUsernames(data);
+      if (data.pc_chars && data.pc_chars.length > 0) {
+        $scope.selection.char = data.pc_chars[0];
+      }
       $scope.decrementOutstanding();
     });
   };
 
   //
   // Refresh all function
+  //
   $scope.refreshAll = function () {
     if (!$scope.currentUser) {
       $location.path("/");

@@ -1,0 +1,162 @@
+﻿<!-- Stats -->
+<div class="panel panel-primary">
+  <table 
+    class="table table-condensed panel-primary text-center" 
+    ng-click="selection.showWoundsEffects = !selection.showWoundsEffects"
+    >
+    <thead class="panel-heading text-center">
+      <tr>
+        <th class="text-center">Iq</th>
+        <th class="text-center">Aw</th>
+        <th class="text-center">Mt</th>
+        <th class="text-center">Ps</th>
+        <th class="text-center">A</th>
+        <th class="text-center">E</th>
+        <th class="text-center">S</th>
+        <th class="text-center">R</th>
+        <th class="text-center">As</th>
+        <th class="text-center">Ai</th>
+        <th class="text-center">Dx</th>
+        <th class="text-center">Sp</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><ml-relative-value ml-current="tmpStats['iq']" ml-base="stats.iqUp" /></td>
+        <td><ml-relative-value ml-current="tmpStats['aw']" ml-base="stats.awUp" /></td>
+        <td><ml-relative-value ml-current="tmpStats['mt']" ml-base="stats.mtUp" /></td>
+        <td><ml-relative-value ml-current="tmpStats['ps']" ml-base="stats.psUp" /></td>
+        <td><ml-relative-value ml-current="tmpStats['a']" ml-base="stats.aUp" /></td>
+        <td><ml-relative-value ml-current="tmpStats['e']" ml-base="stats.eUp" /></td>
+        <td><ml-relative-value ml-current="tmpStats['s']" ml-base="stats.sUp" /></td>
+        <td><ml-relative-value ml-current="tmpStats['r']" ml-base="stats.rUp" /></td>
+        <td><ml-relative-value ml-current="tmpStats['as']" ml-base="stats.asUp" /></td>
+        <td><ml-relative-value ml-current="tmpStats['ai']" ml-base="stats.aiUp" /></td>
+        <td><ml-relative-value ml-current="tmpStats['dx']" ml-base="stats.dxUp" /></td>
+        <td><ml-relative-value ml-current="tmpStats['sp']" ml-base="stats.spUp" /></td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- Wounds -->
+  <table class="table table-condensed panel-primary" ng-show="selection.showWoundsEffects">
+    <thead class="panel-heading">
+      <tr>
+        <th>Wounds</th>
+        <th>Dmg</th>
+        <th>Loc</th>
+        <th>Crit?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="wound in wounds | orderBy:'-damage'">
+        <td>{{wound.note}}</td>
+        <td>{{wound.damage}}</td>
+        <td>{{wound.location | location}}</td>
+        <td><span ng-show="wound.critical"><i class="icon-ok"></i></span></td>
+      <tr ng-hide="wounds.length"><td colspan="4">No wounds</td></tr>
+      <tr ng-show="wounds.length">
+        <td><span class="muted">Total Damage</span></td>
+        <td><span class="muted">{{wounds.totalDamage}}</span></td>
+        <td></td>
+        <td><span class="muted" ng-show="wounds.anyCritical"><i class="icon-ok"></i></span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Effects -->
+  <table class="table table-condensed panel-primary" ng-show="selection.showWoundsEffects">
+    <thead class="panel-heading">
+      <tr>
+        <th>Effects</th>
+        <th>Stat</th>
+        <th>Effect</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="effect in effects">
+        <td>{{effect.notes}}</td>
+        <td>{{effect.stat}}</td>
+        <td>{{effect.effect}}</td>
+      </tr>
+      <tr ng-hide="effects.length"><td colspan="3">No effects</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Armour -->
+  <div class="panel panel-primary" ng-show="selection.showWoundsEffects">
+    <div class="panel-heading">Armour</div>
+
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="set in armourSetList | filter:{loadout:true}">
+        <table class="table table-condensed panel-default">
+          <thead class="panel-heading">
+            <tr>
+              <th colspan="3">{{set.name}}</th>
+            </tr>
+          </thead>
+          <tbody>
+             <tr><td colspan="3">{{set.notes}}</td></tr>
+            <tr>
+              <th>Location</th>
+              <th>Condition</th>
+              <th>Notes</th>
+            </tr>
+            <tr ng-repeat="piece in set.pieces | orderBy:'location' | filter:pieceFilter">
+              <td>{{piece.location | location}}</td>
+              <td>{{piece.currentCondition}}</td>
+              <td>{{piece.notes}}</td>
+            </tr>
+            <tr ng-hide="set.pieces.length"><td colspan="3">No effective armour</td></tr>
+          </tbody>
+        </table>
+      </li>
+    </ul>
+  </div>
+
+  <div class="panel-footer" ng-show="selection.showWoundsEffects">
+    <!-- Wound form -->
+    <form class="form-inline">
+      <div class="form-group">
+        <label class="sr-only" for="healthDescription">Description</label>
+        <input type="text" class="form-control" id="healthDescription" placeholder="Description" ng-model="wform.note">
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="healthDamage">Damage</label>
+        <input type="number" class="form-control" id="healthDamage" placeholder="Damage" ng-model="wform.damage">
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="healthLocation">Location</label>
+        <select 
+          ng-model="wform.location" 
+          id="healthLocation" 
+          class="form-control"
+          ng-options="key as value for (key, value) in statics.hitLocations"
+          >
+          <option value="">-- Location --</option>
+        </select>
+      </div>
+      <div class="checkbox">
+        <label class="checkbox">
+          <input type="checkbox" ng-model="wform.critical"> Crit
+        </label>
+      </div>
+      <button type="submit" ng-click="addWoundFromForm()" class="btn btn-default">Add Wound</button>
+    </form>
+    <!-- Effect form -->
+    <form class="form-inline">
+      <div class="form-group">
+        <label class="sr-only" for="effectDescription">Description</label>
+        <input type="text" class="form-control" id="effectDescription" placeholder="Description" ng-model="eform.note">
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="effectStat">Damage</label>
+        <input type="text" class="form-control" id="effectStat" placeholder="Stat" ng-model="eform.stat">
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="effectValue">Damage</label>
+        <input type="text" class="form-control" id="effectValue" placeholder="Effect" ng-model="eform.effect">
+      </div>
+      <button type="submit" ng-click="addEffectFromForm()" class="btn btn-default">Add Effect</button>
+    </form>
+  </div>
+</div>

@@ -5,33 +5,24 @@
   </div>
 </div>
 <div ng-show="currentUser && party">
-  <div class="row">
-    <div class="col-md-12">
-      <h1><span contenteditable="{{editable}}" ng-model="party.name" on-ok="party.ui.edit=true"></span>
+  <div class="page-header">
+    <h2><span contenteditable="{{editable}}" ng-model="party.name" on-ok="party.ui.edit=true"></span>
 
-        <!-- Edit button -->
-        <span class="pull-right" ng-hide="outstandingReads">
-          <button class="btn" ng-click="allowEdit()" ng-hide="editable"><i class="icon-edit muted" tooltip="Enable Editing"></i></button>
-          <button class="btn" ng-click="refreshAll()" ng-hide="editable"><i class="icon-refresh muted" tooltip="Refresh"></i></button>
-          <button class="btn btn-primary" ng-click="endEdit()" ng-show="editable"><span tooltip="Save Changes"><i class="icon-cloud-upload"></i>&nbsp;Save</span></button>
-          <button class="btn" ng-click="cancelEdit()" ng-show="editable">Cancel</button>
-        </span>
-        <span class="pull-right" ng-show="outstandingReads">
-          <i class="icon-spinner icon-spin"></i>
-        </span>
-      </h1>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12 muted">
-      <span ng-hide="party.notes">Notes:</span>
-      <span contenteditable="{{editable}}" on-ok="party.ui.edit=true" ng-model="party.notes"></span>
-    </div>
-  </div>
-
-  <!-- spacer -->
-  <div class="row">
-    <div class="col-md-12">&nbsp;</div>
+      <!-- Edit button -->
+      <span class="pull-right" ng-hide="outstandingReads">
+        <button class="btn" ng-click="allowEdit()" ng-hide="editable"><i class="icon-edit muted" tooltip="Enable Editing"></i></button>
+        <button class="btn" ng-click="refreshAll()" ng-hide="editable"><i class="icon-refresh muted" tooltip="Refresh"></i></button>
+        <button class="btn btn-primary" ng-click="endEdit()" ng-show="editable"><span tooltip="Save Changes"><i class="icon-cloud-upload"></i>&nbsp;Save</span></button>
+        <button class="btn" ng-click="cancelEdit()" ng-show="editable">Cancel</button>
+      </span>
+      <span class="pull-right" ng-show="outstandingReads">
+        <i class="icon-spinner icon-spin"></i>
+      </span>
+      <small>
+        <span ng-hide="party.notes">Notes:</span>
+        <span contenteditable="{{editable}}" on-ok="party.ui.edit=true" ng-model="party.notes"></span>
+      </small>
+    </h2>
   </div>
 
   <tabs>
@@ -39,6 +30,24 @@
     <!-- Characters tab                                                                 -->
     <!-- ============================================================================== -->
     <pane heading="Characters" icon="group">
+      <div class="row">
+        <div class="col-md-12 table-responsive">
+          <table class="table table-condensed text-center">
+            <td ng-repeat="pc in party.pc_chars">
+              <a href ng-click="selection.char = pc" class="btn" ng-class="{'btn-primary':pc.id == selection.char.id}">
+                {{pc.name | shortname}}<br/>
+                <span class="badge"><i class="icon-heart"></i> {{pc.tmpStats['e']}} / {{pc.stats['eUp']}}</span>
+              </a>
+            </td>
+            <td ng-repeat="npc in party.npc_chars | orderBy:npcsortid:true" >
+              <a  href ng-click="selection.char = npc" class="btn" ng-class="{'btn-primary':npc.id == selection.char.id}">
+                {{npc.name | shortname}}<br/>
+                <span class="badge"><i class="icon-heart"></i> {{npc.tmpStats['e']}} / {{npc.stats['eUp']}}</span>
+              </a>
+            </td>
+          </table>
+        </div>
+      </div>
       
       <!-- Modify Party members -->
       <div ng-show="editable" class="form-horizontal">
@@ -50,32 +59,8 @@
         </fieldset>
       </div>
 
-      <!-- PCs -->
-      <h1>P<span class="hidden-phone">layer </span>C<span class="hidden-phone">haracter</span>s</h1>
-      <div class="columns">
-        <div ng-repeat="pcId in party.pcs" ng-controller="CharacterCtrl" ng-init="initFromId(pcId)">
-          <div class="col-md-5 well card">
-            <ng-include src="'/partials/sub/party_character.html'"></ng-include>
-          </div>
-        </div>
-      </div>
-      <div ng-hide="party.pcs.length">
-        You should add characters to this party.
-      </div>
-
-      <!-- NPCs -->
-      <div ng-show="editable || party.npcs.length">
-        <h1>N<span class="hidden-phone">on-</span>P<span class="hidden-phone">layer </span>C<span class="hidden-phone">haracter</span>s</h1>
-        <div class="columns">
-          <div ng-repeat="npcId in party.npcs" ng-controller="CharacterCtrl" ng-init="initFromId(npcId)">
-            <div class="col-md-5 well card">
-              <ng-include src="'/partials/sub/party_character.html'"></ng-include>
-            </div>
-          </div>
-        </div>
-        <div ng-show="!party.npcs.length">
-          You might want to add NPCs this party.
-        </div>
+      <div ng-controller="CharacterCtrl" ng-init="initFromData(selection.char,'pc')">
+        <ng-include src="'/partials/sub/party_character.html'"></ng-include>
       </div>
 
       <form ng-show="editable">

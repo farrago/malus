@@ -11,8 +11,8 @@
 </div>
 <div class="row">
   <div class="col-md-12">
-    <ul class="unstyled">
-      <li ng-repeat="party in parties | filter:filterDeleted">
+    <ul class="list-group">
+      <li ng-repeat="party in parties | filter:filterDeleted" class="list-group-item">
         <h3>
           <a href="#/parties/{{party.id}}" ng-class="stateClass(party)">
             <i class="icon-user"></i>&nbsp;{{party.name}}

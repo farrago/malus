@@ -29,4 +29,52 @@ angular.module('myApp.directives', []).
         };
       }
     };
-  });
+  }).
+  directive('mlRelativeValue', function () {
+    return {
+      restrict: 'E',
+      template: '<span ng-class="relativeClass">' +
+                  '{{bestValue}}' +
+                '</span>',
+      scope: {
+        mlCurrent: '=',
+        mlBase: '='
+      },
+      link: function (scope, elem, attrs) {
+        // Function to calculate what to display
+        var update = function () {
+          scope.relativeClass = "";
+
+          //
+          // Set the best value
+          //
+          scope.bestValue = scope.mlBase;
+          if (scope.mlCurrent) {
+            scope.bestValue = scope.mlCurrent;
+
+            //
+            // Set the class
+            //
+            if (scope.mlCurrent > scope.mlBase) {
+              scope.relativeClass = "label label-success";
+            }
+            else if (scope.mlCurrent < (scope.mlBase / 2)) {
+              scope.relativeClass = "label label-danger";
+            }
+            else if (scope.mlCurrent < scope.mlBase) {
+              scope.relativeClass = "label label-warning";
+            }
+          }
+        };
+        
+        // Watch the values to update as needed
+        scope.$watch('mlCurrent', function (newVal, oldVal) {
+          update();
+        });
+        scope.$watch('mlBase', function (newVal, oldVal) {
+            update();
+        });
+      }
+    }
+});
+
