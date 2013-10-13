@@ -1,14 +1,14 @@
 <!-- Refreshing progress bar -->
 <div ng-controller="CharacterCtrl" ng-init="initFromRoute()">
   <div class="row" ng-show="!currentUser || !character">
-    <div class="span12">
+    <div class="col-md-12">
       <h1>Refreshing <small><i class="icon-spinner icon-spin"></i></small></h1>
     </div>
   </div>
   <div ng-hide="!currentUser || !character">
     <!-- Name and info -->
     <div class="row"> 
-      <div class="span12">
+      <div class="col-md-12">
         <h1><span contenteditable="{{editable}}" ng-model="character.name" on-ok="character.ui.edit=true"></span>
           <small contenteditable="{{editable}}" ng-model="character.career" on-ok="character.ui.edit=true"></small>
 
@@ -26,13 +26,13 @@
       </div>
     </div>
     <div class="row">
-      <div class="span12 muted">
+      <div class="col-md-12 muted">
         <span ng-hide="character.notes">Notes:</span>
         <span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.notes"></span>
       </div>
     </div>
     <div class="row">
-      <div class="span6">
+      <div class="col-md-6">
         <p class="muted">
           <span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.race"></span>
           <span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.gender"></span>, 
@@ -41,7 +41,7 @@
           <span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.weight"></span>&nbsp;kg
         </p>
       </div>
-      <div class="span6">
+      <div class="col-md-6">
         <div class="pull-right muted">
           <span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.caste"></span>: 
           <b><span contenteditable="{{editable}}" on-ok="character.ui.edit=true" ng-model="character.experience"></span> EPs</b>
@@ -51,7 +51,7 @@
 
     <!-- spacer -->
     <div class="row">
-      <div class="span12">&nbsp;</div>
+      <div class="col-md-12">&nbsp;</div>
     </div>
 
     <tabs>
@@ -60,11 +60,11 @@
       <!-- ============================================================================== -->
       <pane heading="Stats" icon="user">
         <div class="row">
-          <div class="span6">
+          <div class="col-md-6">
             <ng-include src="'/partials/sub/stats_wounds_effects.html'"></ng-include>
           </div>
 
-          <div class="span5 offset1">
+          <div class="col-md-6">
             <!-- Skills -->
             <ng-include src="'/partials/sub/skills.html'"></ng-include>
           </div>
@@ -82,15 +82,24 @@
               <i class="icon-plus"></i>&nbsp;Add Ranged Weapon
             </button>
           </h3>
-          <div class="columns">
-            <div class="well card span5" ng-repeat="ranged in rangedList | orderBy:'name'">
-              <span class="lead">
-                <b ng-class="stateClass(ranged)" contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.name"></b>
-              </span>
-              <span ng-show="editable && !ranged.ui.delete" ng-click="ranged.ui.delete = true"><i class="icon-remove-circle"></i></span>
-              <span ng-show="editable && ranged.ui.delete" ng-click="ranged.ui.delete = false"><i class="icon-undo"></i></span>
-
-              <ng-include src="'/partials/sub/ranged.html'"></ng-include>
+          <div class="panel-group" id="rw-accordion">
+            <div class="panel panel-primary" ng-repeat="ranged in rangedList | orderBy:'name'">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#rw-accordion" ng-href="#rw-{{$index}}">
+                    <span ng-class="stateClass(ranged)" contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.name"></span>
+                  </a>
+                  <span class="pull-right">
+                    <span ng-show="editable && !ranged.ui.delete" ng-click="ranged.ui.delete = true"><i class="icon-remove-circle"></i></span>
+                    <span ng-show="editable && ranged.ui.delete" ng-click="ranged.ui.delete = false"><i class="icon-undo"></i></span>
+                  </span>
+                </h3>
+              </div>
+              <div id="rw-{{$index}}" class="panel-collapse collapse" ng-class="{in:$first}">
+                <div class="panel-body">
+                  <ng-include src="'/partials/sub/ranged.html'"></ng-include>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -102,14 +111,25 @@
               <i class="icon-plus"></i>&nbsp;Add Melee Weapon
             </button>
           </h3>
-          <div class="columns">
-            <div class="well card span5" ng-repeat="melee in meleeList | orderBy:'name'">
-              <span class="lead">
-                <b ng-class="stateClass(melee)" contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.name"></b>
-              </span>
-              <span ng-show="editable && !melee.ui.delete" ng-click="melee.ui.delete = true"><i class="icon-remove-circle"></i></span>
-              <span ng-show="editable && melee.ui.delete" ng-click="melee.ui.delete = false"><i class="icon-undo"></i></span>
-              <ng-include src="'/partials/sub/melee.html'"></ng-include>
+
+          <div class="panel-group" id="mw-accordion">
+            <div class="panel panel-primary" ng-repeat="melee in meleeList | orderBy:'name'">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#mw-accordion" ng-href="#mw-{{$index}}">
+                    <span ng-class="stateClass(melee)" contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.name"></span>
+                  </a>
+                  <span class="pull-right">
+                    <span ng-show="editable && !melee.ui.delete" ng-click="melee.ui.delete = true"><i class="icon-remove-circle"></i></span>
+                    <span ng-show="editable && melee.ui.delete" ng-click="melee.ui.delete = false"><i class="icon-undo"></i></span>
+                  </span>
+                </h3>
+              </div>
+              <div id="mw-{{$index}}" class="panel-collapse collapse" ng-class="{in:$first}">
+                <div class="panel-body">
+                  <ng-include src="'/partials/sub/melee.html'"></ng-include>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -121,18 +141,28 @@
               <i class="icon-plus"></i>&nbsp;Add Area Effect Weapon
             </button>
           </h3>
-          <div class="columns">
-            <div class="well card span5" ng-repeat="areaEffect in areaEffectList | orderBy:'name'">
-              <span class="lead">
-                <b ng-class="stateClass(areaEffect)" contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.name"></b>
-              </span>
-              <span ng-show="editable && !areaEffect.ui.delete" ng-click="areaEffect.ui.delete = true"><i class="icon-remove-circle"></i></span>
-              <span ng-show="editable && areaEffect.ui.delete" ng-click="areaEffect.ui.delete = false"><i class="icon-undo"></i></span>
-              <ng-include src="'/partials/sub/aoe.html'"></ng-include>
+
+          <div class="panel-group" id="aoe-accordion">
+            <div class="panel panel-primary" ng-repeat="areaEffect in areaEffectList | orderBy:'name'">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#aoe-accordion" ng-href="#aw-{{$index}}">
+                    <span ng-class="stateClass(areaEffect)" contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.name"></span>
+                  </a>
+                  <span class="pull-right">
+                    <span ng-show="editable && !areaEffect.ui.delete" ng-click="areaEffect.ui.delete = true"><i class="icon-remove-circle"></i></span>
+                    <span ng-show="editable && areaEffect.ui.delete" ng-click="areaEffect.ui.delete = false"><i class="icon-undo"></i></span>
+                  </span>
+                </h3>
+              </div>
+              <div id="aw-{{$index}}" class="panel-collapse collapse" ng-class="{in:$first}">
+                <div class="panel-body">
+                  <ng-include src="'/partials/sub/aoe.html'"></ng-include>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-
       </pane>
  
       <!-- ============================================================================== -->
@@ -147,7 +177,7 @@
             </button>
           </h3>
           <div class="columns">
-            <div class="well card span5" ng-repeat="set in armourSetList | orderBy:'name'">
+            <div class="well card col-md-5" ng-repeat="set in armourSetList | orderBy:'name'">
               <span class="lead">
                 <b ng-class="stateClass(set)" contenteditable="{{editable}}" on-ok="set.ui.edit=true" ng-model="set.name"></b>
               </span>
@@ -166,7 +196,7 @@
             </button>
           </h3>
           <div class="columns">
-            <div class="well card span5">
+            <div class="well card col-md-5">
               <table class="table table-condensed">
                 <thead>
                   <tr>
@@ -187,7 +217,7 @@
               </table>
             </div>
 
-            <div class="well card span5">
+            <div class="well card col-md-5">
               <table class="table table-condensed">
                 <thead>
                   <tr>
@@ -219,7 +249,7 @@
             </button>
           </h3>
           <div class="columns">
-            <div class="well card span5" ng-repeat="item in magicItemList | orderBy:'name'">
+            <div class="well card col-md-5" ng-repeat="item in magicItemList | orderBy:'name'">
               <span class="lead">
                 <b ng-class="stateClass(item)" contenteditable="{{editable}}" on-ok="item.ui.edit=true" ng-model="item.name"></b>
               </span>
@@ -256,7 +286,7 @@
             </button>
           </h3>
           <div class="columns">
-            <div class="well card span5" ng-repeat="account in accountList | orderBy:'name'">
+            <div class="well card col-md-5" ng-repeat="account in accountList | orderBy:'name'">
               <span class="lead">
                 <b ng-class="stateClass(account)" contenteditable="{{editable}}" on-ok="account.ui.edit=true" ng-model="account.name"></b>
               </span>

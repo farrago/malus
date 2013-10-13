@@ -5,9 +5,15 @@
   <title>Malus Character Manager</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-  <!--<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet">-->
-  <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
+  <!-- Latest compiled and minified CSS -->
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+
+  <!-- Font Awesome -->
+  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+
   <link rel="stylesheet" href="css/app.css" />
 
   <!-- Favicons -->
@@ -24,69 +30,66 @@
 <body class="ng-cloak">
   <div class="container">
     <!-- Navbar -->
-    <div class="navbar" bs-navbar>
-      <div class="navbar-inner">
-        <div class="container">
-
-          <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-
-          <!-- Leave the brand out -->
-          <a class="brand hidden-phone" href="#">Malus</a>
-
-          <ul class="nav">
-            <li data-match-route="/">
-              <a href="#/"><i class="icon-home"></i><span class="hidden-phone">&nbsp;Home</span></a>
-            </li>
-            <li data-match-route="/map">
-              <a href="#/map"><i class="icon-map-marker"></i><span class="hidden-phone">&nbsp;Map</span></a>
-            </li>
-            <li ng-show="currentUser" data-match-route="/characters">
-              <a href="#/characters"><i class="icon-user"></i><span class="hidden-phone">&nbsp;Characters</span></a>
-            </li>
-            <li ng-show="currentUser" data-match-route="/parties">
-              <a href="#/parties"><i class="icon-group"></i><span class="hidden-phone">&nbsp;Parties</span></a>
-            </li>
-          </ul>
-
-          <!-- collapsible elements go in here -->
-          <div class="nav-collapse collapse">
-
-            <div ng-controller="LoginCtrl">
-              <div ng-show="currentUser">
-                <ul class="nav pull-right">
-                  <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                      <i class="icon-user"></i>&nbsp;{{currentUser.username}}<b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                      <li ng-show="currentUser.admin"><a href="#/admin/users" ><i class="icon-group"></i> Users</a></li>
-                      <li><a ng-href="#/admin/users/{{currentUser.id}}" ><i class="icon-user"></i> Me</a></li>
-                      <li><a href="#" ng-click="logout()"><i class="icon-off"></i> Logout</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>
-              <div ng-hide="currentUser">
-                <form class="navbar-form pull-right">
-                  <input type="text" class="span2" placeholder="username" ng-model="username" />
-                  <input type="password" class="span2" placeholder="password" ng-model="password" />
-                  <button type="submit" class="btn btn-primary" ng-click="login()">Log in</button>
-                  <button type="submit" class="btn" ng-click="register()">Register</button>
-                </form>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
+    <nav class="navbar navbar-default" role="navigation" bs-navbar>
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Malus</a>
       </div>
-    </div>
 
+      <!-- collapsible elements go in here -->
+      <div class="navbar-collapse collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav">
+          <li data-match-route="/">
+            <a href="#/"><i class="icon-home"></i><span class="hidden-phone">&nbsp;Home</span></a>
+          </li>
+          <li data-match-route="/map">
+            <a href="#/map"><i class="icon-map-marker"></i><span class="hidden-phone">&nbsp;Map</span></a>
+          </li>
+          <li ng-show="currentUser" data-match-route="/characters">
+            <a href="#/characters"><i class="icon-user"></i><span class="hidden-phone">&nbsp;Characters</span></a>
+          </li>
+          <li ng-show="currentUser" data-match-route="/parties">
+            <a href="#/parties"><i class="icon-group"></i><span class="hidden-phone">&nbsp;Parties</span></a>
+          </li>
+        </ul>
+
+        <div ng-controller="LoginCtrl">
+          <div ng-show="currentUser">
+
+            <ul class="nav navbar-nav navbar-right" ng-show="currentUser">
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                  <i class="icon-user"></i>&nbsp;{{currentUser.username}}<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li ng-show="currentUser.admin"><a href="#/admin/users" ><i class="icon-group"></i> Users</a></li>
+                  <li><a ng-href="#/admin/users/{{currentUser.id}}" ><i class="icon-user"></i> Me</a></li>
+                  <li><a href="#" ng-click="logout()"><i class="icon-off"></i>Logout</a></li>
+                </ul>
+              </li>
+            </ul>
+            
+          </div>
+          <div ng-hide="currentUser">
+            <form class="navbar-form navbar-right">
+              <div class="form-group">
+                <input type="text" class="col-md-1" placeholder="username" ng-model="username" />
+                <input type="password" class="col-md-1" placeholder="password" ng-model="password" />
+                <button type="submit" class="btn btn-primary" ng-click="login()">Log in</button>
+                <button type="submit" class="btn btn-default" ng-click="register()">Register</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+      
+    </nav>
 
     <div ng-view></div>
 
@@ -102,7 +105,8 @@
 
   <script src="lib/angular-ui/bootstrap/ui-bootstrap-tpls-0.1.0-SNAPSHOT.js"></script>
   <script src="lib/angular-strap/angular-strap.min.js"></script>
-  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
   <script src="js/statics.js"></script>
   <script src="js/app.js"></script>

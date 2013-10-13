@@ -1,12 +1,12 @@
 <!-- Refreshing progress bar -->
 <div class="row" ng-show="!currentUser || !party">
-  <div class="span12">
+  <div class="col-md-12">
     <h1>Refreshing <small><i class="icon-spinner icon-spin"></i></small></h1>
   </div>
 </div>
 <div ng-show="currentUser && party">
   <div class="row">
-    <div class="span12">
+    <div class="col-md-12">
       <h1><span contenteditable="{{editable}}" ng-model="party.name" on-ok="party.ui.edit=true"></span>
 
         <!-- Edit button -->
@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="span12 muted">
+    <div class="col-md-12 muted">
       <span ng-hide="party.notes">Notes:</span>
       <span contenteditable="{{editable}}" on-ok="party.ui.edit=true" ng-model="party.notes"></span>
     </div>
@@ -31,7 +31,7 @@
 
   <!-- spacer -->
   <div class="row">
-    <div class="span12">&nbsp;</div>
+    <div class="col-md-12">&nbsp;</div>
   </div>
 
   <tabs>
@@ -54,7 +54,7 @@
       <h1>P<span class="hidden-phone">layer </span>C<span class="hidden-phone">haracter</span>s</h1>
       <div class="columns">
         <div ng-repeat="pcId in party.pcs" ng-controller="CharacterCtrl" ng-init="initFromId(pcId)">
-          <div class="span5 well card">
+          <div class="col-md-5 well card">
             <ng-include src="'/partials/sub/party_character.html'"></ng-include>
           </div>
         </div>
@@ -68,7 +68,7 @@
         <h1>N<span class="hidden-phone">on-</span>P<span class="hidden-phone">layer </span>C<span class="hidden-phone">haracter</span>s</h1>
         <div class="columns">
           <div ng-repeat="npcId in party.npcs" ng-controller="CharacterCtrl" ng-init="initFromId(npcId)">
-            <div class="span5 well card">
+            <div class="col-md-5 well card">
               <ng-include src="'/partials/sub/party_character.html'"></ng-include>
             </div>
           </div>

@@ -12,9 +12,7 @@
       <span ng-show="editable || ranged.drain">
         <i class="icon-bolt" tooltip="Ammo Consumption"></i>&nbsp<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.drain"></span>
       </span>
-    </span>
-    <br/>
-    <span class="lead muted">
+    
       <i class="icon-screenshot" tooltip="To Hit"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.tohit"></span>&nbsp;
       <i class="icon-time" tooltip="Dx"></i>&nbsp;<span contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.dx"></span>&nbsp;
       <span class="nobr">
@@ -46,7 +44,7 @@
         </tr>
         <tr ng-hide="ranged.extports.length"><td colspan="2">None</td></tr>
         <tr ng-show="editable">
-          <td colspan="3">
+          <td colspan="4">
             <button type="submit" class="btn pull-right" ng-click="addExtPort(ranged)" ng-show="editable">
               <i class="icon-plus muted"></i>
             </button>
@@ -80,7 +78,7 @@
         </tr>
         <tr ng-hide="ranged.ammos.length"><td colspan="2">None</td></tr>
         <tr ng-show="editable">
-          <td colspan="3">
+          <td colspan="5">
             <button type="submit" class="btn pull-right" ng-click="addAmmo(ranged)" ng-show="editable">
               <i class="icon-plus muted"></i>
             </button>

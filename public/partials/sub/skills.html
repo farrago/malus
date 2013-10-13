@@ -1,27 +1,29 @@
-﻿<table class="table table-condensed table-striped">
-  <thead>
-    <tr>
-      <th class="lead">Skills</th>
-      <th>
-        <abbr title="Level">Lvl</abbr></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="skill in skills | orderBy:'name'">
-      <td ng-class="stateClass(skill)" contenteditable="{{editable}}" ng-model="skill.name" on-ok="skill.ui.edit=true"></td>
-      <td ng-class="stateClass(skill)" contenteditable="{{editable}}" ng-model="skill.level" on-ok="skill.ui.edit=true"></td>
-      <td ng-show="editable">
-        <span class="pull-right" ng-show="editable && !skill.ui.delete" ng-click="skill.ui.delete = true"><i class="icon-remove-circle"></i></span>
-        <span class="pull-right" ng-show="editable && skill.ui.delete" ng-click="skill.ui.delete = false"><i class="icon-undo"></i></span>
-      </td>
-    </tr>
-    <tr ng-show="editable">
-      <td colspan="3">
-        <button type="submit" class="btn btn-success pull-right" ng-click="addSkill()" ng-show="editable">
-          <i class="icon-plus"></i>&nbsp;Add Skill
-        </button>
-      </td>
-    </tr>
-    <tr ng-hide="skills.length"><td colspan="3">No skills</td></tr>
-  </tbody>
-</table>
+﻿<div class="panel panel-primary">
+  <table class="table table-condensed table-striped panel-primary">
+    <thead class="panel-heading">
+      <tr>
+        <th class="lead">Skills</th>
+        <th>
+          <abbr title="Level">Lvl</abbr></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="skill in skills | orderBy:'name'">
+        <td ng-class="stateClass(skill)" contenteditable="{{editable}}" ng-model="skill.name" on-ok="skill.ui.edit=true"></td>
+        <td ng-class="stateClass(skill)" contenteditable="{{editable}}" ng-model="skill.level" on-ok="skill.ui.edit=true"></td>
+        <td ng-show="editable">
+          <span class="pull-right" ng-show="editable && !skill.ui.delete" ng-click="skill.ui.delete = true"><i class="icon-remove-circle"></i></span>
+          <span class="pull-right" ng-show="editable && skill.ui.delete" ng-click="skill.ui.delete = false"><i class="icon-undo"></i></span>
+        </td>
+      </tr>
+      <tr ng-show="editable">
+        <td colspan="3">
+          <button type="submit" class="btn btn-success pull-right" ng-click="addSkill()" ng-show="editable">
+            <i class="icon-plus"></i>&nbsp;Add Skill
+          </button>
+        </td>
+      </tr>
+      <tr ng-hide="skills.length"><td colspan="3">No skills</td></tr>
+    </tbody>
+  </table>
+</div>
