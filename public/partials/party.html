@@ -29,7 +29,7 @@
     <!-- ============================================================================== -->
     <!-- Characters tab                                                                 -->
     <!-- ============================================================================== -->
-    <pane heading="Characters" icon="group">
+    <pane heading="Party" icon="group">
       <div class="row">
         <div class="col-md-12 table-responsive">
           <table class="table table-condensed text-center">
@@ -75,6 +75,105 @@
         </fieldset>
       </form>
 
+    </pane>
+
+    <!-- ============================================================================== -->
+    <!-- Contacts tab  (always make it last)                                            -->
+    <!-- ============================================================================== -->
+    <pane heading="Contacts" icon="book">
+      <!-- New Contact Form -->
+      <div class="panel panel-primary" ng-show="editableParty">
+        <div class="panel-heading">Add New Contact</div>
+        <div class="panel-body">
+          <form role="form" name="newContactForm">
+            <div class="form-group" ng-class="{'has-warning':newContactForm.newContactName.$valid == false}">
+              <label for="newContactName" class="sr-only">Name</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="newContactName" 
+                placeholder="Name [Required]" 
+                name="newContactName"
+                ng-model="newContact.name" 
+                required>
+            </div>
+            <div class="form-group">
+              <label for="newContactCareer" class="sr-only">Career</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="newContactCareer" 
+                placeholder="Career" 
+                ng-model="newContact.career">
+            </div>
+            <div class="form-group">
+              <label for="newContactNote" class="sr-only">Notes</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="newContactNote" 
+                placeholder="Notes" 
+                ng-model="newContact.notes">
+            </div>
+            <button 
+              type="submit" 
+              class="btn btn-primary" 
+              ng-click="addNewContact(newContact)"
+              ng-disabled="newContactForm.newContactName.$valid == false"
+              >
+              <i class="icon-plus"></i> Add Contact
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Contacts List -->
+      <div class="panel panel-primary">
+        <div class="panel-heading">Contacts</div>
+        <div class="panel-body">
+          <form class="form-inline pull-right" role="search">
+            <div class="form-group">
+              <label class="sr-only" for="contactSearch">Email address</label>
+              <input type="text" class="form-control input-sm" id="contactSearch" placeholder="Search" ng-model="contactSearch">
+            </div>
+          </form>
+          Contacts, associates, and acquaintances of the party.
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="contact in party.contact_chars | orderBy:'name' | filter:contactSearch">
+            <div class="pull-right">
+              <button type="submit" class="btn btn-primary btn-sm" ng-click="addToParty(contact.id)" ng-show="editableParty">
+                <i class="icon-plus"></i> Add to party
+              </button>
+              <a ng-href="/#/characters/{{contact.id}}" class="muted" ng-hide="editableParty">
+                <i class="icon-external-link"></i>
+              </a>
+            </div>
+            <h4 class="list-group-item-heading">{{contact.name}} <small>{{contact.career}}</small></h4>
+            <p class="list-group-item-text">{{contact.notes}}</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- NPCS in party -->
+      <div class="panel panel-default">
+        <div class="panel-heading">Party</div>
+        <div class="panel-body">Current NPC members of the party.</div>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="contact in party.npc_chars | orderBy:'name'">
+            <div class="pull-right">
+              <button class="btn btn-primary btn-sm" ng-click="removeFromParty(contact.id)" ng-show="editableParty">
+                <i class="icon-minus"></i> Remove from party
+              </button>
+              <a ng-href="/#/characters/{{contact.id}}" class="muted" ng-hide="editableParty">
+                <i class="icon-external-link"></i>
+              </a>
+            </div>
+            <h4 class="list-group-item-heading">{{contact.name}} <small>{{contact.career}}</small></h4>
+            <p class="list-group-item-text">{{contact.notes}}</p>
+          </li>
+        </ul>
+      </div>
     </pane>
 
     <!-- ============================================================================== -->

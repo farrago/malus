@@ -21,11 +21,11 @@ var defaultValues = {
     deleted: false,
     notes: "Notes"
 };
-
+console.log('New Char', this);
 var member;
 for (member in defaultValues) {
     if ( defaultValues.hasOwnProperty(member)) {
-        if (!this.member){
+        if (!this.hasOwnProperty(member)){
             this[member] = defaultValues[member];
         }
     }

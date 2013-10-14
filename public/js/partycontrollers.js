@@ -254,11 +254,16 @@ function PartyCtrl(
       // Marked as edited, so save
       //
       console.log("Saving:", obj);
+      var refresh = obj.ui.partyChange;
       delete obj.ui;
       $scope.calls += 1;
       obj.$save({}, function (s, saveResponseHeaders) {
         console.log("Saved:", s);
         $scope.calls -= 1;
+        if (refresh) {
+          $scope.refreshAll();
+        }
+
       });
     }
   }
@@ -365,6 +370,111 @@ function PartyCtrl(
     }
     $scope.party.ui.edit = true;
   }
+
+  $scope.addToParty = function (charId) {
+    console.log("Add to party:", charId);
+    var found = false;
+    for (var i = $scope.party.contacts.length - 1; i >= 0; i--) {
+      if ($scope.party.contacts[i] == charId) {
+        found = true;
+        $scope.party.contacts.splice(i, 1);
+        break;
+      }
+    }
+    if (found) {
+      if (!$scope.party.hasOwnProperty('npcs')) {
+        $scope.party.npcs = [];
+      }
+      $scope.party.npcs.push(charId);
+
+      if (!$scope.party.hasOwnProperty('npc_chars')) {
+        $scope.party.npc_chars = [];
+      }
+      for (var i = $scope.party.contact_chars.length - 1; i >= 0; i--) {
+        if ($scope.party.contact_chars[i].id == charId) {
+          $scope.party.npc_chars.push($scope.party.contact_chars[i]);
+          $scope.party.contact_chars.splice(i, 1);
+          break;
+        }
+      }
+
+      if (!$scope.party.hasOwnProperty('ui')) {
+        $scope.party.ui = function () { };
+      }
+      $scope.party.ui.edit = true;
+      $scope.party.ui.partyChange = true;
+    }
+  }
+
+  $scope.removeFromParty = function (charId) {
+    console.log("Remove from party:", charId);
+    var found = false;
+    for (var i = $scope.party.npcs.length - 1; i >= 0; i--) {
+      if ($scope.party.npcs[i] == charId) {
+        found = true;
+        $scope.party.npcs.splice(i, 1);
+        break;
+      }
+    }
+    if (found) {
+      if (!$scope.party.hasOwnProperty('contacts')) {
+        $scope.party.contacts = [];
+      }
+      $scope.party.contacts.push(charId);
+
+      for (var i = $scope.party.npc_chars.length - 1; i >= 0; i--) {
+        if ($scope.party.npc_chars[i].id == charId) {
+          $scope.party.contact_chars.push($scope.party.npc_chars[i]);
+          $scope.party.npc_chars.splice(i, 1);
+          break;
+        }
+      }
+
+      if (!$scope.party.hasOwnProperty('ui')) {
+        $scope.party.ui = function () { };
+      }
+      $scope.party.ui.edit = true;
+      $scope.party.ui.partyChange = true;
+    }
+  }
+
+  $scope.newContact = {};
+  $scope.addNewContact = function () {
+    console.log("Adding new contact", $scope.newContact);
+    if (!$scope.newContact.name) {
+      return;
+    }
+    var char = new Character();
+    char.name = $scope.newContact.name;
+    if ($scope.newContact.hasOwnProperty('career')) {
+      char.career = $scope.newContact.career;
+    }
+    if ($scope.newContact.hasOwnProperty('notes')) {
+      char.notes = $scope.newContact.notes;
+    }
+    console.log("Saving contact", char);
+    char.$save({}, function (newChar, saveResponseHeaders) {
+      console.log('Added: ', newChar);
+      console.log('Adding to contacts');
+
+      if (!$scope.party.hasOwnProperty('contacts')) {
+        $scope.party.contacts = [];
+      }
+      $scope.party.contacts.push(newChar.id);
+      if (!$scope.party.hasOwnProperty('contact_chars')) {
+        $scope.party.contact_chars = [];
+      }
+      $scope.party.contact_chars.push(newChar);
+
+      if (!$scope.party.hasOwnProperty('ui')) {
+        $scope.party.ui = function () { };
+      }
+      $scope.party.ui.edit = true;
+      $scope.party.ui.partyChange = true;
+
+      $scope.newContact = {};
+    });
+  };
 
   $scope.newNPC = {};
   $scope.addNewNPC = function () {

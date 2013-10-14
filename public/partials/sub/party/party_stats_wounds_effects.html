@@ -103,7 +103,7 @@
             </tr>
             <tr ng-repeat="piece in set.pieces | orderBy:'location' | filter:pieceFilter">
               <td>{{piece.location | location}}</td>
-              <td>{{piece.currentCondition}}</td>
+              <td><ml-relative-value ml-current="piece.currentCondition" ml-base="piece.baseCondition" /></td>
               <td>{{piece.notes}}</td>
             </tr>
             <tr ng-hide="set.pieces.length"><td colspan="3">No effective armour</td></tr>

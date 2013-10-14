@@ -44,32 +44,3 @@
 
 <!-- Skills -->
 <ng-include src="'/partials/sub/skills.html'"></ng-include>
-
-<!-- Armour and Equipment -->
-<!--
-<table class="table table-condensed">
-  <tbody>
-    <tr>
-      <td class="hidden-phone"><b>Armour:</b></td>
-      <td>
-        <span ng-repeat="set in armourSetList | filter:limitIfShowLoadout | orderBy:'name'">
-          <i class="icon-info-sign muted"
-            data-unique="1"
-            bs-popover="'partials/sub/armour.html'"
-            data-title="<b>{{set.name}}</b><button type='button' class='close' ng-click='dismiss()'>&times;</button>"></i>
-          {{set.name}}<br />
-        </span>
-        <span ng-hide="armourSetList.length">No armour</span>
-      </td>
-    </tr>
-    <tr>
-      <td class="hidden-phone"><b>Equipment:</b></td>
-      <td>
-        <span ng-repeat="eq in equipmentList | filter:limitIfShowLoadout | orderBy:'name'">{{eq.name}} <span ng-hide="eq.loadout == '1'">[{{eq.loadout}}]</span><br />
-        </span>
-        <span ng-hide="equipmentList.length">No equipment</span>
-      </td>
-    </tr>
-  </tbody>
-</table>
--->

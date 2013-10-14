@@ -8,4 +8,8 @@ if (query.id) {
       function(chars){
         party.npc_chars = chars;
     });
+    dpd.characters.get({id: {$in: party.contacts}, $fields: {name:1,career:1,notes:1}}, 
+      function(chars){
+        party.contact_chars = chars;
+    });
 }
