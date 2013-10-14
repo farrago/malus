@@ -745,7 +745,6 @@ function CharacterCtrl(
     var have = Number(ammo.loadout);
     var drain = Number(ranged.drain);
     if (have < drain) {
-      console.log("Have, need", have, drain);
       alert("Not enough ammo to fire " + ranged.name + " using " + ammo.name );
       return;
     }
@@ -828,6 +827,21 @@ function CharacterCtrl(
         }
       });
   };
+
+  $scope.useAoe = function (aoe) {
+    var have = Number(aoe.loadout);
+    if (have < 1) {
+      alert("No " + aoe.name + " left!");
+      return;
+    }
+
+    var confirmMessage = "Use " + aoe.name + " [" + have + " left]?";
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+    aoe.loadout = String(have - 1);
+    aoe.$save();
+  }
 
   //
   // Equipment

@@ -1,0 +1,22 @@
+﻿<div class="panel panel-primary">
+  <div class="panel-heading">Melee</div>
+
+  <div class="list-group">
+    <a 
+      href 
+      class="list-group-item"
+      ng-repeat="melee in meleeList | filter:limitIfShowLoadout | orderBy:'name'"
+      >
+      <h4 class="list-group-item-heading">{{melee.name}} <small>{{melee.notes}}</small></h4>
+      <p class="list-group-item-text">
+        <span class="lead">
+          <i class="icon-wrench" tooltip="Strength"></i>&nbsp;{{melee.strength}} 
+          <i class="icon-heart" tooltip="Damage"></i>&nbsp;{{melee.damage}} 
+          <i class="icon-legal" tooltip="Attack Skill"></i>&nbsp;{{melee.as}} 
+          <i class="icon-time" tooltip="Dx"></i>&nbsp;{{melee.dx}} 
+        </span>
+      </p>
+    </a>
+  </div>
+
+</div>

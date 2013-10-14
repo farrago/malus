@@ -12,34 +12,9 @@
 <ng-include src="'/partials/sub/party/party_stats_wounds_effects.html'"></ng-include>
 
 <!-- Weapons -->
-<div class="panel panel-primary">
-  <div class="panel-heading">Ranged</div>
-  <ul class="list-group">
-    <li class="list-group-item" ng-repeat="ranged in rangedList | filter:limitIfShowLoadout | orderBy:'name'">
-      <ng-include src="'/partials/sub/party/party-ranged.html'"></ng-include>
-    </li>
-  </ul>
-</div>
-
-<div class="panel panel-primary">
-  <div class="panel-heading">Melee</div>
-  <ul class="list-group">
-    <li class="list-group-item" ng-repeat="melee in meleeList | filter:limitIfShowLoadout | orderBy:'name'">
-      <h4>{{melee.name}}</h4>
-      <ng-include src="'/partials/sub/melee.html'"></ng-include>
-    </li>
-  </ul>
-</div>
-
-<div class="panel panel-primary">
-  <div class="panel-heading">Area Effect</div>
-  <ul class="list-group">
-    <li class="list-group-item" ng-repeat="areaEffect in areaEffectList | filter:limitIfShowLoadout | orderBy:'name'">
-      <h4>{{areaEffect.name}}</h4>
-      <ng-include src="'/partials/sub/aoe.html'"></ng-include>
-    </li>
-  </ul>
-</div>
+<ng-include src="'/partials/sub/party/party-ranged.html'"></ng-include>
+<ng-include src="'/partials/sub/party/party-aoe.html'"></ng-include>
+<ng-include src="'/partials/sub/party/party-melee.html'"></ng-include>
 
 <!-- Skills -->
 <ng-include src="'/partials/sub/skills.html'"></ng-include>
