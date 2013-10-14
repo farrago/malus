@@ -63,18 +63,6 @@
         <ng-include src="'/partials/sub/party_character.html'"></ng-include>
       </div>
 
-      <form ng-show="editable">
-        <fieldset>
-          <legend>Add New NPC to the party</legend>
-          <label for="newnpcname">Name</label>
-          <input type="text" placeholder="New NPC Name" ng-model="newNPC.name" id="newnpcname">
-          <label for="newnpcendurance">Endurance</label>
-          <input type="number" placeholder="Endurance" ng-model="newNPC.eUP" id="newnpcendurance" />
-          <span class="help-block">Initial Endurance for this new NPC (Defaults to 0 if left blank)</span>
-          <button type="submit" class="btn btn-primary" ng-click="addNewNPC()"><i class="icon-plus"></i> Add New NPC</button>
-        </fieldset>
-      </form>
-
     </pane>
 
     <!-- ============================================================================== -->
