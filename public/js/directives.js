@@ -45,23 +45,24 @@ angular.module('myApp.directives', []).
         var update = function () {
           scope.relativeClass = "";
 
-          //
-          // Set the best value
-          //
-          scope.bestValue = scope.mlBase;
-          if (scope.mlCurrent) {
-            scope.bestValue = scope.mlCurrent;
+          var base = Number(scope.mlBase);
+          
+          scope.bestValue = base;
+
+          if (scope.hasOwnProperty('mlCurrent') && scope.mlCurrent !== null && scope.mlCurrent !== "") {
+            var current = Number(scope.mlCurrent);
+            scope.bestValue = current;
 
             //
             // Set the class
             //
-            if (scope.mlCurrent > scope.mlBase) {
+            if (current > base) {
               scope.relativeClass = "label label-success";
             }
-            else if (scope.mlCurrent < (scope.mlBase / 2)) {
+            else if (current < (base / 2)) {
               scope.relativeClass = "label label-danger";
             }
-            else if (scope.mlCurrent < scope.mlBase) {
+            else if (current < base) {
               scope.relativeClass = "label label-warning";
             }
           }
@@ -69,7 +70,7 @@ angular.module('myApp.directives', []).
         
         // Watch the values to update as needed
         scope.$watch('mlCurrent', function (newVal, oldVal) {
-          update();
+            update();
         });
         scope.$watch('mlBase', function (newVal, oldVal) {
             update();
