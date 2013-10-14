@@ -16,8 +16,7 @@
   <div class="panel-heading">Ranged</div>
   <ul class="list-group">
     <li class="list-group-item" ng-repeat="ranged in rangedList | filter:limitIfShowLoadout | orderBy:'name'">
-      <h4>{{ranged.name}}</h4>
-      <ng-include src="'/partials/sub/ranged.html'"></ng-include>
+      <ng-include src="'/partials/sub/party/party-ranged.html'"></ng-include>
     </li>
   </ul>
 </div>

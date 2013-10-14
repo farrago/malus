@@ -581,6 +581,28 @@ function CharacterCtrl(
     }
   }
 
+  $scope.healWound = function (points, woundId) {
+    var confirmMessage = "Heal wound by 1 point?";
+    if (!woundId) {
+      confirmMessage = "Heal all wounds by 1 point?";
+    }
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+    angular.forEach($scope.wounds, function (wound) {
+      if (!woundId || wound.id === woundId) {
+        if (Number(wound.damage)) {
+          wound.damage = Number(wound.damage) - Number(points);
+          if (Number(wound.damage) < 0) {
+            wound.damage = 0;
+          }
+          wound.$save();
+        }
+      }
+    });
+    $scope.calculateTemporaries();
+  }
+
   //
   // Effects
   //
@@ -719,6 +741,22 @@ function CharacterCtrl(
       }
     });
   };
+  $scope.useAmmo = function (ranged, ammo) {
+    var have = Number(ammo.loadout);
+    var drain = Number(ranged.drain);
+    if (have < drain) {
+      console.log("Have, need", have, drain);
+      alert("Not enough ammo to fire " + ranged.name + " using " + ammo.name );
+      return;
+    }
+
+    var confirmMessage = "Fire " + ranged.name + " using " + ammo.name + " [will use " + drain + " of " + have + "]?";
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+    ammo.loadout = String( have - drain );
+    ammo.$save();
+  }
 
   //
   // Melee weapons

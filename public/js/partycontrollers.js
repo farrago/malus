@@ -277,6 +277,7 @@ function PartyCtrl(
   //
   // Enable the edit controls and reset the edit flags
   //
+  $scope.editableParty = false;
   $scope.allowEdit = function () {
     $scope.editable = true;
     $scope.editableParty = true;

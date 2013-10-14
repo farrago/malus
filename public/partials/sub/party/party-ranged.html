@@ -1,9 +1,37 @@
-﻿<div class="panel panel-primary">
-  <div class="panel-heading">Ranged</div>
+﻿<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">{{ranged.name}}</div>
+  <div class="panel-body">
+    <p>{{ranged.notes}}</p>
+    <p class="lead">
+      <i class="icon-wrench" tooltip="Strength"></i></a>&nbsp;{{ranged.strength}} 
+      <i class="icon-heart" tooltip="Damage"></i>&nbsp;{{ranged.damage}} 
+      <i class="icon-retweet" tooltip="Rate of Fire"></i>&nbsp;{{ranged.rof}} 
+      <i class="icon-bolt" tooltip="Ammo Consumption"></i>&nbsp{{ranged.drain}} 
+      <i class="icon-screenshot" tooltip="To Hit"></i>&nbsp;{{ranged.tohit}} 
+      <i class="icon-time" tooltip="Dx"></i>&nbsp;{{ranged.dx}} 
+      <span class="nobr">
+        <i class="icon-resize-horizontal" tooltip="Range: Short/Medium/Long"></i>&nbsp;{{ranged.short}}&nbsp;/&nbsp;{{ranged.medium}}&nbsp;/&nbsp;{{ranged.long}}
+      </span>
+    </p>
+  </div>
+
   <ul class="list-group">
-    <li class="list-group-item" ng-repeat="ranged in rangedList | filter:limitIfShowLoadout | orderBy:'name'">
-      <h4>{{ranged.name}}</h4>
-      <ng-include src="'/partials/sub/ranged.html'"></ng-include>
+    <li class="list-group-item"><strong>External Ports</strong></li>
+    <li class="list-group-item" ng-repeat="extport in ranged.extports">
+      {{extport.name}} <span class="text-muted">{{extport.effect}}</span>
     </li>
   </ul>
+
+  <div class="list-group">
+    <a href class="list-group-item"><strong>Ammo</strong></a>
+    <a 
+      href 
+      class="list-group-item" ng-repeat="ammo in ranged.ammos | filter:limitIfShowLoadout"
+      ng-click="useAmmo(ranged,ammo)"
+      >
+      <span class="badge">{{ammo.loadout}}</span>
+      {{ammo.name}} <span class="text-muted">{{ammo.notes}}</span>
+    </a>
+  </div>
 </div>
