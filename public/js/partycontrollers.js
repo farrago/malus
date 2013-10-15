@@ -372,6 +372,42 @@ function PartyCtrl(
     $scope.party.ui.edit = true;
   }
 
+  //
+  // Watch the selected char and then reload the old char when we change chars
+  // to pick up the changed values
+  //
+  $scope.$watch('selection.char', function (newVal, oldVal) {
+    if (oldVal) {
+      Character.get({ id: oldVal.id }, function (char) {
+        var found = false;
+        // See if it was a PC
+        if ($scope.party && $scope.party.pc_chars) {
+          for (var i = 0, l = $scope.party.pc_chars.length; i < l; ++i) {
+            if ($scope.party.pc_chars[i].id == char.id) {
+              $scope.party.pc_chars[i] = char;
+              found = true;
+              break;
+            }
+          }
+        }
+        // See if it was an NPC
+        if ($scope.party && $scope.party.npc_chars && !found) {
+          for (var i = 0, l = $scope.party.npc_chars.length; i < l; ++i) {
+            if ($scope.party.npc_chars[i].id == char.id) {
+              $scope.party.npc_chars[i] = char;
+              found = true;
+              break;
+            }
+          }
+        }
+        
+        if (!found) {
+          console.log("Couldn't find: ", char);
+        }
+      });
+    }
+  });
+  
   $scope.addToParty = function (charId) {
     console.log("Add to party:", charId);
     var found = false;
