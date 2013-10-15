@@ -1,4 +1,20 @@
-﻿<!-- Character Name -->
+﻿
+<div class="btn-group pull-right">
+  <button 
+    type="button" 
+    class="btn"
+    ng-class="{'btn-danger':selection.showWoundsEffects, 'btn-default':!selection.showWoundsEffects}"
+    ng-click="selection.showWoundsEffects = true"
+    >In Combat</button>
+  <button 
+    type="button" 
+    class="btn"
+    ng-class="{'btn-success':!selection.showWoundsEffects, 'btn-default':selection.showWoundsEffects}"
+    ng-click="selection.showWoundsEffects = false"
+    >Out of Combat</button>
+</div>
+
+<!-- Character Name -->
 <h2>{{character.name}}&nbsp;
     <small>
       <a href="/#/characters/{{character.id}}" class="muted"><i class="icon-external-link"></i></a>
@@ -11,10 +27,15 @@
 <!-- Stats, wounds, & effects -->
 <ng-include src="'/partials/sub/party/party_stats_wounds_effects.html'"></ng-include>
 
-<!-- Weapons -->
-<ng-include src="'/partials/sub/party/party-ranged.html'"></ng-include>
-<ng-include src="'/partials/sub/party/party-aoe.html'"></ng-include>
-<ng-include src="'/partials/sub/party/party-melee.html'"></ng-include>
+<div  ng-show="selection.showWoundsEffects">
+  <!-- Armour -->
+  <ng-include src="'/partials/sub/party/party-armour.html'"></ng-include>
+
+  <!-- Weapons -->
+  <ng-include src="'/partials/sub/party/party-ranged.html'"></ng-include>
+  <ng-include src="'/partials/sub/party/party-aoe.html'"></ng-include>
+  <ng-include src="'/partials/sub/party/party-melee.html'"></ng-include>
+</div>
 
 <!-- Skills -->
 <ng-include src="'/partials/sub/skills.html'"></ng-include>

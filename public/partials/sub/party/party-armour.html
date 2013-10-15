@@ -1,0 +1,29 @@
+﻿<div class="panel panel-primary">
+  <div class="panel-heading">Armour</div>
+
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="set in armourSetList | filter:{loadout:true}">
+      <table class="table table-condensed panel-default">
+        <thead class="panel-heading">
+          <tr>
+            <th colspan="3">{{set.name}}</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="3">{{set.notes}}</td></tr>
+          <tr>
+            <th>Location</th>
+            <th>Condition</th>
+            <th>Notes</th>
+          </tr>
+          <tr ng-repeat="piece in set.pieces | orderBy:'location' | filter:pieceFilter">
+            <td>{{piece.location | location}}</td>
+            <td><ml-relative-value ml-current="piece.currentCondition" ml-base="piece.baseCondition" /></td>
+            <td>{{piece.notes}}</td>
+          </tr>
+          <tr ng-hide="set.pieces.length"><td colspan="3">No effective armour</td></tr>
+        </tbody>
+      </table>
+    </li>
+  </ul>
+</div>

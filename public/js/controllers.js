@@ -581,25 +581,30 @@ function CharacterCtrl(
     }
   }
 
-  $scope.healWound = function (points, woundId) {
-    var confirmMessage = "Heal wound by 1 point?";
-    if (!woundId) {
+  $scope.healWound = function (points, wound) {
+    var confirmMessage = "";
+    if (wound === null) {
       confirmMessage = "Heal all wounds by 1 point?";
+    } else {
+      confirmMessage = "Heal " + wound.note + " by 1 point?";
     }
     if (!confirm(confirmMessage)) {
       return;
     }
-    angular.forEach($scope.wounds, function (wound) {
-      if (!woundId || wound.id === woundId) {
+
+    if (!wound) {
+      angular.forEach($scope.wounds, function (wound) {
         if (Number(wound.damage)) {
           wound.damage = Number(wound.damage) - Number(points);
-          if (Number(wound.damage) < 0) {
-            wound.damage = 0;
-          }
           wound.$save();
         }
+      });
+    } else {
+      if (Number(wound.damage)) {
+        wound.damage = Number(wound.damage) - Number(points);
+        wound.$save();
       }
-    });
+    }
     $scope.calculateTemporaries();
   }
 
