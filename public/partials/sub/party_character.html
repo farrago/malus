@@ -5,13 +5,17 @@
     class="btn"
     ng-class="{'btn-danger':selection.showWoundsEffects, 'btn-default':!selection.showWoundsEffects}"
     ng-click="selection.showWoundsEffects = true"
-    >In Combat</button>
+    >
+    <i class="icon-screenshot"></i><span class="hidden-inline-xs">  In Combat</span>
+  </button>
   <button 
     type="button" 
     class="btn"
     ng-class="{'btn-success':!selection.showWoundsEffects, 'btn-default':selection.showWoundsEffects}"
     ng-click="selection.showWoundsEffects = false"
-    >Out of Combat</button>
+    >
+    <i class="icon-ban-circle"></i><span class="hidden-inline-xs"> Out of combat</span>
+  </button>
 </div>
 
 <!-- Character Name -->
