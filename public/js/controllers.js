@@ -748,7 +748,7 @@ function CharacterCtrl(
   };
   $scope.useAmmo = function (ranged, ammo) {
     var have = Number(ammo.loadout);
-    var drain = Number(ranged.drain) | 1;
+    var drain = Number(ranged.drain) || 1;
     if (have < drain) {
       alert("Not enough ammo to fire " + ranged.name + " using " + ammo.name );
       return;
