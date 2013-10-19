@@ -942,6 +942,23 @@ function CharacterCtrl(
     return $scope.editable || (piece.baseCondition !== null && piece.baseCondition !== "");
   };
 
+  $scope.damageArmour = function (points, piece) {
+    var confirmMessage = "";
+    if (piece === null) {
+      return;
+    } else {
+      confirmMessage = "Damage location " + piece.location + " by 1 point?";
+    }
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    if (Number(piece.currentCondition)) {
+      piece.currentCondition = String(Number(piece.currentCondition) - Number(points));
+      piece.$save();
+    }
+  }
+
   //
   // MagicItems
   //

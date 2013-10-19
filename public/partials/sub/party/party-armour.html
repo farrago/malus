@@ -16,7 +16,10 @@
             <th>Condition</th>
             <th>Notes</th>
           </tr>
-          <tr ng-repeat="piece in set.pieces | orderBy:'location' | filter:pieceFilter">
+          <tr 
+            ng-repeat="piece in set.pieces | orderBy:'location' | filter:pieceFilter"
+            ng-click="damageArmour(1,piece)"
+            >
             <td>{{piece.location | location}}</td>
             <td><ml-relative-value ml-current="piece.currentCondition" ml-base="piece.baseCondition" /></td>
             <td>{{piece.notes}}</td>
