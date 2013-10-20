@@ -868,6 +868,20 @@ function CharacterCtrl(
     equipment.ui.add = true;
     $scope.equipmentList.push(equipment);
   }
+  $scope.useEquipment = function (equipment) {
+    var have = Number(equipment.loadout);
+    if (have < 1) {
+      alert("No " + equipment.name + " left!");
+      return;
+    }
+
+    var confirmMessage = "Use one " + equipment.name + " [" + have + " left]?";
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+    equipment.loadout = String(have - 1);
+    equipment.$save();
+  }
 
   //
   // ArmourSet
@@ -1171,6 +1185,61 @@ function CharacterCtrl(
 
     if (!found.$save) {
       found = new CharacterAreaEffect(found);
+    }
+
+    //
+    // Update the loadout of each objects
+    //
+    object.loadout = String(Number(object.loadout) - 1);
+    object.$save();
+    found.loadout = String(Number(found.loadout) + 1);
+    found.$save();
+
+    if ($scope.refreshPartyChar) {
+      $scope.refreshPartyChar(target.id);
+    }
+  }
+
+  $scope.giveOneEquipment = function (target, object, group) {
+    if (!target || !object || !group) {
+      return;
+    }
+    if (target.id === $scope.character.id) {
+      alert("Can't give things to yourself!");
+      return;
+    }
+    if (!object.loadout) {
+      alert("Don't have any to give!");
+      return;
+    }
+    var confirmMessage = "Do you want to give one " + object.name + " to " + target.name + "?";
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    //
+    // Search the target char's Equipment list for a matching object. That is one that
+    // matches the name
+    //
+    var found = null;
+    for (var i = 0, l = target.equipments.length; i < l; ++i) {
+      var equipment = target.equipments[i];
+      if ( equipment.name === object.name ) {
+        found = equipment;
+        break;
+      }
+    }
+    if (!found) {
+      found = {};
+      found.characterId = target.id;
+      found.name = object.name;
+      found.count = "0";
+      found.loadout = "0";
+      found.carried = true;
+    }
+
+    if (!found.$save) {
+      found = new CharacterEquipment(found);
     }
 
     //

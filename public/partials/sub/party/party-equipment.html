@@ -1,0 +1,16 @@
+﻿<div class="panel panel-primary">
+  <div class="panel-heading">Equipment</div>
+
+  <ul class="list-group">
+    <li 
+      class="list-group-item"
+       ng-repeat="equipment in equipmentList | filter:editableOrInLoadout | orderBy:'name'"
+      >
+      <span class="badge" ng-click="useEquipment(equipment)">{{equipment.loadout}}</span>
+      <span ng-click="useEquipment(equipment)">{{equipment.name}}</small></span>
+      <ml-expander></ml-expander>
+      <ml-give ml-item="equipment" ml-group="equipmentList" ml-give-fn="giveOneEquipment"></ml-give>
+    </li>
+  </ul>
+
+</div>
