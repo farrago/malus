@@ -249,9 +249,8 @@ function CharacterCtrl(
     $scope.characterId = id;
     $scope.refreshAll();
   }
-  $scope.initFromData = function (char, type) {
+  $scope.initFromData = function (char) {
     if (char) {
-      $scope.characterType = type;
       $scope.characterId = char.id;
       $scope.processCharObject(char);
     }
@@ -1082,6 +1081,109 @@ function CharacterCtrl(
     }
 
     return true;
+  }
+
+  //
+  // Giving functionality
+  //
+  $scope.give = function (target, object, group) {
+    if (!target || !object || !group) {
+      return;
+    }
+    if (target.id === $scope.character.id) {
+      alert("Can't give things to yourself!");
+      return;
+    }
+    var confirmMessage = "Do you want to give " + object.name + " to " + target.name + "?";
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    //
+    // Update the object
+    //
+    object.characterId = target.id;
+    object.$save();
+
+    //
+    // Remove it from our cached data
+    //
+    for (var i = group.length - 1; i >= 0; i--) {
+      if (group[i].id === object.id) {
+        group.splice(i, 1);
+        break;
+      }
+    }
+
+    if ($scope.refreshPartyChar) {
+      $scope.refreshPartyChar(target.id);
+    }
+  }
+
+  $scope.giveOneAoe = function (target, object, group) {
+    if (!target || !object || !group) {
+      return;
+    }
+    if (target.id === $scope.character.id) {
+      alert("Can't give things to yourself!");
+      return;
+    }
+    if (!object.loadout) {
+      alert("Don't have any to give!");
+      return;
+    }
+    var confirmMessage = "Do you want to give one " + object.name + " to " + target.name + "?";
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    //
+    // Search the target char's aoe list for a matching object. That is one that
+    // matches area, damage, hits, strength, and name
+    //
+    var found = null;
+    for (var i = 0, l = target.aoes.length; i < l; ++i) {
+      var aoe = target.aoes[i];
+      if (
+        aoe.area === object.area &&
+        aoe.damage === object.damage &&
+        aoe.hits === object.hits &&
+        aoe.name === object.name &&
+        aoe.strength === object.strength
+        ) {
+        found = aoe;
+        break;
+      }
+    }
+    if (!found) {
+      found = {};
+      found.characterId = target.id;
+      found.area = object.area;
+      found.damage = object.damage;
+      found.hits = object.hits;
+      found.name = object.name;
+      found.strength = object.strength;
+      found.notes = object.notes;
+      found.enc = object.enc;
+      found.number = "0";
+      found.loadout = "0";
+    }
+
+    if (!found.$save) {
+      found = new CharacterAreaEffect(found);
+    }
+
+    //
+    // Update the loadout of each objects
+    //
+    object.loadout = String(Number(object.loadout) - 1);
+    object.$save();
+    found.loadout = String(Number(found.loadout) + 1);
+    found.$save();
+
+    if ($scope.refreshPartyChar) {
+      $scope.refreshPartyChar(target.id);
+    }
   }
 
   //

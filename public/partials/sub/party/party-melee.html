@@ -7,8 +7,12 @@
       class="list-group-item"
       ng-repeat="melee in meleeList | filter:limitIfShowLoadout | orderBy:'name'"
       >
-      <h4 class="list-group-item-heading">{{melee.name}} <small>{{melee.notes}}</small></h4>
+      <h4 class="list-group-item-heading">
+        {{melee.name}} <small>{{melee.notes}}</small>
+        <ml-expander></ml-expander>
+      </h4>
       <p class="list-group-item-text">
+        <ml-give ml-item="melee" ml-group="meleeList"></ml-give>
         <span class="lead">
           <i class="icon-wrench" tooltip="Strength"></i>&nbsp;{{melee.strength}} 
           <i class="icon-heart" tooltip="Damage"></i>&nbsp;{{melee.damage}} 

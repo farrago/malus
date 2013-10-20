@@ -1,0 +1,14 @@
+﻿<form class="form-inline" ng-show="expand">
+  <div class="form-group">
+    <label class="sr-only" for="{{mlGiveItem.id}}">Beneficiary</label>
+    <select 
+      id="{{mlGiveItem.id}}"
+      ng-model="giveTarget" 
+      ng-options="c as c.name for c in party.pc_chars.concat(party.npc_chars)" 
+      class="form-control" 
+      placeholder="Select beneficiary">
+      <option value="">-- Choose Beneficiary --</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-default" ng-click="mlGiveFn(giveTarget, mlGiveItem, mlGiveGroup)">Give</button>
+</form>

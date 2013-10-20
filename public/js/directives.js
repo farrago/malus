@@ -77,5 +77,32 @@ angular.module('myApp.directives', []).
         });
       }
     }
-});
+  }).
+  directive('mlExpander', function () {
+    return {
+      restrict: 'E',
+      templateUrl: "/partials/sub/expander.html",
+      scope: false,
+      replace:true
+    }
+  }).
+  directive('mlGive', function () {
+    return {
+      restrict: 'E',
+      templateUrl: "/partials/sub/party/give.html",
+      scope: true,
+      replace: true,
+      link: function (scope, elem, attrs) {
+        scope.giveTarget = null;
+        scope.mlGiveItem = scope[attrs.mlItem];
+        scope.mlGiveGroup = scope[attrs.mlGroup];
+
+        if (attrs.hasOwnProperty('mlGiveFn')) {
+          scope.mlGiveFn = scope[attrs.mlGiveFn];
+        } else {
+          scope.mlGiveFn = scope['give'];
+        }
+      }
+    }
+  });
 

@@ -6,7 +6,11 @@
       <table class="table table-condensed panel-default">
         <thead class="panel-heading">
           <tr>
-            <th colspan="3">{{set.name}}</th>
+            <th colspan="3">
+              {{set.name}}
+              <ml-expander></ml-expander>
+              <ml-give ml-item="set" ml-group="armourSetList"></ml-give>
+            </th>
           </tr>
         </thead>
         <tbody>

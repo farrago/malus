@@ -6,12 +6,18 @@
       href 
       class="list-group-item"
       ng-repeat="aoe in areaEffectList | filter:limitIfShowLoadout | orderBy:'name'"
-      ng-click="useAoe(aoe)"
       >
-      <span class="badge">{{aoe.loadout}}</span>
+      <span class="badge" ng-click="useAoe(aoe)">{{aoe.loadout}}</span>
       
-      <h4 class="list-group-item-heading">{{aoe.name}} <small>{{aoe.notes}}</small></h4>
+      <h4 class="list-group-item-heading">
+        <span ng-click="useAoe(aoe)">{{aoe.name}} <small>{{aoe.notes}}</small></span>
+        <ml-expander></ml-expander>
+      </h4>
       <p class="list-group-item-text">
+        <ml-give ml-item="aoe" ml-group="areaEffectList" ml-give-fn="giveOneAoe"></ml-give>
+      </p>
+        
+      <p class="list-group-item-text" ng-click="useAoe(aoe)">
         <span class="lead">
           <i class="icon-wrench" tooltip="Strength"></i>&nbsp;{{aoe.strength}} 
           <i class="icon-heart" tooltip="Damage"></i>&nbsp;{{aoe.damage}} 

@@ -5,7 +5,11 @@
 
       <div class="panel panel-default">
         <!-- Default panel contents -->
-        <div class="panel-heading">{{ranged.name}} <small class="text-muted">{{ranged.notes}}</small></div>
+        <div class="panel-heading">
+          {{ranged.name}} <small class="text-muted">{{ranged.notes}}</small>
+          <ml-expander></ml-expander>
+          <ml-give ml-item="ranged" ml-group="rangedList"></ml-give>
+        </div>
 
         <ul class="list-group">
           <li class="list-group-item">

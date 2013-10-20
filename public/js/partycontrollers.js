@@ -376,9 +376,9 @@ function PartyCtrl(
   // Watch the selected char and then reload the old char when we change chars
   // to pick up the changed values
   //
-  $scope.$watch('selection.char', function (newVal, oldVal) {
-    if (oldVal) {
-      Character.get({ id: oldVal.id }, function (char) {
+  $scope.refreshPartyChar = function (charId) {
+    if (charId) {
+      Character.get({ id: charId }, function (char) {
         var found = false;
         // See if it was a PC
         if ($scope.party && $scope.party.pc_chars) {
@@ -400,11 +400,16 @@ function PartyCtrl(
             }
           }
         }
-        
+
         if (!found) {
           console.log("Couldn't find: ", char);
         }
       });
+    }
+  };
+  $scope.$watch('selection.char', function (newVal, oldVal) {
+    if (oldVal) {
+      $scope.refreshPartyChar(oldVal.id);
     }
   });
   
