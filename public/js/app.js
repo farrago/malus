@@ -5,6 +5,7 @@
 angular.module(
   'myApp',
   [
+  'ngRoute',
   'myApp.userServices',
   'myApp.filters',
   'myApp.services',

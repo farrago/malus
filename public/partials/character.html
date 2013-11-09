@@ -86,7 +86,7 @@
             <div class="panel panel-primary" ng-repeat="ranged in rangedList | orderBy:'name'">
               <div class="panel-heading">
                 <h3 class="panel-title">
-                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#rw-accordion" ng-href="#rw-{{$index}}">
+                  <a href class="accordion-toggle" data-toggle="collapse" data-parent="#rw-accordion" data-target="#rw-{{$index}}">
                     <span ng-class="stateClass(ranged)" contenteditable="{{editable}}" on-ok="ranged.ui.edit=true" ng-model="ranged.name"></span>
                   </a>
                   <span class="pull-right">
@@ -116,7 +116,7 @@
             <div class="panel panel-primary" ng-repeat="melee in meleeList | orderBy:'name'">
               <div class="panel-heading">
                 <h3 class="panel-title">
-                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#mw-accordion" ng-href="#mw-{{$index}}">
+                  <a href class="accordion-toggle" data-toggle="collapse" data-parent="#mw-accordion" data-target="#mw-{{$index}}">
                     <span ng-class="stateClass(melee)" contenteditable="{{editable}}" on-ok="melee.ui.edit=true" ng-model="melee.name"></span>
                   </a>
                   <span class="pull-right">
@@ -146,7 +146,7 @@
             <div class="panel panel-primary" ng-repeat="areaEffect in areaEffectList | orderBy:'name'">
               <div class="panel-heading">
                 <h3 class="panel-title">
-                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#aoe-accordion" ng-href="#aw-{{$index}}">
+                  <a href class="accordion-toggle" data-toggle="collapse" data-parent="#aoe-accordion" data-target="#aw-{{$index}}">
                     <span ng-class="stateClass(areaEffect)" contenteditable="{{editable}}" on-ok="areaEffect.ui.edit=true" ng-model="areaEffect.name"></span>
                   </a>
                   <span class="pull-right">
