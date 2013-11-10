@@ -12,3 +12,5 @@ for ( var i = 0; i < stats.length; ++i ) {
         this[up] = 0;
     }
 }
+
+emit('char:changed', this.characterId);

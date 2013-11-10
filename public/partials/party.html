@@ -6,6 +6,9 @@
 </div>
 <div ng-show="currentUser && party">
   <div class="page-header">
+    <div class="alert alert-warning" ng-hide="connected">
+      <i class="icon-cloud"></i> Realtime connection lost! Party will not automatically update...
+    </div>
     <h2><span contenteditable="{{editable}}" ng-model="party.name" on-ok="party.ui.edit=true"></span>
 
       <!-- Edit button -->

@@ -1,5 +1,5 @@
-var ammo = this;
-dpd.ranged.get({id: ammo.rangedId}, 
+var extport = this;
+dpd.ranged.get({id: extport.rangedId}, 
   function(ranged) {
     if(ranged){
         emit("char:changed", ranged.characterId);

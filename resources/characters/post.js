@@ -30,3 +30,5 @@ for (member in defaultValues) {
         }
     }
 };
+
+emit('char:changed', this.id);

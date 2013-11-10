@@ -11,3 +11,5 @@ protect('creatorId');
 
 dateObj = new Date();
 this.modifiedDate = dateObj.getTime();
+
+emit('char:changed', this.id);

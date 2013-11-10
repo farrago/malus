@@ -1,1 +1,1 @@
-emit('wounds:changed', this.characterId);
+emit('char:changed', this.characterId);

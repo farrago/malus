@@ -161,11 +161,107 @@ function PartyCtrl(
   $routeParams,
   $location,
   $http,
+  $timeout,
   User,
   Party,
   Character,
   CharacterStats
   ) {
+
+
+  // Get pings to keep the socket open
+  $scope.keepAliveReceived = false;
+  $scope.keepAliveRequested = false;
+  $scope.keepAliveTimer = null;
+  $scope.connected = false;
+
+  $scope.randomDelay = function() { return 40000 + ((Math.random() * 15000) - 5000)};
+  $scope.keepAliveDelay = $scope.randomDelay();
+  $scope.minMargin = 1000;
+  $scope.myTimer = 0;
+  $scope.otherTimer = 0;
+  $scope.keepAlivePossible = 0;
+  $scope.keepAliveSent = 0;
+
+  //
+  // When the scope is destroyed, tidy up our dpd socket stuff
+  //
+  $scope.$on('$destroy', function destroy() {
+    // say goodbye to your controller here
+    // release resources, cancel request...
+    dpd.off('keepalive');
+    dpd.off('char:changed');
+    $timeout.cancel($scope.keepAliveTimer);
+    console.log("Cancelled keepalives: ", $scope.keepAliveDelay);
+  });
+
+  dpd.socketReady(function () {
+    var realFunc = function () {
+      console.log("Socket ready. Using keepalive of ", $scope.keepAliveDelay);
+      $scope.connected = true;
+      $scope.keepaliver();
+    };
+    $scope.$apply(realFunc());
+  });
+
+  dpd.on('keepalive', function (data) {
+    var realFunc = function () {
+      $scope.keepAliveReceived = true;
+      $scope.connected = true;
+      if (data.query == $scope.keepAliveDelay) {
+        $scope.myTimer += 1;
+      } else {
+        $scope.otherTimer += 1;
+        //
+        // Check if this is close to my timer and recalc if so
+        //
+        if (Math.abs(data.query - $scope.keepAliveDelay) < $scope.minMargin) {
+          $scope.keepAliveDelay = $scope.randomDelay();
+          console.log("=========== Picking new random time ================ ", $scope.keepAliveDelay);
+        }
+      }
+      console.log("keepalive ", $scope.keepAlivePossible, $scope.keepAliveSent, $scope.myTimer, $scope.otherTimer);
+      $scope.keepaliver();  // Start the timer for the next one
+    };
+    $scope.$apply(realFunc());
+  });
+
+  // 
+  // Stop any current timer and restart it for another 40s
+  // Actually add a bit of wiggle room so that various connections likely end up with
+  // different times, so only 1 request will be made across all clients.
+  //
+  $scope.keepaliver = function () {
+    $scope.keepAlivePossible += 1;
+
+    $timeout.cancel($scope.keepAliveTimer);
+
+    $scope.keepAliveTimer = $timeout(function () {
+      if ($scope.keepAliveRequested && !$scope.keepAliveReceived) {
+        $scope.connected = false;
+      }
+
+      $scope.keepAliveRequested = true;
+      $scope.keepAliveReceived = false;
+      $http.get('/keepalive', { params: { id: $scope.keepAliveDelay } }).
+        error(function (data, status) {
+          console.log("Keepalive call failed!");
+          $scope.connected = false;
+        });
+      $scope.keepAliveSent += 1;
+      $scope.keepaliver();
+    }, $scope.keepAliveDelay, true);
+  };
+
+  //
+  // Refresh all the party when we get connected to be sure we are up to date
+  //
+  $scope.$watch('connected', function (newVal, oldVal) {
+    if (newVal && (newVal !== oldVal)) {
+      $scope.refreshAll();
+    }
+  });
+  
   $scope.statics = statics;
 
   $scope.editable = false;
@@ -185,6 +281,7 @@ function PartyCtrl(
   $scope.decrementOutstanding = function () {
     if ($scope.outstandingReads === 0) {
       console.log("Too many read completions!!");
+      return;
     }
     $scope.outstandingReads -= 1;
     var progress = ($scope.maxReads - $scope.outstandingReads) / $scope.maxReads;
@@ -376,6 +473,10 @@ function PartyCtrl(
   // Watch the selected char and then reload the old char when we change chars
   // to pick up the changed values
   //
+  dpd.on('char:changed', function (data) {
+    console.log("OnCharChanged: ", data);
+    $scope.refreshPartyChar(data);
+  });
   $scope.refreshPartyChar = function (charId) {
     if (charId) {
       Character.get({ id: charId }, function (char) {
@@ -386,6 +487,9 @@ function PartyCtrl(
             if ($scope.party.pc_chars[i].id == char.id) {
               $scope.party.pc_chars[i] = char;
               found = true;
+              if (charId === $scope.selection.char.id) {
+                $scope.selection.char = $scope.party.pc_chars[i];
+              }
               break;
             }
           }
@@ -396,6 +500,9 @@ function PartyCtrl(
             if ($scope.party.npc_chars[i].id == char.id) {
               $scope.party.npc_chars[i] = char;
               found = true;
+              if (charId === $scope.selection.char.id) {
+                $scope.selection.char = $scope.party.npc_chars[i];
+              }
               break;
             }
           }
@@ -407,11 +514,6 @@ function PartyCtrl(
       });
     }
   };
-  $scope.$watch('selection.char', function (newVal, oldVal) {
-    if (oldVal) {
-      $scope.refreshPartyChar(oldVal.id);
-    }
-  });
   
   $scope.addToParty = function (charId) {
     console.log("Add to party:", charId);
@@ -611,6 +713,7 @@ PartyCtrl.$inject = [
   '$routeParams',
   '$location',
   '$http',
+  '$timeout',
   'User',
   'Party',
   'Character',
