@@ -1,0 +1,1 @@
+emit('party:changed', this.id);

@@ -191,6 +191,7 @@ function PartyCtrl(
     // release resources, cancel request...
     dpd.off('keepalive');
     dpd.off('char:changed');
+    dpd.off('party:changed');
     $timeout.cancel($scope.keepAliveTimer);
     console.log("Cancelled keepalives: ", $scope.keepAliveDelay);
   });
@@ -676,6 +677,12 @@ function PartyCtrl(
   //
   // Function to reload all of the character
   //
+  dpd.on('party:changed', function (data) {
+    console.log("OnPartyChanged: ", data);
+    if (data == $routeParams.id) {
+      $scope.refreshAll();
+    }
+  });
   $scope.refreshParty = function () {
     console.log("Refresh Party");
     $scope.incrementOutstanding();
