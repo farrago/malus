@@ -358,7 +358,7 @@ function PartyCtrl(
       obj.$save({}, function (s, saveResponseHeaders) {
         console.log("Saved:", s);
         $scope.calls -= 1;
-        if (refresh) {
+        if (refresh && !$scope.connected) {
           $scope.refreshAll();
         }
 
