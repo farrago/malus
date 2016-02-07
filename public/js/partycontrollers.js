@@ -165,7 +165,8 @@ function PartyCtrl(
   User,
   Party,
   Character,
-  CharacterStats
+  CharacterStats,
+  Note
   ) {
 
 
@@ -621,6 +622,35 @@ function PartyCtrl(
     });
   };
 
+  $scope.newNote = {};
+  $scope.addNewNote = function() {
+    console.log("Adding new note", $scope.newNote);
+    if (!$scope.newNote.note) {
+      return;
+    }
+    var note = new Note();
+    note.note = $scope.newNote.note;
+    note.partyId = $scope.party.id;
+    
+    console.log("Saving note", note);
+    note.$save({}, function(newNote, saveResponseHeaders) {
+      console.log('Added: ', newNote);
+      $scope.newNote = {};
+    }, function error(responseHeaders) {
+      console.log('Failed to save note', responseHeaders);
+    });
+  };
+  dpd.on('party:new-note', function(data) {
+    if (data.partyId === $scope.party.id) {
+      console.log('Adding to notes', data);
+
+      if (!$scope.party.hasOwnProperty('notes')) {
+        $scope.party.notes = [];
+      }
+      $scope.party.notes.push(data);
+    }
+  });
+
   //
   // Functions for adding and removing players
   //
@@ -724,5 +754,6 @@ PartyCtrl.$inject = [
   'User',
   'Party',
   'Character',
-  'CharacterStats'
+  'CharacterStats',
+  'Note'
 ];

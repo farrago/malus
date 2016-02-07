@@ -123,6 +123,14 @@ angular.module('party.partyServices', ['ngResource']).
   });
 
 //
+// Notes
+//
+angular.module('myApp.noteServices', ['ngResource']).
+  factory('Note', function($resource) {
+      return $resource('notes/:id', { id: '@id' }, {});
+  });
+
+//
 // Admin
 //
 angular.module('admin.userServices', ['ngResource']).

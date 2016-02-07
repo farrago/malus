@@ -1,0 +1,45 @@
+{
+	"type": "Collection",
+	"properties": {
+		"note": {
+			"name": "note",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "note",
+			"order": 0
+		},
+		"partyId": {
+			"name": "partyId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "partyId",
+			"order": 1
+		},
+		"date": {
+			"name": "date",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "date",
+			"order": 2
+		},
+		"userId": {
+			"name": "userId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "userId",
+			"order": 3
+		},
+		"userName": {
+			"name": "userName",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "userName",
+			"order": 4
+		}
+	}
+}

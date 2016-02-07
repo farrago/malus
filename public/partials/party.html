@@ -9,7 +9,8 @@
     <div class="alert alert-warning" ng-hide="connected">
       <i class="icon-cloud"></i> Realtime connection lost! Party will not automatically update...
     </div>
-    <h2><span contenteditable="{{editable}}" ng-model="party.name" on-ok="party.ui.edit=true"></span>
+    <h2>
+      <span contenteditable="{{editable}}" ng-model="party.name" on-ok="party.ui.edit=true"></span>
 
       <!-- Edit button -->
       <span class="pull-right" ng-hide="outstandingReads">
@@ -38,20 +39,20 @@
           <table class="table table-condensed text-center">
             <td ng-repeat="pc in party.pc_chars">
               <a href ng-click="selection.char = pc" class="btn" ng-class="{'btn-primary':pc.id == selection.char.id}">
-                {{pc.name | shortname}}<br/>
+                {{pc.name | shortname}}<br />
                 <span class="badge"><i class="icon-heart"></i> {{pc.tmpStats['e']}} / {{pc.stats['eUp']}}</span>
               </a>
             </td>
-            <td ng-repeat="npc in party.npc_chars | orderBy:npcsortid:true" >
-              <a  href ng-click="selection.char = npc" class="btn" ng-class="{'btn-primary':npc.id == selection.char.id}">
-                {{npc.name | shortname}}<br/>
+            <td ng-repeat="npc in party.npc_chars | orderBy:npcsortid:true">
+              <a href ng-click="selection.char = npc" class="btn" ng-class="{'btn-primary':npc.id == selection.char.id}">
+                {{npc.name | shortname}}<br />
                 <span class="badge"><i class="icon-heart"></i> {{npc.tmpStats['e']}} / {{npc.stats['eUp']}}</span>
               </a>
             </td>
           </table>
         </div>
       </div>
-      
+
       <!-- Modify Party members -->
       <div ng-show="editable" class="form-horizontal">
         <fieldset>
@@ -69,7 +70,55 @@
     </pane>
 
     <!-- ============================================================================== -->
-    <!-- Contacts tab  (always make it last)                                            -->
+    <!-- Contacts tab                                                                   -->
+    <!-- ============================================================================== -->
+    <pane heading="Notes" icon="comments">
+      <!-- Notes List -->
+      <div class="panel panel-primary">
+        <div class="panel-heading">Notes</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-9">
+              <form role="form" name="newNoteForm" class="form-inline">
+                <div class="form-group" style="width:85%">
+                  <label for="note" class="sr-only">Note</label>
+                  <input type="text"
+                         class="form-control"
+                         id="newNote"
+                         placeholder="What's happening?'"
+                         name="newNote"
+                         ng-model="newNote.note"
+                         required>
+                </div>
+                <button type="submit"
+                        class="btn btn-primary"
+                        ng-click="addNewNote(newNote)"
+                        ng-disabled="newNote.note.$valid == false">
+                  <i class="icon-plus"></i> Add Note
+                </button>
+              </form>
+            </div>
+            <div class="col-md-3">
+              <form class="form-inline pull-right" role="search">
+                <div class="form-group">
+                  <label class="sr-only" for="noteSearch">Note Search</label>
+                  <input type="text" class="form-control input-sm" id="noteSearch" placeholder="Search" ng-model="noteSearch">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="note in party.notes | orderBy:'-date' | filter:noteSearch">
+            <span class="badge">{{note.userName}} @ {{note.date | date : 'yyyy-MM-dd HH:mm'}}</span>
+            <p class="list-group-item-text">{{note.note}}</p>
+          </li>
+        </ul>
+      </div>
+    </pane>
+
+    <!-- ============================================================================== -->
+    <!-- Contacts tab                                                                   -->
     <!-- ============================================================================== -->
     <pane heading="Contacts" icon="book">
       <!-- New Contact Form -->
@@ -79,39 +128,34 @@
           <form role="form" name="newContactForm">
             <div class="form-group" ng-class="{'has-warning':newContactForm.newContactName.$valid == false}">
               <label for="newContactName" class="sr-only">Name</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                id="newContactName" 
-                placeholder="Name [Required]" 
-                name="newContactName"
-                ng-model="newContact.name" 
-                required>
+              <input type="text"
+                     class="form-control"
+                     id="newContactName"
+                     placeholder="Name [Required]"
+                     name="newContactName"
+                     ng-model="newContact.name"
+                     required>
             </div>
             <div class="form-group">
               <label for="newContactCareer" class="sr-only">Career</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                id="newContactCareer" 
-                placeholder="Career" 
-                ng-model="newContact.career">
+              <input type="text"
+                     class="form-control"
+                     id="newContactCareer"
+                     placeholder="Career"
+                     ng-model="newContact.career">
             </div>
             <div class="form-group">
               <label for="newContactNote" class="sr-only">Notes</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                id="newContactNote" 
-                placeholder="Notes" 
-                ng-model="newContact.notes">
+              <input type="text"
+                     class="form-control"
+                     id="newContactNote"
+                     placeholder="Notes"
+                     ng-model="newContact.notes">
             </div>
-            <button 
-              type="submit" 
-              class="btn btn-primary" 
-              ng-click="addNewContact(newContact)"
-              ng-disabled="newContactForm.newContactName.$valid == false"
-              >
+            <button type="submit"
+                    class="btn btn-primary"
+                    ng-click="addNewContact(newContact)"
+                    ng-disabled="newContactForm.newContactName.$valid == false">
               <i class="icon-plus"></i> Add Contact
             </button>
           </form>
@@ -186,6 +230,6 @@
         {{player.username}}
       </div>
     </pane>
- 
+
   </tabs>
 </div>

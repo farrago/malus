@@ -2,7 +2,7 @@
 
 
 // Declare app level module which depends on filters, and services
-angular.module(
+var myApp = angular.module(
   'myApp',
   [
   'ngRoute',
@@ -29,6 +29,7 @@ angular.module(
   'myApp.accountServices',
   'myApp.magicItemsServices',
   'myApp.effectsServices',
+  'myApp.noteServices',
   'map.systemsServices',
   'party.partyServices',
   'admin.userServices'
