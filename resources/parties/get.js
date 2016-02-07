@@ -12,4 +12,8 @@ if (query.id) {
       function(chars){
         party.contact_chars = chars;
     });
+    dpd.notes.get({partyId: party.id},
+      function(notes){
+      party.notes = notes;
+    });
 }

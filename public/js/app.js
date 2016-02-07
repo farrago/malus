@@ -29,6 +29,7 @@ var myApp = angular.module(
   'myApp.accountServices',
   'myApp.magicItemsServices',
   'myApp.effectsServices',
+  'myApp.noteServices',
   'map.systemsServices',
   'party.partyServices',
   'admin.userServices'
