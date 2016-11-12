@@ -4,7 +4,13 @@ var db = module.exports = {}
   , mongodb = require('mongodb')
   , uuid = require('./util/uuid')
   , scrub = require('scrubber').scrub
-  , debug = require('debug')('db');
+  , debug = require('debug')('db')
+  , url = require('url')
+  , Promise = require('bluebird')
+  , _ = require('underscore');
+
+require("debug").enable("db:error");
+var error = require('debug')('db:error');
 
 /**
  * Create a new database with the given options. You can start making
@@ -40,13 +46,13 @@ db.create = function (options) {
  * Example:
  *
  *     var redis = require('redis');
- *     
+ *
  *     function Redis(options) {
  *       this.options = options;
  *       this._redis = redis.createClient()
  *     }
  *     util.inherits(Redis, Db);
- *     
+ *
  *     Redis.prototype.open = function (fn) {
  *       this._redis.once('ready', fn);
  *     }
@@ -54,10 +60,21 @@ db.create = function (options) {
  * @param {Object} options
  * @api private
  */
- 
+
 function Db(options) {
   this.options = options;
-  this._mdb = new mongodb.Db(this.options.name, new mongodb.Server(this.options.host, this.options.port));
+  this.connectionString = this.options.connectionString;
+  this.connectionOptions = this.options.connectionOptions || null;
+  if (!this.connectionString && this.options.host) {
+    this.connectionString = url.format({
+      protocol: "mongodb",
+      slashes: true,
+      hostname: this.options.host,
+      port: this.options.port,
+      auth: this.options.credentials ? this.options.credentials.username + ":" + this.options.credentials.password : null,
+      pathname: this.options.name
+    });
+  }
 }
 util.inherits(Db, EventEmitter);
 db.Db = Db;
@@ -70,7 +87,7 @@ db.Db = Db;
  */
 
 Db.prototype.drop = function (fn) {
-  getConnection(this, function (err, mdb) {
+  getConnection(this).then(function (mdb) {
     mdb.open(function () {
       mdb.dropDatabase(fn);
     });
@@ -109,59 +126,62 @@ function Store(namespace, db) {
 }
 module.exports.Store = Store;
 
-function getConnection(db, fn) {
-  if(db.connected) {
-    fn(null, db._mdb);
-  } else if(db.connecting) {
-    db.once('connection attempted', function (err) {
-      fn(err, db._mdb);
-    });
-  } else {
-    db.connecting = true;
-    db._mdb.open(function (err) {
-      db.connecting = false;
-      db.emit('connection attempted', err);
-      if(err) {
-        db.connected = false;
-        throw err;
-      } else {
-          
-        // check for credentials
-        var credentials = db.options.credentials;
-        if (credentials && credentials.username && credentials.password) {
-          db._mdb.authenticate(credentials.username, credentials.password, function (err) {
-            if (err) {
-              db.connected = false;
-              throw err;
-            }
-            db.connected = true;
-            fn(null, db._mdb);
-          });
-        } else {
-          db.connected = true;
-          fn(null, db._mdb);
-        }
-      }
-    });
+function getConnection(db) {
+  if (db.Db) return Promise.resolve(db.Db); // reuse connection
+  if (typeof db.connectionString !== "string" || db.connectionString.length === 0) {
+    error(new Error("Cannot initialize store. A proper connection string was not specified."));
+    process.exit(1);
   }
+  return new Promise(function(resolve, reject) {
+    try {
+      mongodb.MongoClient.connect(db.connectionString, db.connectionOptions, function (err, database) {
+        if (!err) {
+          db.Db = database;
+          resolve(database);
+        }
+        else {
+          // log error
+          error(new Error("Cannot open store: " + err));
+          // hide sensitive database connection error details
+          reject("Database connection error");
+        }
+      });
+    } catch(e){
+      error(e);
+      reject("Database connection error");
+    }
+  });
 }
 
 function collection(store, fn) {
   var db = store._db;
-  
-  getConnection(db, function (err, mdb) {
-    if(err) return fn(err);
-    
-    mdb.collection(store.namespace, function (err, collection) {
-      if(err || !collection) {
-        console.error(err || new Error('Unable to get ' + store.namespace + ' collection'));
-        process.exit(1);
-      }
-      
-      fn(null, collection);
+
+  return getConnection(db).then(function (mdb) {
+    return new Promise(function(resolve, reject) {
+      mdb.collection(store.namespace, function (err, collection) {
+        if(err || !collection) {
+          error(err || new Error('Unable to get ' + store.namespace + ' collection'));
+          process.exit(1);
+        }
+
+        if (fn) fn(null, collection);
+        resolve(collection);
+      });
     });
+  }).catch(function (err) {
+    if (fn) fn(err);
+    throw err;
   });
 }
+
+/**
+ * Returns a promise, or calls fn with the mongo collection served by this store
+ * @param  {Function} fn   a callback that will receive the mongo collection as the second parameter
+ * @return {Promise}       returns a promise with the mongo collection
+ */
+Store.prototype.getCollection = function(fn){
+  return collection(this, fn);
+};
 
 /**
  * Change public IDs to private IDs.
@@ -224,11 +244,11 @@ Store.prototype.scrubQuery = function (query) {
         parent._id = parent.id;
         delete parent.id;
       }
-    });  
+    });
   } catch(ex) {
     debug(ex);
   }
-  
+
 };
 
 /**
@@ -257,10 +277,25 @@ Store.prototype.createUniqueIdentifier = function() {
  */
 
 Store.prototype.insert = function (object, fn) {
+  if (Array.isArray(object) && object.length === 0) {
+    // mongodb client combatibility, empty arrays not allowed any more
+    fn(null, null);
+    return;
+  }
+
   var store = this;
   this.identify(object);
   collection(this, function (err, col) {
+    if (err) {
+      fn(err);
+      return;
+    }
     col.insert(object, function (err, result) {
+      if (err) {
+        fn(err);
+        return;
+      }
+      result = result.ops;
       if(Array.isArray(result) && !Array.isArray(object)) {
         result = result[0];
       }
@@ -285,7 +320,7 @@ Store.prototype.insert = function (object, fn) {
  */
 
 Store.prototype.count = function(query, fn) {
-  var store = this;
+  
   if (typeof query == 'function') {
     fn = query;
     query = {};
@@ -332,15 +367,29 @@ Store.prototype.find = function (query, fn) {
   var fields = stripFields(query)
     , options = stripOptions(query);
 
+  if (!_.isObject(fields)) fields = undefined;
+
   collection(this, function (err, col) {
+    if (err) {
+      fn(err);
+      return;
+    }
     if(typeof query._id === 'string') {
       if(fields) {
         col.findOne(query, fields, options, function (err, obj) {
+          if (err) {
+            fn(err);
+            return;
+          }
           store.identify(query);
           fn(err, store.identify(obj));
         });
       } else {
         col.findOne(query, options, function (err, obj) {
+          if (err) {
+            fn(err);
+            return;
+          }
           store.identify(query);
           fn(err, store.identify(obj));
         });
@@ -348,10 +397,18 @@ Store.prototype.find = function (query, fn) {
     } else {
       if(fields) {
         col.find(query,  fields, options).toArray(function (err, arr) {
+          if (err) {
+            fn(err);
+            return;
+          }
           fn(err, store.identify(arr));
         });
       } else {
         col.find(query, options).toArray(function (err, arr) {
+          if (err) {
+            fn(err);
+            return;
+          }
           fn(err, store.identify(arr));
         });
       }
@@ -382,12 +439,24 @@ Store.prototype.first = function (query, fn) {
     , fields = stripFields(query);
 
   collection(this, function (err, col) {
-    if(fields) {    
+    if (err) {
+      fn(err);
+      return;
+    }
+    if(fields) {
       col.findOne(query, fields, function (err, result) {
+        if (err) {
+          fn(err);
+          return;
+        }
         fn(err, store.identify(result));
       });
-    } else {    
+    } else {
       col.findOne(query, function (err, result) {
+        if (err) {
+          fn(err);
+          return;
+        }
         fn(err, store.identify(result));
       });
     }
@@ -413,7 +482,7 @@ Store.prototype.update = function (query, object, fn) {
   var store = this
     , multi = false
     , command = {};
-    
+
   if(typeof query == 'string') query = {id: query};
   if(typeof query != 'object') throw new Error('update requires a query object or string id');
   if(query.id) {
@@ -431,11 +500,11 @@ Store.prototype.update = function (query, object, fn) {
       delete object[k];
     }
   });
-  
+
   if(Object.keys(object).length) {
-    command.$set = object;    
+    command.$set = object;
   }
-  
+
   multi = query._id ? false : true;
 
   debug('update - query', query);
@@ -443,9 +512,17 @@ Store.prototype.update = function (query, object, fn) {
   debug('update - command', command);
 
   collection(this, function (err, col) {
-      col.update(query, command, {multi: multi}, function(err) {
-      store.identify(query);
+    if (err) {
       fn(err);
+      return;
+    }
+    col.update(query, command, { multi: multi }, function (err, r) {
+      if (err) {
+        fn(err);
+        return;
+      }
+      store.identify(query);
+      fn(err, r ? { count: r.result.n } : null);
     }, multi);
   });
 };
@@ -475,7 +552,11 @@ Store.prototype.remove = function (query, fn) {
     store.identify(query);
   }
   collection(this, function (err, col) {
-    col.remove(query, fn);
+    if (err) {
+      fn(err);
+      return;
+    }
+    col.remove(query, function (error, r) { fn(error, r ? { count: r.result.n } : null); });
   });
 };
 
@@ -496,6 +577,10 @@ Store.prototype.remove = function (query, fn) {
 Store.prototype.rename = function (namespace, fn) {
   var store = this;
   collection(this, function (err, col) {
+    if (err) {
+      fn(err);
+      return;
+    }
     store.namespace = namespace;
     col.rename(namespace, fn);
   });
@@ -512,8 +597,8 @@ function stripOptions(query) {
   var options = {};
   if(!query) return options;
   // performance
-  if(query.$limit) options.limit = query.$limit;
-  if(query.$skip) options.skip = query.$skip;
+  if(query.$limit) options.limit = parseInt(query.$limit);
+  if(query.$skip) options.skip = parseInt(query.$skip);
   if(query.$sort || query.$orderby) options.sort = query.$sort || query.$orderby;
   delete query.$limit;
   delete query.$skip;
