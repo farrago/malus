@@ -33,6 +33,7 @@ function PartiesCtrl($scope, $routeParams, Party, User) {
     party.users = [$scope.currentUser.id];
     party.pcs = [];
     party.npcs = [];
+    party.contacts = [];
     party.deleted = false;
     party.$save({}, function (newParty, saveResponseHeaders) {
       console.log('Added: ', newParty);
